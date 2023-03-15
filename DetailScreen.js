@@ -1,6 +1,11 @@
 import * as Location from 'expo-location';
 import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet, View ,Text, ScrollView, Dimensions,Image, ImageBackground, ActivityIndicator} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+
+import MainScreen from './MainScreen';
+import First from './First';
+import Login from './LoginScreen';
 
 const weatherApiKey = '77d7448b07d017540cef875699684fb0';
 
@@ -8,7 +13,7 @@ const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
 
-export default function DetailScreen () {
+export default function DetailScreen ({ navigation }) {
     const [city,setCity] = useState("Loading...")
     const [days, setDays] = useState([]);
     const [ok, setOk] = useState(true);
@@ -52,9 +57,14 @@ export default function DetailScreen () {
                   <Text style={styles.tinyText}>{day.weather[0].description}</Text>
                 </View>
                 )
-            )}         
+            )}
+            
           </ScrollView>
+
+      
+    
       </View>
+     
       );
     
   }
