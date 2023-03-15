@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { View, Text, Button,StyleSheet,TextInput,Dimensions,Image, ImageBackground } from 'react-native';
 
-const {width:SCREEN_WIDTH} = Dimensions.get('window');
+// const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function First ({navigation}) {
     setTimeout(() => {
