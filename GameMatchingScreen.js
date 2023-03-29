@@ -1,15 +1,18 @@
 import React, { Component, useState ,useEffect} from 'react';
-import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions } from 'react-native';
+import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function GameMatchingScreen ({navigation}) {
     
+    const [userInfos, setUserInfo] = useState([]);
+
     const getUserData = async() =>{
         const response = await fetch (`http://3.37.211.126:8080/common/test.do?id=aabc&pw=bbccc%27).then(response`);
         const json = await response.json();       
-        console.log(json)
+        console.log(json.userInfo)
+        setUserInfo(json.userInfo)
       };
     useEffect(() => {
         getUserData();
@@ -21,18 +24,33 @@ export default function GameMatchingScreen ({navigation}) {
             </View>
             <View style={styles.bottomContainer}>
                     <View style={styles.titleBorder}> 
-                        <Text >GameMatching</Text>
+                        <Text style={styles.whiteTitle}>매칭된 유저</Text>
                     </View>
-                    <ScrollView pagingEnabled horizontal contentContainerStyle={styles.contentBorder}>
-                        <View style={styles.itemBox}>
-                            <Text>1</Text>
+                    <ScrollView pagingEnabled 
+                                horizontal 
+                                showsHorizontalScrollIndicator = {false}
+                                contentContainerStyle={styles.contentBorder}>
+                    {userInfos.length === 0? (
+                        <View style={styles.day}>
+                            <ActivityIndicator color="black" size="large"/>
                         </View>
-                        <View style={styles.itemBox}>
-                            <Text>2</Text>
+                        ) : (
+                        userInfos.map((id, index) =>  
+                        <View key={index} style={styles.contentBottom}>
+                            <View style={styles.itemBox}>
+                                <Text style={styles.matchingUserInfo}>
+                                    {id.id}
+                                </Text>
+                                <Text style={styles.matchingUserInfo}>
+                                    {id.name}
+                                </Text>
+                                <Text style={styles.matchingUserInfo}>
+                                    {id.pw}
+                                </Text>
+                            </View>  
                         </View>
-                        <View style={styles.itemBox}>
-                            <Text>3</Text>
-                        </View>
+                        )
+                    )}
                     </ScrollView>                  
             </View>
               
@@ -48,18 +66,13 @@ export default function GameMatchingScreen ({navigation}) {
 const styles = StyleSheet.create({
     container:{
       flex:1,
+      backgroundColor:"white",
     },
-    topContainer:{
-        borderStyle:"solid",
-        borderColor:"black",
-        borderWidth:2,
+    topContainer:{       
         flex:5,
         alignItems:"center",
     },
     bottomContainer:{
-        borderStyle:"solid",
-        borderColor:"red",
-        borderWidth:2,
         flex:3,
         alignItems:"center",
     },
@@ -68,24 +81,31 @@ const styles = StyleSheet.create({
       borderColor: "black",  
     },
     titleBorder:{
-        borderStyle:"solid",
-        borderColor:"black",
-        borderWidth:2,
         width: "100%",
         alignItems:"center",
         height:"10%",
     },
     contentBorder:{        
-        borderStyle:"solid",
-        borderColor:"black",
-        borderWidth:2,
-        width: "100%",
-        height:"40%"
+        height:"100%"
+    },
+    contentBottom:{
+        width:SCREEN_WIDTH,
+        alignItems:"center",
+        justifyContent:"center",
     },
     itemBox:{
-        borderStyle:"solid",
-        borderColor:"black",
-        borderWidth:2,
-        width:SCREEN_WIDTH,
+        backgroundColor:"black",
+        width:"50%",
+        height:"80%",
+        alignItems:"center",
+        borderRadius:30,
+    },
+    whiteTitle:{
+        fontSize:20,
+        color:"black"
+    },
+    matchingUserInfo:{
+        color:"white",
+        margin:"10%"
     },
   });
