@@ -1,7 +1,7 @@
 
 import * as Location from 'expo-location';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator,StackNavigationProp } from '@react-navigation/stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View ,Text, ScrollView, Dimensions,Image, ImageBackground, ActivityIndicator} from 'react-native';
@@ -14,44 +14,39 @@ import ChatScreen from './ChatScreen';
 import FriendScreen from './FriendScreen';
 import GameMatchingScreen from './GameMatchingScreen';
 import AdminScreen from './AdminScreen';
+import OptionSelect from './OptionSelect';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-
-
-export default function App() {
-  
+function HomeStack(){
   return (
-    
-    <NavigationContainer style>
-      <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="MainScreen">
-            <Tab.Screen name="MainScreen" component={MainScreen} />
-            <Tab.Screen name="DetailScreen" component={DetailScreen} /> 
-            <Tab.Screen name="CHAT" component={ChatScreen} />
-            <Tab.Screen name="Friend" component={FriendScreen} />
-            <Tab.Screen name="GameMatching" component={GameMatchingScreen} />
-            <Tab.Screen name="Admin" component={AdminScreen} />
-      </Tab.Navigator> 
-      {/* <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="MAIN" component={MainScreen}
-          options={{
-            title: '메인화면'
-        }}/>
-        <Stack.Screen name="DETAIL" component={DetailScreen} 
-          options={{
-            title: '상세화면'
-        }}/>
-        <Stack.Screen name="First" component={First} 
-          options={{
-            title: '첫화면'
-        }}/>
-        <Stack.Screen name="Login" component={Login} 
-          options={{
-            title: '로그인'
-        }}/>
-      </Stack.Navigator>          */}
-    </NavigationContainer>  
+    <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>            
+      <Stack.Screen name="First" component={First} options={{
+        headerShown:false  
+      }}/>
+      <Stack.Screen name="OptionSelect" component={OptionSelect} options={{
+        headerShown:false  
+      }}/>      
+    </Stack.Navigator>
+  );
+}
+
+export default function App() {  
+  return (
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>
+        <Tab.Screen name='MainScreen' component={MainScreen}/>
+        <Tab.Screen name='Home' component={First} options={{tabBarStyle: {display: 'none'}}} />
+        <Tab.Screen name='DetailScreen' component={DetailScreen}/>
+        <Tab.Screen name='Login' component={Login}/>
+        <Tab.Screen name='ChatScreen' component={ChatScreen}/>
+        <Tab.Screen name='FriendScreen' component={FriendScreen}/>
+        <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/>
+        <Tab.Screen name='AdminScreen' component={AdminScreen}/>
+      </Tab.Navigator>
+    </NavigationContainer>
+         
   );
 }
 

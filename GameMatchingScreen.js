@@ -20,7 +20,16 @@ export default function GameMatchingScreen ({navigation}) {
     return (
         <View style={styles.container} >
             <View style={styles.topContainer}>
-
+                <View style={styles.titleBorder}>
+                    <Text style={styles.TopwhiteTitle}>선택한 조건</Text>
+                </View>
+                <View style={styles.optionBar}>
+                    <Text style={styles.optionStyle}>조건1</Text>
+                    <Text style={styles.optionStyle}>조건2</Text>
+                </View>
+                <View style={styles.optionBar}>
+                    
+                </View>
             </View>
             <View style={styles.bottomContainer}>
                     <View style={styles.titleBorder}> 
@@ -71,6 +80,21 @@ const styles = StyleSheet.create({
     topContainer:{       
         flex:5,
         alignItems:"center",
+        borderColor:"black",
+        borderStyle:"solid",
+        borderWidth:"2",
+    },
+    optionBar:{
+        width:"100%",
+        height:"45%",
+        borderColor:"red",
+        borderStyle:"solid",
+        borderWidth:"2",
+    },
+    optionStyle:{
+        marginLeft:10,
+        marginTop:30,
+        fontSize:20,
     },
     bottomContainer:{
         flex:3,
@@ -103,6 +127,11 @@ const styles = StyleSheet.create({
     whiteTitle:{
         fontSize:20,
         color:"black"
+    },
+    TopwhiteTitle:{
+        fontSize:20,
+        color:"black",
+        marginTop:15,
     },
     matchingUserInfo:{
         color:"white",
