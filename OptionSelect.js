@@ -1,7 +1,19 @@
 import React, { Component, useState } from 'react';
-import { View, Text, Button,StyleSheet,TextInput } from 'react-native';
+import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
+
+const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function optionSelect ({navigation}) {
+
+    const selectGameOtion = [   
+                                {optionName:"rank",
+                                optionUrl: "./assets/images/emblem-challenger.png"}
+                                ,
+                                {optionName:"champion",
+                                optionUrl: "./assets/images/main.jpg"}
+                            ];
+    const rankTitle = "rank";
+
     return (      
             <View style={styles.container} >
                 <View style={styles.topContainer} >
@@ -12,7 +24,24 @@ export default function optionSelect ({navigation}) {
                         <Text style={styles.centerContainerTitle}>조건1</Text>
                     </View>
                     <View style={styles.centerBottomContainer}>
-
+                    <ScrollView pagingEnabled 
+                                horizontal 
+                                showsHorizontalScrollIndicator = {false}>
+                        {selectGameOtion.length === 0? (
+                        <View >
+                            <ActivityIndicator color="black" size="large"/>
+                        </View>
+                        ) : (
+                            selectGameOtion.map((id, index) =>  
+                        <View key={index} style={styles.contentBottom}>
+                            <View style={styles.itemBox}>
+                                <Text style={styles.testWhiteText}>{id.optionUrl}</Text>
+                            <ImageBackground resizeMode="stretch" source={require=id.optionUrl} style={styles.backImg}></ImageBackground>                              
+                            </View>  
+                        </View>
+                        )
+                    )}         
+                    </ScrollView>
                     </View>
                 </View> 
                 <View style={styles.bottomContainer} >
@@ -23,7 +52,7 @@ export default function optionSelect ({navigation}) {
       
     );
   
-
+    
 }
 
 const styles = StyleSheet.create({
@@ -74,5 +103,26 @@ const styles = StyleSheet.create({
     centerContainerTitle:{
         marginTop: "5%",    
         fontSize: 20,
+    },
+    contentBottom:{
+        width:SCREEN_WIDTH,
+        alignItems:"center",
+        justifyContent:"center",
+    },
+    itemBox:{
+        backgroundColor:"black",
+        width:"50%",
+        height:"80%",
+        alignItems:"center",
+        borderRadius:30,
+    },
+    testWhiteText:{
+        color:"red",
+    },
+    backImg:{
+        flex:1,
+        width:'100%',
+        height:610,
+        opacity:0.7
     },
 });
