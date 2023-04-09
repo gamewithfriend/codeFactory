@@ -3,7 +3,7 @@ import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,Activity
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
-export default function optionSelect ({navigation}) {
+export default function OptionSelect ({navigation}) {
 
     const selectGameOtion = [   
                                 {optionName:"rank",
