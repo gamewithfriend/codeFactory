@@ -82,14 +82,12 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderColor:"black",
         borderStyle:"solid",
-        borderWidth:"2",
     },
     optionBar:{
         width:"100%",
         height:"45%",
         borderColor:"red",
         borderStyle:"solid",
-        borderWidth:"2",
     },
     optionStyle:{
         marginLeft:10,

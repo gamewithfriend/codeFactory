@@ -63,21 +63,20 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderColor:"black",
         borderStyle:"solid",
-        borderWidth:"2",
+       
     },
     centerContainer:{       
         flex:6,
         alignItems:"center",
         borderColor:"black",
         borderStyle:"solid",
-        borderWidth:"2", 
+        
     },
     centerTopContainer:{       
         flex:1,
         alignItems:"center",
         borderColor:"black",
         borderStyle:"solid",
-        borderWidth:"2",
         width:"100%",
     },
     centerBottomContainer:{       
@@ -85,7 +84,6 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderColor:"red",
         borderStyle:"solid",
-        borderWidth:"2",
         width:"100%",
     },
     bottomContainer:{
@@ -93,7 +91,6 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderColor:"black",
         borderStyle:"solid",
-        borderWidth:"2",
     },
     topContainerTitle:{
         marginTop: "8%",

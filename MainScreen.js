@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     testClick: {
         borderColor:"black",
         borderStyle:"solid",
-        borderWidth:"2",
         flex:1,
     },
     mainContainer: {
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
     testClickCenter: {
         borderColor:"black",
         borderStyle:"solid",
-        borderWidth:"2",
         flex:1,
         alignItems:"center",
         justifyContent:"center",
