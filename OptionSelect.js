@@ -7,12 +7,11 @@ export default function optionSelect ({navigation}) {
 
     const selectGameOtion = [   
                                 {optionName:"rank",
-                                optionUrl: "./assets/images/emblem-challenger.png"}
+                                optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
                                 {optionName:"champion",
-                                optionUrl: "./assets/images/main.jpg"}
+                                optionUrl: require("./assets/images/main.jpg")}
                             ];
-    const rankTitle = "rank";
 
     return (      
             <View style={styles.container} >
@@ -28,19 +27,19 @@ export default function optionSelect ({navigation}) {
                                 horizontal 
                                 showsHorizontalScrollIndicator = {false}>
                         {selectGameOtion.length === 0? (
-                        <View >
-                            <ActivityIndicator color="black" size="large"/>
-                        </View>
-                        ) : (
-                            selectGameOtion.map((id, index) =>  
-                        <View key={index} style={styles.contentBottom}>
-                            <View style={styles.itemBox}>
-                                <Text style={styles.testWhiteText}>{id.optionUrl}</Text>
-                            <ImageBackground resizeMode="stretch" source={require=id.optionUrl} style={styles.backImg}></ImageBackground>                              
-                            </View>  
-                        </View>
-                        )
-                    )}         
+                            <View >
+                                <ActivityIndicator color="black" size="large"/>
+                            </View>
+                            ) : (
+                            selectGameOtion.map( (info, index) =>    
+                                <View key={index} style={styles.contentBottom}>
+                                    <View style={styles.itemBox}>
+                                        <Image style={styles.backImg} source={info.optionUrl}/>       
+                                    </View>  
+                                </View>
+                            )
+                            )
+                        }         
                     </ScrollView>
                     </View>
                 </View> 
@@ -110,7 +109,6 @@ const styles = StyleSheet.create({
         justifyContent:"center",
     },
     itemBox:{
-        backgroundColor:"black",
         width:"50%",
         height:"80%",
         alignItems:"center",
