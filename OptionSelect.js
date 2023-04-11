@@ -4,7 +4,8 @@ import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,Activity
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function OptionSelect ({navigation}) {
-
+    const optionTrigger = false;
+    const [ok, setOptionName] = useState("true");
     const selectGameOtion = [   
                                 {optionName:"rank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
@@ -12,6 +13,11 @@ export default function OptionSelect ({navigation}) {
                                 {optionName:"champion",
                                 optionUrl: require("./assets/images/main.jpg")}
                             ];
+    const optionChange = ()=>{
+        alert(ok);
+        alert()
+        
+    };
 
     return (      
             <View style={styles.container} >
@@ -32,8 +38,9 @@ export default function OptionSelect ({navigation}) {
                             </View>
                             ) : (
                             selectGameOtion.map( (info, index) =>    
-                                <View key={index} style={styles.contentBottom}>
+                                <View onTouchEnd={text => setOptionName(index)}  key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
+                                        <Text>{info.optionName}</Text>
                                         <Image style={styles.backImg} source={info.optionUrl}/>       
                                     </View>  
                                 </View>
@@ -44,6 +51,7 @@ export default function OptionSelect ({navigation}) {
                     </View>
                 </View> 
                 <View style={styles.bottomContainer} >
+                  <Button onPress={optionChange} title='선택하기'></Button>
                 </View>       
             </View>              
         
