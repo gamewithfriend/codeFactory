@@ -8,6 +8,7 @@ const {width:SCREEN_WIDTH} = Dimensions.get('window');
 export default function OptionSelect ({navigation}) {
     const optionTrigger = false;
     const [ok, setOptionName] = useState(1);
+    const [changeOptionValue, optionValue] = useState("true");
     const selectGameOtion = [   
                                 {optionName:"rank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
@@ -15,9 +16,18 @@ export default function OptionSelect ({navigation}) {
                                 {optionName:"champion",
                                 optionUrl: require("./assets/images/main.jpg")}
                             ];
-    const optionChange = ()=>{
-        // alert(ok);
-        navigation.navigate('OtionSelectTwo');
+    const optionChange = (index)=>{
+      setOptionName(index)
+      console.log(ok)
+      let temp = "";
+      if(ok == 1){   
+         temp = "rank";   
+      }else{
+         temp = "champion";
+      }
+      console.log(changeOptionValue)
+      alert(changeOptionValue)
+      navigation.navigate('OtionSelectTwo',{num: temp});
         
     };
 
@@ -40,7 +50,7 @@ export default function OptionSelect ({navigation}) {
                             </View>
                             ) : (
                             selectGameOtion.map( (info, index) =>    
-                                <View onTouchEnd={text => setOptionName(index)}  key={index} style={styles.contentBottom}>
+                                <View onTouchEnd={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
                                         <Text>{info.optionName}</Text>
                                         <Image style={styles.backImg} source={info.optionUrl}/>       

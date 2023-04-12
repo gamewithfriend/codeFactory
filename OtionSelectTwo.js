@@ -1,11 +1,11 @@
 import React, { Component, useState } from 'react';
 import { View, Text, Button,StyleSheet,TextInput } from 'react-native';
 
-export default function OtionSelectTwo ({navigation}) {
+export default function OtionSelectTwo ({ route }) {
     return (
         <View >
             <View >
-                   <Text>Friend</Text>
+                   <Text style={styles.topContainerTitle}>{route.params.num}</Text>
             </View>
               
         </View>
@@ -16,3 +16,9 @@ export default function OtionSelectTwo ({navigation}) {
   
 
 }
+
+const styles = StyleSheet.create({
+  topContainerTitle:{
+        fontSize: 20,
+    },
+});
