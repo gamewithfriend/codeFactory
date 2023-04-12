@@ -1,12 +1,13 @@
 import React, { Component, useState } from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
-import OptionTwo from './OtionSelectTwo';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
+
+
 export default function OptionSelect ({navigation}) {
     const optionTrigger = false;
-    const [ok, setOptionName] = useState("true");
+    const [ok, setOptionName] = useState(1);
     const selectGameOtion = [   
                                 {optionName:"rank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
@@ -15,8 +16,8 @@ export default function OptionSelect ({navigation}) {
                                 optionUrl: require("./assets/images/main.jpg")}
                             ];
     const optionChange = ()=>{
-        alert(ok);
-        navigation.navigate('OptionTwo')
+        // alert(ok);
+        navigation.navigate('OtionSelectTwo');
         
     };
 
