@@ -1,5 +1,6 @@
 import React, { Component, useState } from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
+import OptionTwo from './OtionSelectTwo';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -15,7 +16,7 @@ export default function OptionSelect ({navigation}) {
                             ];
     const optionChange = ()=>{
         alert(ok);
-        alert()
+        navigation.navigate('OptionTwo')
         
     };
 
