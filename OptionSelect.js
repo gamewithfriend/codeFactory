@@ -16,19 +16,25 @@ export default function OptionSelect ({navigation}) {
                                 {optionName:"champion",
                                 optionUrl: require("./assets/images/main.jpg")}
                             ];
+    
     const optionChange = (index)=>{
       setOptionName(index)
-      console.log(ok)
+      
+      
+        
+    };
+
+    const optionSubmit = () => {
+      
       let temp = "";
       if(ok == 1){   
          temp = "rank";   
       }else{
          temp = "champion";
       }
-      console.log(changeOptionValue)
-      alert(changeOptionValue)
+      
+      
       navigation.navigate('OtionSelectTwo',{num: temp});
-        
     };
 
     return (      
@@ -50,7 +56,7 @@ export default function OptionSelect ({navigation}) {
                             </View>
                             ) : (
                             selectGameOtion.map( (info, index) =>    
-                                <View onTouchEnd={text => optionChange(index)}  key={index} style={styles.contentBottom}>
+                                <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
                                         <Text>{info.optionName}</Text>
                                         <Image style={styles.backImg} source={info.optionUrl}/>       
@@ -63,7 +69,7 @@ export default function OptionSelect ({navigation}) {
                     </View>
                 </View> 
                 <View style={styles.bottomContainer} >
-                  <Button onPress={optionChange} title='선택하기'></Button>
+                  <Button onPress={optionSubmit} title='선택하기'></Button>
                 </View>       
             </View>              
         
