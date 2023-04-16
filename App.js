@@ -15,27 +15,14 @@ import FriendScreen from './FriendScreen';
 import GameMatchingScreen from './GameMatchingScreen';
 import AdminScreen from './AdminScreen';
 import OptionSelect from './OptionSelect';
+import OtionSelectTwo from './OtionSelectTwo';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function HomeStack(){
+function HomeTab(){
   return (
-    <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>            
-      <Stack.Screen name="First" component={First} options={{
-        headerShown:false  
-      }}/>
-      <Stack.Screen name="OptionSelect" component={OptionSelect} options={{
-        headerShown:false  
-      }}/>      
-    </Stack.Navigator>
-  );
-}
-
-export default function App() {  
-  return (
-    <NavigationContainer>
-      <Tab.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>
+       <Tab.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>
         <Tab.Screen name='MainScreen' component={MainScreen}/>
         <Tab.Screen name='Home' component={First} options={{tabBarStyle: {display: 'none'}}} />
         <Tab.Screen name='DetailScreen' component={DetailScreen}/>
@@ -45,6 +32,24 @@ export default function App() {
         <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/>
         <Tab.Screen name='AdminScreen' component={AdminScreen}/>
       </Tab.Navigator>
+  
+  );
+}
+
+export default function App() {  
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>            
+        <Stack.Screen name="HomeTab" component={HomeTab} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="OptionSelect" component={OptionSelect} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="OtionSelectTwo" component={OtionSelectTwo} options={{
+          headerShown:false  
+        }}/>
+      </Stack.Navigator>
     </NavigationContainer>
          
   );

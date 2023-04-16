@@ -1,17 +1,42 @@
 import React, { Component, useState } from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
 
+
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
-export default function OptionSelect ({navigation}) {
 
+
+export default function OptionSelect ({navigation}) {
+    const optionTrigger = false;
+    const [ok, setOptionName] = useState(1);
+    const [changeOptionValue, optionValue] = useState("true");
     const selectGameOtion = [   
                                 {optionName:"rank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
                                 {optionName:"champion",
-                                optionUrl: require("./assets/images/main.jpg")}
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
                             ];
+    
+    const optionChange = (index)=>{
+      setOptionName(index)
+      
+      
+        
+    };
+
+    const optionSubmit = () => {
+      
+      let temp = "";
+      if(ok == 1){   
+         temp = "rank";   
+      }else{
+         temp = "champion";
+      }
+      
+      
+      navigation.navigate('OtionSelectTwo',{num: temp});
+    };
 
     return (      
             <View style={styles.container} >
@@ -32,8 +57,9 @@ export default function OptionSelect ({navigation}) {
                             </View>
                             ) : (
                             selectGameOtion.map( (info, index) =>    
-                                <View key={index} style={styles.contentBottom}>
+                                <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
+                                        <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
                                         <Image style={styles.backImg} source={info.optionUrl}/>       
                                     </View>  
                                 </View>
@@ -44,6 +70,7 @@ export default function OptionSelect ({navigation}) {
                     </View>
                 </View> 
                 <View style={styles.bottomContainer} >
+                  <Button onPress={optionSubmit} title='선택하기'></Button>
                 </View>       
             </View>              
         
@@ -119,5 +146,8 @@ const styles = StyleSheet.create({
         width:'100%',
         height:610,
         opacity:0.7
+    },
+    itemBoxTitle:{
+      marginBottom : '5%',
     },
 });
