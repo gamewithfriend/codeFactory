@@ -17,7 +17,6 @@ export default function OtionSelectTwo ({ route }) {
                 <Text style={styles.topContainerTitleTest}>Test1</Text>
                 ) : (
                 <View>
-                  <Text style={styles.topContainerTitleTest}>Test2</Text>  
                   <View style={styles.centerBottomContainer}>
                     <View style={styles.itemBox}>
                       <Image style={styles.backImg} source={require('./assets/images/chmapion/Aatrox_0.jpg')}/>
@@ -32,7 +31,50 @@ export default function OtionSelectTwo ({ route }) {
                       <Image style={styles.backImg} source={require('./assets/images/chmapion/Akshan_0.jpg')}/>
                     </View>
                   </View>
-                </View>  
+                  <View style={styles.centerBottomContainer}>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Alistar_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Amumu_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Anivia_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Annie_0.jpg')}/>
+                    </View>
+                  </View>
+                  <View style={styles.centerBottomContainer}>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Ashe_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/AurelionSol_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Azir_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Bard_0.jpg')}/>
+                    </View>
+                  </View>
+                  <View style={styles.centerBottomContainer}>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Belveth_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Blitzcrank_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Brand_0.jpg')}/>
+                    </View>
+                    <View style={styles.itemBox}>
+                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Braum_0.jpg')}/>
+                    </View>
+                  </View>
+                </View>
+                  
                 )
               
               }
@@ -83,8 +125,6 @@ const styles = StyleSheet.create({
   centerBottomContainer:{       
     flex:5,
     alignItems:"center",
-    borderColor:"red",
-    borderStyle:"solid",
     width:"100%",
     flexDirection:"row"
   },
@@ -95,10 +135,9 @@ const styles = StyleSheet.create({
     borderStyle:"solid",
   },
   itemBox:{
-    width:"10%",
-    height:"10%",
-    borderColor:"black",
-    margin: "5%",
+    width:"20%",
+    height:"60%",
+    margin: "3%",
   },
   backImg:{
     width:'100%',

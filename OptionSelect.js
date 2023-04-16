@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
 
+
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
@@ -14,7 +15,7 @@ export default function OptionSelect ({navigation}) {
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
                                 {optionName:"champion",
-                                optionUrl: require("./assets/images/main.jpg")}
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
                             ];
     
     const optionChange = (index)=>{
@@ -58,7 +59,7 @@ export default function OptionSelect ({navigation}) {
                             selectGameOtion.map( (info, index) =>    
                                 <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
-                                        <Text>{info.optionName}</Text>
+                                        <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
                                         <Image style={styles.backImg} source={info.optionUrl}/>       
                                     </View>  
                                 </View>
@@ -145,5 +146,8 @@ const styles = StyleSheet.create({
         width:'100%',
         height:610,
         opacity:0.7
+    },
+    itemBoxTitle:{
+      marginBottom : '5%',
     },
 });
