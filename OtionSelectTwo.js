@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
 
 
@@ -6,6 +6,23 @@ import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,Activity
 
 
 export default function OtionSelectTwo ({ route }) {
+    
+    const [championList, setChampionList] = useState([]);
+
+    const getChampionList = async() =>{
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
+      let json = await response.json();
+      for (let value of json.gameVO) {
+        let tempChName = value.chName;
+        value.url="./assets/images/chmapion/"+tempChName+"_0.jpg";
+      }       
+      console.log(json.gameVO)
+      setChampionList(json.gameVO)
+    };
+    useEffect(() => {
+      getChampionList();
+    },[]);
+
     return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
@@ -13,70 +30,37 @@ export default function OtionSelectTwo ({ route }) {
             </View>
             <View style={styles.centerContainer} >
               <View style={styles.centerTopContainer}>
+              
               {route.params.num ==="rank" ? (
                 <Text style={styles.topContainerTitleTest}>Test1</Text>
-                ) : (
-                <View>
-                  <View style={styles.centerBottomContainer}>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Aatrox_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Ahri_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Akali_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Akshan_0.jpg')}/>
-                    </View>
-                  </View>
-                  <View style={styles.centerBottomContainer}>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Alistar_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Amumu_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Anivia_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Annie_0.jpg')}/>
-                    </View>
-                  </View>
-                  <View style={styles.centerBottomContainer}>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Ashe_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/AurelionSol_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Azir_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Bard_0.jpg')}/>
-                    </View>
-                  </View>
-                  <View style={styles.centerBottomContainer}>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Belveth_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Blitzcrank_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Brand_0.jpg')}/>
-                    </View>
-                    <View style={styles.itemBox}>
-                      <Image style={styles.backImg} source={require('./assets/images/chmapion/Braum_0.jpg')}/>
-                    </View>
-                  </View>
-                </View>
-                  
-                )
-              
+                ) : (   
+                      <ScrollView pagingEnabled  
+                                showsHorizontalScrollIndicator = {false}>                
+                      {championList.length === 0? (
+                          <View >
+                            <ActivityIndicator color="black" size="large"/>
+                          </View>
+                        ):(
+                          championList.map((champion, index) =>         
+                            <View key={index} style={styles.centerBottomContainer}>
+                              <View style={styles.itemBox}>
+                               <Text>{champion.url}</Text>
+                              </View>
+                              <View style={styles.itemBox}>
+                                <Text>{champion.url}</Text>
+                              </View>
+                              <View style={styles.itemBox}>
+                                <Text>{champion.url}</Text>
+                              </View>
+                              <View style={styles.itemBox}>
+                                <Text>{champion.url}</Text>
+                              </View>
+                            </View> 
+                          )
+                        )
+                      }
+                      </ScrollView>
+                  )              
               }
               </View>
             </View>
