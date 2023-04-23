@@ -8,16 +8,50 @@ import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,Activity
 export default function OtionSelectTwo ({ route }) {
     
     const [championList, setChampionList] = useState([]);
-
+    let reChampionList = [];
     const getChampionList = async() =>{
-      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
-      let json = await response.json();
-      for (let value of json.gameVO) {
-        let tempChName = value.chName;
-        value.url="./assets/images/chmapion/"+tempChName+"_0.jpg";
+    const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
+      let json = await response.json();   
+      for (let i =0; i<json.gameVO.length; i++) {
+        let tempChName = json.gameVO[i].chName;
+        let tempUrl = `./assets/images/chmapion/${tempChName}_0.jpg`;
+        json.gameVO[i]= {
+          chIndex : json.gameVO[i].chIndex,
+          chName : json.gameVO[i].chName,
+          chNameK: json.gameVO[i].chNameK,
+          optionUrl : tempUrl
+        };
+        if((i+1)%4 ==0){
+          let tempBox = [];
+          tempBox.push(json.gameVO[i]);
+          tempBox.push(json.gameVO[i-1]);
+          tempBox.push(json.gameVO[i-2]);
+          tempBox.push(json.gameVO[i-3]);
+          reChampionList.push(tempBox);
+        }
+        if(i == json.gameVO.length-1){
+          let tempLength = (i+1)%4;
+          console.log(tempLength)
+          let tempBox = [];
+          for(let n =0; n<tempLength; n++){
+            tempBox.push(json.gameVO[i-n]);  
+          }
+          if(tempBox.length !=4){
+            let tempTwoLength = 4-tempBox.length;
+            for(let u=0; u<tempTwoLength; u++){
+              let tempObjec = {
+                chName : "",
+                chIndex : "",
+                url : ""
+              };
+              tempBox.push(tempObjec);
+            }
+          }
+          reChampionList.push(tempBox); 
+        }
       }       
-      console.log(json.gameVO)
-      setChampionList(json.gameVO)
+      console.log(reChampionList)
+      setChampionList(reChampionList)
     };
     useEffect(() => {
       getChampionList();
@@ -44,16 +78,16 @@ export default function OtionSelectTwo ({ route }) {
                           championList.map((champion, index) =>         
                             <View key={index} style={styles.centerBottomContainer}>
                               <View style={styles.itemBox}>
-                               <Text>{champion.url}</Text>
+                                <Text>{champion[0].chName}</Text>
                               </View>
                               <View style={styles.itemBox}>
-                                <Text>{champion.url}</Text>
+                                <Text>{champion[1].chName}</Text>
                               </View>
                               <View style={styles.itemBox}>
-                                <Text>{champion.url}</Text>
+                                <Text>{champion[2].chName}</Text>
                               </View>
                               <View style={styles.itemBox}>
-                                <Text>{champion.url}</Text>
+                                <Text>{champion[3].chName}</Text>
                               </View>
                             </View> 
                           )
