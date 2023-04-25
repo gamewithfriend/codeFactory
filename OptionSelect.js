@@ -35,7 +35,7 @@ export default function OptionSelect ({navigation}) {
       }
       
       
-      navigation.navigate('OtionSelectTwo',{num: temp});
+      navigation.navigate('OtionSelectTwo',{optionOne: temp},{navigation});
     };
 
     return (      

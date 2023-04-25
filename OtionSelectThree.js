@@ -23,12 +23,11 @@ export default function OtionSelectThree ({ route }) {
       console.log("조건2")
       console.log(route.params.optionTwo)
       optionValueTwo(selectGameOtion);
-      console.log(changeOptionValueTwo)   
     };
     
     const optionChange = (index)=>{
       setOptionName(index)
-      console.log(index) 
+      console.log(ok) 
     };
 
      useEffect(() => {
@@ -47,12 +46,12 @@ export default function OtionSelectThree ({ route }) {
                     <ScrollView pagingEnabled 
                                 horizontal 
                                 showsHorizontalScrollIndicator = {false}>
-                        {changeOptionValueTwo.length === 0? (
+                        {selectGameOtion.length === 0? (
                             <View >
                                 <ActivityIndicator color="black" size="large"/>
                             </View>
                             ) : (
-                            changeOptionValueTwo.map( (info, index) =>    
+                            selectGameOtion.map( (info, index) =>    
                                 <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
                                         <Text style={styles.itemBoxTitle} >{info.optionName}</Text>

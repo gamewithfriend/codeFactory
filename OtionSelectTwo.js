@@ -2,25 +2,61 @@ import React, { Component, useEffect, useState } from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity  } from 'react-native';
 
 
+const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
-
-export default function OtionSelectTwo ({ route }) {
+export default function OtionSelectTwo ({ route,navigation }) {
     
-    
+    const [ok, setOptionName] = useState(1);
     const [championList, setChampionList] = useState([]);
     const [getChampionSelect, setChampionSelect] = useState("");
     let reChampionList = [];
+    const rankList = [   
+                                {rankName:"unRank",
+                                optionUrl: require("./assets/images/emblem-challenger.png")}
+                                ,
+                                {rankName:"brozne",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                {rankName:"silver",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                {rankName:"gold",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                {rankName:"platinum",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                {rankName:"diamond",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                {rankName:"master",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                {rankName:"challenger",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                {rankName:"ranker",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                            ]; 
     const selectChampion = (index)=>{
       setChampionSelect(index)
 
+    };
+    const optionChange = (index)=>{
+      setOptionName(index)
+      
+      
+        
     };
      const optionSubmit = ()=>{
        console.log(getChampionSelect)
       console.log("test2")
       console.log(route.params.optionOne)  
 
-      navigation.navigate('OtionSelectThree',{optionOne: temp});
+      navigation.navigate('OtionSelectThree',{optionOne: route.params.optionOne,
+                                              optionTwo: getChampionSelect
+                                              });
     
     };
     const getChampionList = async() =>{
@@ -79,7 +115,25 @@ export default function OtionSelectTwo ({ route }) {
               <View style={styles.centerTopContainer}>
               
               {route.params.optionOne ==="rank" ? (
-                <Text style={styles.topContainerTitleTest}>Test1</Text>
+                <ScrollView pagingEnabled 
+                                horizontal 
+                                showsHorizontalScrollIndicator = {false}>
+                        {rankList.length === 0? (
+                            <View >
+                                <ActivityIndicator color="black" size="large"/>
+                            </View>
+                            ) : (
+                            rankList.map( (info, index) =>    
+                                <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
+                                    <View style={styles.itemBox}>
+                                        <Text style={styles.itemBoxTitle} >{info.rankName}</Text>
+                                        <Image style={styles.backImg} source={info.optionUrl}/>       
+                                    </View>  
+                                </View>
+                            )
+                            )
+                        }         
+                    </ScrollView>
                 ) : (   
                       <ScrollView pagingEnabled  
                                 showsHorizontalScrollIndicator = {false}>                
@@ -175,4 +229,9 @@ const styles = StyleSheet.create({
     width:'100%',
     height:'100%',
   },
+  contentBottom:{
+        width:SCREEN_WIDTH,
+        alignItems:"center",
+        justifyContent:"center",
+    },
 });
