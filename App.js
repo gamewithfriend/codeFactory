@@ -16,6 +16,7 @@ import GameMatchingScreen from './GameMatchingScreen';
 import AdminScreen from './AdminScreen';
 import OptionSelect from './OptionSelect';
 import OtionSelectTwo from './OtionSelectTwo';
+import OtionSelectThree from './OtionSelectThree';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -47,6 +48,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="OtionSelectTwo" component={OtionSelectTwo} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="OtionSelectThree" component={OtionSelectThree} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>

@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
+import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity  } from 'react-native';
 
 
 
@@ -7,8 +7,22 @@ import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,Activity
 
 export default function OtionSelectTwo ({ route }) {
     
+    
     const [championList, setChampionList] = useState([]);
+    const [getChampionSelect, setChampionSelect] = useState("");
     let reChampionList = [];
+    const selectChampion = (index)=>{
+      setChampionSelect(index)
+
+    };
+     const optionSubmit = ()=>{
+       console.log(getChampionSelect)
+      console.log("test2")
+      console.log(route.params.optionOne)  
+
+      navigation.navigate('OtionSelectThree',{optionOne: temp});
+    
+    };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
       let json = await response.json();   
@@ -31,7 +45,6 @@ export default function OtionSelectTwo ({ route }) {
         }
         if(i == json.gameVO.length-1){
           let tempLength = (i+1)%4;
-          console.log(tempLength)
           let tempBox = [];
           for(let n =0; n<tempLength; n++){
             tempBox.push(json.gameVO[i-n]);  
@@ -50,7 +63,7 @@ export default function OtionSelectTwo ({ route }) {
           reChampionList.push(tempBox); 
         }
       }       
-      console.log(reChampionList)
+      // console.log(reChampionList)
       setChampionList(reChampionList)
     };
     useEffect(() => {
@@ -60,12 +73,12 @@ export default function OtionSelectTwo ({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
-                   <Text style={styles.topContainerTitle}>{route.params.num}</Text>
+                   <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
             </View>
             <View style={styles.centerContainer} >
               <View style={styles.centerTopContainer}>
               
-              {route.params.num ==="rank" ? (
+              {route.params.optionOne ==="rank" ? (
                 <Text style={styles.topContainerTitleTest}>Test1</Text>
                 ) : (   
                       <ScrollView pagingEnabled  
@@ -76,18 +89,19 @@ export default function OtionSelectTwo ({ route }) {
                           </View>
                         ):(
                           championList.map((champion, index) =>         
-                            <View key={index} style={styles.centerBottomContainer}>
-                              <View style={styles.itemBox}>
-                                <Text>{champion[0].chName}</Text>
+                            <View key={index} style={styles.centerBottomContainer}> 
+                                                     
+                              <View onStartShouldSetResponder={() =>selectChampion(champion[0].chNameK)} style={styles.itemBox}>
+                                <Text>{champion[0].chNameK}</Text>
+                              </View> 
+                              <View onStartShouldSetResponder={() => selectChampion(champion[1].chNameK)} style={styles.itemBox}>
+                                <Text>{champion[1].chNameK}</Text>
                               </View>
-                              <View style={styles.itemBox}>
-                                <Text>{champion[1].chName}</Text>
-                              </View>
-                              <View style={styles.itemBox}>
-                                <Text>{champion[2].chName}</Text>
-                              </View>
-                              <View style={styles.itemBox}>
-                                <Text>{champion[3].chName}</Text>
+                              <View onStartShouldSetResponder={() => selectChampion(champion[2].chNameK)} style={styles.itemBox}>
+                                <Text>{champion[2].chNameK}</Text>
+                              </View> 
+                              <View onStartShouldSetResponder={() => selectChampion(champion[3].chNameK)} style={styles.itemBox}>
+                                <Text>{champion[3].chNameK}</Text>
                               </View>
                             </View> 
                           )
@@ -99,7 +113,7 @@ export default function OtionSelectTwo ({ route }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button title='선택하기'></Button>
+              <Button onPress={optionSubmit} title='선택하기'></Button>
             </View>   
         </View>
         
