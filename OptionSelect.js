@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
-import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
-
+import {View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -19,10 +19,7 @@ export default function OptionSelect ({navigation}) {
                             ];
     
     const optionChange = (index)=>{
-      setOptionName(index)
-      
-      
-        
+      setOptionName(index) 
     };
 
     const optionSubmit = () => {
