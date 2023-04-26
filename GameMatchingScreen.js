@@ -1,6 +1,5 @@
 import React, { Component, useState ,useEffect} from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 

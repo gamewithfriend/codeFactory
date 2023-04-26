@@ -8,35 +8,47 @@ const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function OptionSelect ({navigation}) {
     const optionTrigger = false;
-    const [ok, setOptionName] = useState(1);
+    const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
     const selectGameOtion = [   
                                 {optionName:"rank",
-                                optionUrl: require("./assets/images/emblem-challenger.png")}
+                                optionUrl: require("./assets/images/emblem-challenger.png"),
+                                optionIndex : 0}
                                 ,
                                 {optionName:"champion",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg"),
+                                optionIndex : 1}
                                 ,
                                  {optionName:"position",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png"),
+                                optionIndex : 2}
                                 , 
                                 {optionName:"자주하는시간",
-                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg")}
+                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg"),
+                                optionIndex : 3}
                             ];
     
     const optionChange = (index)=>{
-      setOptionName(index) 
+      console.log(index)
+      setOptionName(Number(index/100)) 
     };
 
     const optionSubmit = () => {
       
+      console.log(ok)
       let temp = "";
-      if(ok == 1){   
+      if(ok == 0){   
          temp = "rank";   
-      }else{
+      }else if(7>ok>3){
          temp = "champion";
+         console.log("test")
+      }else if(11>ok>7){
+         temp = "position";
+      }else if(15>ok>11){
+         temp = "time";
       }
       
+      console.log(temp)
       
       navigation.navigate('OtionSelectTwo',{optionOne: temp},{navigation});
     };
@@ -52,7 +64,8 @@ export default function OptionSelect ({navigation}) {
                     </View>
                     <View style={styles.centerBottomContainer}>
                     <ScrollView pagingEnabled 
-                                horizontal 
+                                horizontal
+                                onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}}
                                 showsHorizontalScrollIndicator = {false}>
                         {selectGameOtion.length === 0? (
                             <View >
@@ -60,7 +73,7 @@ export default function OptionSelect ({navigation}) {
                             </View>
                             ) : (
                             selectGameOtion.map( (info, index) =>    
-                                <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
+                                <View   key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
                                         <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
                                         <Image style={styles.backImg} source={info.optionUrl}/>       
@@ -148,7 +161,8 @@ const styles = StyleSheet.create({
         flex:1,
         width:'100%',
         height:610,
-        opacity:0.7
+        opacity:0.7,
+        
     },
     itemBoxTitle:{
       marginBottom : '5%',
