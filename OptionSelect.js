@@ -16,6 +16,12 @@ export default function OptionSelect ({navigation}) {
                                 ,
                                 {optionName:"champion",
                                 optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                ,
+                                 {optionName:"position",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                , 
+                                {optionName:"자주하는시간",
+                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg")}
                             ];
     
     const optionChange = (index)=>{
