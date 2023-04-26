@@ -11,8 +11,11 @@ export default function OtionSelectThree ({ route }) {
                                 {optionName:"rank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
-                                {optionName:"없음",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"자주하는 게임시간",
+                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg")}
+                                ,
+                                {optionName:"선택하지않음",
+                                optionUrl: require("./assets/images/not_option.png")}
                             ]; 
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
                             
