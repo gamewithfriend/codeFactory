@@ -30,7 +30,7 @@ export default function OptionSelect ({navigation}) {
     
     const optionChange = (index)=>{
       console.log(index)
-      setOptionName(Number(index/100)) 
+      setOptionName(Math.floor(index/100)) 
     };
 
     const optionSubmit = () => {
@@ -39,12 +39,12 @@ export default function OptionSelect ({navigation}) {
       let temp = "";
       if(ok == 0){   
          temp = "rank";   
-      }else if(7>ok>3){
+      }else if(ok==3){
          temp = "champion";
          console.log("test")
-      }else if(11>ok>7){
+      }else if(ok==7){
          temp = "position";
-      }else if(15>ok>11){
+      }else if(ok==11){
          temp = "time";
       }
       

@@ -12,48 +12,79 @@ export default function OtionSelectTwo ({ route,navigation }) {
     const [getChampionSelect, setChampionSelect] = useState("");
     let reChampionList = [];
     const rankList = [   
-                                {rankName:"unRank",
+                                {optionName:"unRank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
-                                {rankName:"brozne",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"brozne",
+                                optionUrl: require("./assets/images/rank/emblem-bronze.png")}
                                 ,
-                                {rankName:"silver",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"silver",
+                                optionUrl: require("./assets/images/rank/emblem-silver.png")}
                                 ,
-                                {rankName:"gold",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"gold",
+                                optionUrl: require("./assets/images/rank/emblem-gold.png")}
                                 ,
-                                {rankName:"platinum",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"platinum",
+                                optionUrl: require("./assets/images/rank/emblem-platinum.png")}
                                 ,
-                                {rankName:"diamond",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"diamond",
+                                optionUrl: require("./assets/images/rank/emblem-diamond.png")}
                                 ,
-                                {rankName:"master",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"master",
+                                optionUrl: require("./assets/images/rank/emblem-master.png")}
                                 ,
-                                {rankName:"challenger",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
+                                {optionName:"challenger",
+                                optionUrl: require("./assets/images/rank/emblem-grandmaster.png")}
                                 ,
-                                {rankName:"ranker",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg")}
-                            ]; 
+                                {optionName:"ranker",
+                                optionUrl: require("./assets/images/rank/emblem-challenger.png")}
+                            ];
+    const positionList = [   
+                                {optionName:"탑",
+                                optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
+                                ,
+                                {optionName:"정글",
+                                optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
+                                ,
+                                {optionName:"미드",
+                                optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}
+                                ,
+                                 {optionName:"원딜",
+                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png")}
+                                ,
+                                {optionName:"서폿",
+                                optionUrl: require("./assets/images/position/SUP-CHALLENGER.png")}       
+                        ];
+    const timeList = [   
+                                {optionName:"평일",
+                                optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
+                                ,
+                                {optionName:"주말",
+                                optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
+                                ,
+                                {optionName:"평일 + 주말",
+                                optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}            
+                        ];                                             
     const selectChampion = (index)=>{
       setChampionSelect(index)
 
     };
     const optionChange = (index)=>{
-      setOptionName(index)
+      console.log(index)
+      setOptionName(Math.floor(index/100))
       
       
         
     };
      const optionSubmit = ()=>{
-       console.log(getChampionSelect)
+      console.log(getChampionSelect)
+      console.log(ok)
+      
       console.log("test2")
       console.log(route.params.optionOne)  
-
+      const listLength = (route.params.optionOne+"List").length;
+      console.log(listLength)
+      console.log(rankList)
       navigation.navigate('OtionSelectThree',{optionOne: route.params.optionOne,
                                               optionTwo: getChampionSelect
                                               });
@@ -105,79 +136,155 @@ export default function OtionSelectTwo ({ route,navigation }) {
     useEffect(() => {
       getChampionList();
     },[]);
-
-    return (
+    if(route.params.optionOne ==="rank"){
+      return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
                    <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
             </View>
             <View style={styles.centerContainer} >
               <View style={styles.centerTopContainer}>
-              
-              {route.params.optionOne ==="rank" ? (
                 <ScrollView pagingEnabled 
-                                horizontal 
-                                showsHorizontalScrollIndicator = {false}>
-                        {rankList.length === 0? (
-                            <View >
-                                <ActivityIndicator color="black" size="large"/>
-                            </View>
-                            ) : (
-                            rankList.map( (info, index) =>    
-                                <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
-                                    <View style={styles.itemBox}>
-                                        <Text style={styles.itemBoxTitle} >{info.rankName}</Text>
-                                        <Image style={styles.backImg} source={info.optionUrl}/>       
-                                    </View>  
-                                </View>
-                            )
-                            )
-                        }         
-                    </ScrollView>
-                ) : (   
-                      <ScrollView pagingEnabled  
-                                showsHorizontalScrollIndicator = {false}>                
-                      {championList.length === 0? (
-                          <View >
+                            horizontal
+                            onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
+                            showsHorizontalScrollIndicator = {false}>
+                    {rankList.length === 0? (
+                        <View >
                             <ActivityIndicator color="black" size="large"/>
-                          </View>
-                        ):(
-                          championList.map((champion, index) =>         
-                            <View key={index} style={styles.centerBottomContainer}> 
-                                                     
-                              <View onStartShouldSetResponder={() =>selectChampion(champion[0].chNameK)} style={styles.itemBox}>
-                                <Text>{champion[0].chNameK}</Text>
-                              </View> 
-                              <View onStartShouldSetResponder={() => selectChampion(champion[1].chNameK)} style={styles.itemBox}>
-                                <Text>{champion[1].chNameK}</Text>
-                              </View>
-                              <View onStartShouldSetResponder={() => selectChampion(champion[2].chNameK)} style={styles.itemBox}>
-                                <Text>{champion[2].chNameK}</Text>
-                              </View> 
-                              <View onStartShouldSetResponder={() => selectChampion(champion[3].chNameK)} style={styles.itemBox}>
-                                <Text>{champion[3].chNameK}</Text>
-                              </View>
-                            </View> 
-                          )
+                        </View>
+                        ) : (
+                        rankList.map( (info, index) =>    
+                            <View key={index} style={styles.contentBottom}>
+                                <View style={styles.itemBox}>
+                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
+                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                </View>  
+                            </View>
                         )
-                      }
-                      </ScrollView>
-                  )              
-              }
+                        )
+                    }         
+                </ScrollView>
               </View>
             </View>
             <View style={styles.bottomContainer} >
               <Button onPress={optionSubmit} title='선택하기'></Button>
             </View>   
         </View>
-        
-      
-      
-    );
-  
-
+      );
+    }else if(route.params.optionOne ==="champion"){
+      return (
+        <View style={styles.container}>
+            <View style={styles.topContainer}>
+                   <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
+            </View>
+            <View style={styles.centerContainer} >
+              <View style={styles.centerTopContainer}>
+                <ScrollView pagingEnabled  
+                              showsHorizontalScrollIndicator = {false}>                
+                    {championList.length === 0? (
+                        <View >
+                          <ActivityIndicator color="black" size="large"/>
+                        </View>
+                      ):(
+                        championList.map((champion, index) =>         
+                          <View key={index} style={styles.centerBottomContainer}> 
+                                                  
+                            <View onStartShouldSetResponder={() =>selectChampion(champion[0].chNameK)} style={styles.itemBox}>
+                              <Text>{champion[0].chNameK}</Text>
+                            </View> 
+                            <View onStartShouldSetResponder={() => selectChampion(champion[1].chNameK)} style={styles.itemBox}>
+                              <Text>{champion[1].chNameK}</Text>
+                            </View>
+                            <View onStartShouldSetResponder={() => selectChampion(champion[2].chNameK)} style={styles.itemBox}>
+                              <Text>{champion[2].chNameK}</Text>
+                            </View> 
+                            <View onStartShouldSetResponder={() => selectChampion(champion[3].chNameK)} style={styles.itemBox}>
+                              <Text>{champion[3].chNameK}</Text>
+                            </View>
+                          </View> 
+                        )
+                      )
+                    }
+                </ScrollView>
+              </View>
+            </View>
+            <View style={styles.bottomContainer} >
+              <Button onPress={optionSubmit} title='선택하기'></Button>
+            </View>   
+        </View>
+      );
+    }else if(route.params.optionOne ==="position"){
+      return (
+        <View style={styles.container}>
+            <View style={styles.topContainer}>
+                   <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
+            </View>
+            <View style={styles.centerContainer} >
+              <View style={styles.centerTopContainer}>
+                 <ScrollView pagingEnabled 
+                            horizontal
+                            onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
+                            showsHorizontalScrollIndicator = {false}>
+                    {positionList.length === 0? (
+                        <View >
+                            <ActivityIndicator color="black" size="large"/>
+                        </View>
+                        ) : (
+                        positionList.map( (info, index) =>    
+                            <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
+                                <View style={styles.itemBox}>
+                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
+                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                </View>  
+                            </View>
+                        )
+                        )
+                    }         
+                </ScrollView>
+              </View>
+            </View>
+            <View style={styles.bottomContainer} >
+              <Button onPress={optionSubmit} title='선택하기'></Button>
+            </View>   
+        </View>
+      );
+    }else if(route.params.optionOne ==="time"){
+      return (
+        <View style={styles.container}>
+            <View style={styles.topContainer}>
+                   <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
+            </View>
+            <View style={styles.centerContainer} >
+              <View style={styles.centerTopContainer}>
+                <ScrollView pagingEnabled 
+                            horizontal
+                            onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
+                            showsHorizontalScrollIndicator = {false}>
+                    {timeList.length === 0? (
+                        <View >
+                            <ActivityIndicator color="black" size="large"/>
+                        </View>
+                        ) : (
+                        timeList.map( (info, index) =>    
+                            <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
+                                <View style={styles.itemBox}>
+                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
+                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                </View>  
+                            </View>
+                        )
+                        )
+                    }         
+                </ScrollView>
+              </View>
+            </View>
+            <View style={styles.bottomContainer} >
+              <Button onPress={optionSubmit} title='선택하기'></Button>
+            </View>   
+        </View>
+      );
+    }
 }
-
 const styles = StyleSheet.create({
   topContainerTitle:{
     fontSize: 20,
