@@ -29,28 +29,23 @@ export default function OptionSelect ({navigation}) {
                             ];
     
     const optionChange = (index)=>{
-      console.log(index)
       setOptionName(Math.floor(index/100)) 
     };
 
     const optionSubmit = () => {
       
-      console.log(ok)
       let temp = "";
       if(ok == 0){   
          temp = "rank";   
       }else if(ok==3){
          temp = "champion";
-         console.log("test")
       }else if(ok==7){
          temp = "position";
       }else if(ok==11){
          temp = "time";
       }
       
-      console.log(temp)
-      
-      navigation.navigate('OtionSelectTwo',{optionOne: temp},{navigation});
+      navigation.navigate('OtionSelectDetail',{optionOne: temp},{navigation});
     };
 
     return (      
