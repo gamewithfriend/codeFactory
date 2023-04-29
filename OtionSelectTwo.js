@@ -9,9 +9,10 @@ export default function OtionSelectTwo ({ route,navigation }) {
     
     const [ok, setOptionName] = useState(1);
     const [championList, setChampionList] = useState([]);
+    const [optionList, setOptionList] = useState([]);
     const [getChampionSelect, setChampionSelect] = useState("");
     let reChampionList = [];
-    const rankList = [   
+    let rankList = [   
                                 {optionName:"unRank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
@@ -39,7 +40,7 @@ export default function OtionSelectTwo ({ route,navigation }) {
                                 {optionName:"ranker",
                                 optionUrl: require("./assets/images/rank/emblem-challenger.png")}
                             ];
-    const positionList = [   
+    let positionList = [   
                                 {optionName:"탑",
                                 optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
                                 ,
@@ -55,7 +56,7 @@ export default function OtionSelectTwo ({ route,navigation }) {
                                 {optionName:"서폿",
                                 optionUrl: require("./assets/images/position/SUP-CHALLENGER.png")}       
                         ];
-    const timeList = [   
+    let timeList = [   
                                 {optionName:"평일",
                                 optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
                                 ,
@@ -64,31 +65,40 @@ export default function OtionSelectTwo ({ route,navigation }) {
                                 ,
                                 {optionName:"평일 + 주말",
                                 optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}            
-                        ];                                             
+                        ]; 
+    // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
       setChampionSelect(index)
-
     };
+    // 나머지 옵션 select index 감지 함수
     const optionChange = (index)=>{
       console.log(index)
-      setOptionName(Math.floor(index/100))
-      
-      
-        
+      setOptionName(Math.floor(index/100))     
     };
-     const optionSubmit = ()=>{
+    // 선택하기 감지 함수
+    const optionSubmit = ()=>{
       console.log(getChampionSelect)
       console.log(ok)
-      
       console.log("test2")
-      console.log(route.params.optionOne)  
-      const listLength = (route.params.optionOne+"List").length;
-      console.log(listLength)
-      console.log(rankList)
+      // route.params.optionOne 는 option1
+      let tempList = [];
+      let indexNumber = (ok+1)/4;
+      // tempList[indexNumber].optionName 은 option2
+      if(route.params.optionOne == "rank"){
+        tempList = rankList;
+        setChampionSelect(tempList[indexNumber].optionName);
+      }else if(route.params.optionOne == "position"){
+        tempList = positionList;
+        setChampionSelect(tempList[indexNumber].optionName);
+      }else if(route.params.optionOne == "time"){
+        tempList = timeList;
+        setChampionSelect(tempList[indexNumber].optionName);
+      }
+      console.log(getChampionSelect)
+      
       navigation.navigate('OtionSelectThree',{optionOne: route.params.optionOne,
                                               optionTwo: getChampionSelect
                                               });
-    
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
