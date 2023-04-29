@@ -3,33 +3,63 @@ import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Im
 import {ScrollView} from 'react-native-gesture-handler';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
-export default function OtionSelectThree ({ route }) {
+export default function OtionSelectThree ({ route,navigation }) {
     const optionTrigger = false;
-    const [ok, setOptionName] = useState(1);
+    const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
-    const selectGameOtionTwo = [   
+    let selectGameOtion = [   
                                 {optionName:"rank",
-                                optionUrl: require("./assets/images/emblem-challenger.png")}
+                                optionUrl: require("./assets/images/emblem-challenger.png"),
+                                optionIndex : 0}
                                 ,
-                                {optionName:"자주하는 게임시간",
-                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg")}
+                                {optionName:"champion",
+                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg"),
+                                optionIndex : 1}
                                 ,
-                                {optionName:"선택하지않음",
-                                optionUrl: require("./assets/images/not_option.png")}
+                                 {optionName:"position",
+                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png"),
+                                optionIndex : 2}
+                                , 
+                                {optionName:"time",
+                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg"),
+                                optionIndex : 3}
+                                , 
+                                {optionName:"선택하지 않음",
+                                optionUrl: require("./assets/images/not_option.png"),
+                                optionIndex : 4}
                             ]; 
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
                             
     const setSelectGameOtionTwo = ()=>{
       console.log("조건1")
       console.log(route.params.optionOne)
-      console.log("조건2")
-      console.log(route.params.optionTwo)
-      optionValueTwo(selectGameOtionTwo);
+      console.log("조건1-Detail")
+      console.log(route.params.optionOneDetail)
+      for(let i =0; i<selectGameOtion.length; i++ ){
+        if(selectGameOtion[i].optionName == route.params.optionOne ){
+          selectGameOtion.splice(i, 1);
+          console.log(selectGameOtion)
+        }
+      }
+      optionValueTwo(selectGameOtion);
     };
     
     const optionChange = (index)=>{
-      setOptionName(index)
+      setOptionName(Math.floor(index/100))
       console.log(ok) 
+    };
+
+     const optionSubmit = () => {
+      
+       console.log(ok)
+       console.log(changeOptionValueTwo)
+       let indexNumber = (ok+1)/4;
+       let tempOptionValueTwo = changeOptionValueTwo[indexNumber].optionName;
+       console.log(tempOptionValueTwo)
+      navigation.navigate('OtionSelectTwo',{  optionOne: route.params.optionOne
+                                              ,optionOneDetail: route.params.optionOneDetail
+                                              ,optionTwo:tempOptionValueTwo
+                                              },{navigation});
     };
 
      useEffect(() => {
@@ -46,15 +76,16 @@ export default function OtionSelectThree ({ route }) {
                     </View>
                     <View style={styles.centerBottomContainer}>
                     <ScrollView pagingEnabled 
-                                horizontal 
+                                horizontal
+                                onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
                                 showsHorizontalScrollIndicator = {false}>
-                        {selectGameOtionTwo.length === 0? (
+                        {changeOptionValueTwo.length === 0? (
                             <View >
                                 <ActivityIndicator color="black" size="large"/>
                             </View>
                             ) : (
-                            selectGameOtionTwo.map( (info, index) =>    
-                                <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
+                            changeOptionValueTwo.map( (info, index) =>    
+                                <View key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
                                         <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
                                         <Image style={styles.backImg} source={info.optionUrl}/>       
@@ -67,7 +98,7 @@ export default function OtionSelectThree ({ route }) {
                     </View>
                 </View> 
                 <View style={styles.bottomContainer} >
-                  <Button  title='선택하기'></Button>
+                  <Button onPress={optionSubmit} title='선택하기'></Button>
                 </View>       
             </View>  
         

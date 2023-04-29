@@ -95,8 +95,8 @@ export default function OtionSelectDetail ({ route,navigation }) {
 
       
       navigation.navigate('OtionSelectTwo',{optionOne: route.params.optionOne,
-                                              optionTwo: getChampionSelect
-                                              });
+                                              optionOneDetail: getChampionSelect
+                                              },{navigation});
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
