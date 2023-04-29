@@ -17,6 +17,7 @@ import AdminScreen from './AdminScreen';
 import OptionSelect from './OptionSelect';
 import OtionSelectDetail from './OtionSelectDetail';
 import OtionSelectTwo from './OtionSelectTwo';
+import OtionSelectTwoDetail from './OtionSelectTwoDetail';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,6 +52,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="OtionSelectTwo" component={OtionSelectTwo} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="OtionSelectTwoDetail" component={OtionSelectTwoDetail} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>
