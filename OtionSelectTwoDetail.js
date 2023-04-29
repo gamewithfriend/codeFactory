@@ -5,7 +5,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
-export default function OtionSelectDetail ({ route,navigation }) {
+export default function OtionSelectTwoDetail ({ route,navigation }) {
     
     const [ok, setOptionName] = useState(1);
     const [championList, setChampionList] = useState([]);
@@ -78,25 +78,6 @@ export default function OtionSelectDetail ({ route,navigation }) {
     // 선택하기 감지 함수
     const optionSubmit = ()=>{
 
-      // route.params.optionOne 는 option1
-      let tempList = [];
-      let indexNumber = (ok+1)/4;
-      // tempList[indexNumber].optionName 은 option2
-      if(route.params.optionOne == "rank"){
-        tempList = rankList;
-        setChampionSelect(tempList[indexNumber].optionName);
-      }else if(route.params.optionOne == "position"){
-        tempList = positionList;
-        setChampionSelect(tempList[indexNumber].optionName);
-      }else if(route.params.optionOne == "time"){
-        tempList = timeList;
-        setChampionSelect(tempList[indexNumber].optionName);
-      }
-
-      
-      navigation.navigate('OtionSelectTwo',{optionOne: route.params.optionOne,
-                                              optionOneDetail: getChampionSelect
-                                              },{navigation});
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
@@ -144,7 +125,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
     useEffect(() => {
       getChampionList();
     },[]);
-    if(route.params.optionOne ==="rank"){
+    if(route.params.optionTwo ==="rank"){
       return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
@@ -179,7 +160,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>   
         </View>
       );
-    }else if(route.params.optionOne ==="champion"){
+    }else if(route.params.optionTwo ==="champion"){
       return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
@@ -221,7 +202,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>   
         </View>
       );
-    }else if(route.params.optionOne ==="position"){
+    }else if(route.params.optionTwo ==="position"){
       return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
@@ -256,7 +237,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>   
         </View>
       );
-    }else if(route.params.optionOne ==="time"){
+    }else if(route.params.optionTwo ==="time"){
       return (
         <View style={styles.container}>
             <View style={styles.topContainer}>

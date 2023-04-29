@@ -56,10 +56,13 @@ export default function OtionSelectThree ({ route,navigation }) {
        let indexNumber = (ok+1)/4;
        let tempOptionValueTwo = changeOptionValueTwo[indexNumber].optionName;
        console.log(tempOptionValueTwo)
-      navigation.navigate('OtionSelectTwo',{  optionOne: route.params.optionOne
-                                              ,optionOneDetail: route.params.optionOneDetail
-                                              ,optionTwo:tempOptionValueTwo
-                                              },{navigation});
+       if(tempOptionValueTwo == "선택하지 않음"){
+         alert("게임 매칭 시작");
+       }
+      navigation.navigate('OtionSelectTwoDetail',{  optionOne: route.params.optionOne
+                                                    ,optionOneDetail: route.params.optionOneDetail
+                                                    ,optionTwo:tempOptionValueTwo
+                                                  },{navigation});
     };
 
      useEffect(() => {
