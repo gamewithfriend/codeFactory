@@ -12,7 +12,7 @@ export default function OptionSelectFour ({ route,navigation }) {
     const setSelectGameOtionTwo = ()=>{
       tempOptionValueBox = route.params.optionValueBox;
       for(let i =0; i<route.params.optionValueBox.length; i++ ){
-        if(route.params.optionValueBox[i].optionName == route.params.optionTwo ){
+        if(route.params.optionValueBox[i].optionName == route.params.optionThree ){
            tempOptionValueBox.splice(i, 1);
         }
       }
@@ -25,8 +25,8 @@ export default function OptionSelectFour ({ route,navigation }) {
 
      const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
-      let tempOptionValueThree = changeOptionValueTwo[indexNumber].optionName;
-      if(tempOptionValueThree == "선택하지 않음"){
+      let tempOptionValueFour = changeOptionValueTwo[indexNumber].optionName;
+      if(tempOptionValueFour == "선택하지 않음"){
         alert("게임 매칭 시작");
       }
       console.log("조건1")
@@ -38,13 +38,19 @@ export default function OptionSelectFour ({ route,navigation }) {
       console.log("조건2-2")
       console.log(route.params.optionTwoDetail)
       console.log("조건3")
-      console.log(tempOptionValueThree)
-      console.log("----------OptionSelectThree.js---------Finsh----------------------")
-      navigation.navigate('OptionSelectThreeDetail',{  optionOne: route.params.optionOne
+      console.log(route.params.optionThree)
+       console.log("조건3-3")
+      console.log(route.params.optionThreeDetail)
+       console.log("조건4")
+      console.log(tempOptionValueFour)
+      console.log("----------OptionSelectFour.js---------Finsh----------------------")
+      navigation.navigate('OptionSelectFourDetail',{  optionOne: route.params.optionOne
                                                     ,optionOneDetail: route.params.optionOneDetail
                                                     ,optionTwo:route.params.optionTwo
                                                     ,optionTwoDetail:route.params.optionTwoDetail
-                                                    ,optionThree:tempOptionValueThree
+                                                    ,optionThree:route.params.optionThree
+                                                    ,optionThreeDetail:route.params.optionThreeDetail
+                                                    ,optionFour:tempOptionValueFour
                                                     ,optionValueBox: route.params.optionValueBox
                                                   },{navigation});
     };
@@ -59,7 +65,7 @@ export default function OptionSelectFour ({ route,navigation }) {
                 </View>
                 <View style={styles.centerContainer} >
                     <View style={styles.centerTopContainer}>
-                        <Text style={styles.centerContainerTitle}>조건3</Text>
+                        <Text style={styles.centerContainerTitle}>조건4</Text>
                     </View>
                     <View style={styles.centerBottomContainer}>
                     <ScrollView pagingEnabled 
@@ -86,7 +92,66 @@ export default function OptionSelectFour ({ route,navigation }) {
                 </View> 
                 <View style={styles.bottomContainer} >
                   <Button onPress={optionSubmit} title='선택하기'></Button>
-                </View>       
+                </View>
+                <View style={styles.bottomOptionContainer} >
+              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionOne === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션1</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionOne}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionOneDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  }
+                  {route.params.optionTwo === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션2</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwo}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwoDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionThree === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션3</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionThree}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionThreeDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+                  {route.params.optionFour === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션4</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionFour}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionFourDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>                   
+            </View>                
             </View>  
         
       
@@ -97,72 +162,107 @@ export default function OptionSelectFour ({ route,navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container:{
+  container:{
+    flex:1,
+  },
+  topContainer:{       
       flex:1,
-    },
-    topContainer:{       
-        flex:1,
-        alignItems:"center",
-        borderColor:"black",
-        borderStyle:"solid",
-       
-    },
-    centerContainer:{       
-        flex:6,
-        alignItems:"center",
-        borderColor:"black",
-        borderStyle:"solid",
-        
-    },
-    centerTopContainer:{       
-        flex:1,
-        alignItems:"center",
-        borderColor:"black",
-        borderStyle:"solid",
-        width:"100%",
-    },
-    centerBottomContainer:{       
-        flex:5,
-        alignItems:"center",
-        borderColor:"red",
-        borderStyle:"solid",
-        width:"100%",
-    },
-    bottomContainer:{
-        flex:3,
-        alignItems:"center",
-        borderColor:"black",
-        borderStyle:"solid",
-    },
-    topContainerTitle:{
-        marginTop: "8%",
-        fontSize: 20,
-    },
-    centerContainerTitle:{
-        marginTop: "5%",    
-        fontSize: 20,
-    },
-    contentBottom:{
-        width:SCREEN_WIDTH,
-        alignItems:"center",
-        justifyContent:"center",
-    },
-    itemBox:{
-        width:"50%",
-        height:"80%",
-        alignItems:"center",
-        borderRadius:30,
-    },
-    testWhiteText:{
-        color:"red",
-    },
-    backImg:{
-        flex:1,
-        width:'100%',
-        height:610,
-        opacity:0.7
-    },
-    itemBoxTitle:{
-      marginBottom : '5%',
-    },
+      alignItems:"center",
+      borderColor:"black",
+      borderStyle:"solid",
+      
+  },
+  centerContainer:{       
+      flex:6,
+      alignItems:"center",
+      borderColor:"black",
+      borderStyle:"solid",
+      
+  },
+  centerTopContainer:{       
+      flex:1,
+      alignItems:"center",
+      borderColor:"black",
+      borderStyle:"solid",
+      width:"100%",
+  },
+  centerBottomContainer:{       
+    flex:5,
+    alignItems:"center",
+    width:"100%",
+    flexDirection:"row"
+  },
+  bottomContainer:{
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+  },
+  bottomOptionContainer:{
+    flex:5,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+  },
+  bottomOptionTextTitle:{
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  bottomOptionText:{
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  bottomOptionBoxContainer:{
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+    flexDirection:"row",
+    marginTop:"2%"
+  },
+  bottomOptionBox:{
+    flex:1,
+    width:"50%",
+    lignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+  },
+  bottomOptionBoxText:{
+    flex:1,
+    borderColor:"black",
+    borderStyle:"solid",
+    marginTop: "5%",
+  },
+  topContainerTitle:{
+      marginTop: "8%",
+      fontSize: 20,
+  },
+  centerContainerTitle:{
+      marginTop: "5%",    
+      fontSize: 20,
+  },
+  contentBottom:{
+      width:SCREEN_WIDTH,
+      alignItems:"center",
+      justifyContent:"center",
+      height:"100%",
+  },
+  itemBox:{
+      width:"50%",
+      height:"80%",
+      alignItems:"center",
+      borderRadius:30,
+  },
+  testWhiteText:{
+      color:"red",
+  },
+  backImg:{
+      flex:1,
+      width:'100%',
+      height:610,
+      opacity:0.7
+  },
+  itemBoxTitle:{
+    marginBottom : '5%',
+  },
 });

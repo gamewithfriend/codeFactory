@@ -180,7 +180,66 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>
             <View style={styles.bottomContainer} >
               <Button onPress={optionSubmit} title='선택하기'></Button>
-            </View>   
+            </View>
+            <View style={styles.bottomOptionContainer} >
+              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionOne === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션1</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionOne}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionOneDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  }
+                  {route.params.optionTwo === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션2</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwo}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwoDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionThree === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션3</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionThree}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionThreeDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+                  {route.params.optionFour === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션4</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionFour}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionFourDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>                   
+            </View>         
         </View>
       );
     }else if(route.params.optionOne ==="champion"){
@@ -222,6 +281,65 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>
             <View style={styles.bottomContainer} >
               <Button onPress={optionSubmit} title='선택하기'></Button>
+            </View>
+            <View style={styles.bottomOptionContainer} >
+              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionOne === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션1</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionOne}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionOneDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  }
+                  {route.params.optionTwo === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션2</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwo}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwoDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionThree === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션3</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionThree}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionThreeDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+                  {route.params.optionFour === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션4</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionFour}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionFourDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>                   
             </View>   
         </View>
       );
@@ -257,6 +375,65 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>
             <View style={styles.bottomContainer} >
               <Button onPress={optionSubmit} title='선택하기'></Button>
+            </View>
+            <View style={styles.bottomOptionContainer} >
+              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionOne === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션1</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionOne}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionOneDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  }
+                  {route.params.optionTwo === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션2</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwo}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwoDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionThree === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션3</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionThree}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionThreeDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+                  {route.params.optionFour === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션4</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionFour}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionFourDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>                   
             </View>   
         </View>
       );
@@ -292,6 +469,65 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>
             <View style={styles.bottomContainer} >
               <Button onPress={optionSubmit} title='선택하기'></Button>
+            </View>
+            <View style={styles.bottomOptionContainer} >
+              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionOne === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션1</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionOne}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionOneDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  }
+                  {route.params.optionTwo === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션2</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwo}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionTwoDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>
+              <View style={styles.bottomOptionBoxContainer}>
+                  {route.params.optionThree === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션3</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionThree}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionThreeDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+                  {route.params.optionFour === undefined? (
+                    <View style={styles.bottomOptionBox} >
+                    </View>
+                    ):(
+                    <View style={styles.bottomOptionBox} >
+                      <Text style={styles.bottomOptionTextTitle}>옵션4</Text>
+                      <View style={styles.bottomOptionBoxText} >
+                        <Text style={styles.bottomOptionText}>{route.params.optionFour}</Text>
+                        <Text style={styles.bottomOptionText}>{route.params.optionFourDetail}</Text>
+                      </View> 
+                    </View>
+                    )
+                  } 
+              </View>                   
             </View>   
         </View>
       );
@@ -334,10 +570,45 @@ const styles = StyleSheet.create({
     flexDirection:"row"
   },
   bottomContainer:{
-    flex:3,
+    flex:1,
     alignItems:"center",
     borderColor:"black",
     borderStyle:"solid",
+  },
+  bottomOptionContainer:{
+    flex:5,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+  },
+  bottomOptionTextTitle:{
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  bottomOptionText:{
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  bottomOptionBoxContainer:{
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+    flexDirection:"row",
+    marginTop:"2%"
+  },
+  bottomOptionBox:{
+    flex:1,
+    width:"50%",
+    lignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+  },
+  bottomOptionBoxText:{
+    flex:1,
+    borderColor:"black",
+    borderStyle:"solid",
+    marginTop: "5%",
   },
   itemBox:{
     width:"20%",
@@ -349,8 +620,9 @@ const styles = StyleSheet.create({
     height:'100%',
   },
   contentBottom:{
-        width:SCREEN_WIDTH,
-        alignItems:"center",
-        justifyContent:"center",
-    },
+      width:SCREEN_WIDTH,
+      alignItems:"center",
+      justifyContent:"center",
+      height:"100%",
+  },
 });
