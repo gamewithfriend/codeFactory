@@ -7,52 +7,46 @@ export default function OptionSelectThree ({ route,navigation }) {
     const optionTrigger = false;
     const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
-    let selectGameOtion = [   
-                                {optionName:"rank",
-                                optionUrl: require("./assets/images/emblem-challenger.png"),
-                                optionIndex : 0}
-                                ,
-                                {optionName:"champion",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg"),
-                                optionIndex : 1}
-                                ,
-                                 {optionName:"position",
-                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png"),
-                                optionIndex : 2}
-                                , 
-                                {optionName:"time",
-                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg"),
-                                optionIndex : 3}
-                                , 
-                                {optionName:"선택하지 않음",
-                                optionUrl: require("./assets/images/not_option.png"),
-                                optionIndex : 4}
-                            ]; 
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
-                            
+    let tempOptionValueBox = [];                         
     const setSelectGameOtionTwo = ()=>{
-      console.log("조건1")
-      console.log(route.params.optionOne)
-      console.log("조건1-Detail")
-      console.log(route.params.optionOneDetail)
-      console.log("조건2")
-      console.log(route.params.optionTwo)
-      for(let i =0; i<selectGameOtion.length; i++ ){
-        if(selectGameOtion[i].optionName == route.params.optionTwo ){
-          selectGameOtion.splice(i, 1);
-          console.log(selectGameOtion)
+      tempOptionValueBox = route.params.optionValueBox;
+      for(let i =0; i<route.params.optionValueBox.length; i++ ){
+        if(route.params.optionValueBox[i].optionName == route.params.optionTwo ){
+           tempOptionValueBox.splice(i, 1);
         }
       }
-      optionValueTwo(selectGameOtion);
+      optionValueTwo(tempOptionValueBox);
     };
     
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
-      console.log(ok) 
     };
 
      const optionSubmit = () => {
-      
+      let indexNumber = Math.floor((ok+1)/4);
+      let tempOptionValueThree = changeOptionValueTwo[indexNumber].optionName;
+      if(tempOptionValueThree == "선택하지 않음"){
+        alert("게임 매칭 시작");
+      }
+      console.log("조건1")
+      console.log(route.params.optionOne)
+      console.log("조건1-1")
+      console.log(route.params.optionOneDetail)
+      console.log("조건2")
+      console.log(route.params.optionTwo)
+      console.log("조건2-2")
+      console.log(route.params.optionTwoDetail)
+      console.log("조건3")
+      console.log(tempOptionValueThree)
+      console.log("----------OptionSelectThree.js-------------------------------")
+      navigation.navigate('OptionSelectThreDetail',{  optionOne: route.params.optionOne
+                                                    ,optionOneDetail: route.params.optionOneDetail
+                                                    ,optionTwo:route.params.optionTwo
+                                                    ,optionTwoDetail:route.params.optionTwoDetail
+                                                    ,optionThree:tempOptionValueThree
+                                                    ,optionValueBox: route.params.optionValueBox
+                                                  },{navigation});
     };
 
      useEffect(() => {
@@ -65,7 +59,7 @@ export default function OptionSelectThree ({ route,navigation }) {
                 </View>
                 <View style={styles.centerContainer} >
                     <View style={styles.centerTopContainer}>
-                        <Text style={styles.centerContainerTitle}>조건2</Text>
+                        <Text style={styles.centerContainerTitle}>조건3</Text>
                     </View>
                     <View style={styles.centerBottomContainer}>
                     <ScrollView pagingEnabled 

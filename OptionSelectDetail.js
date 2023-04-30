@@ -80,22 +80,26 @@ export default function OtionSelectDetail ({ route,navigation }) {
 
       // route.params.optionOne 는 option1
       let tempList = [];
-      let indexNumber = (ok+1)/4;
+      let indexNumber = Math.floor((ok+1)/4);
       // tempList[indexNumber].optionName 은 option2
+      let tempOptionOneDetail =getChampionSelect; 
       if(route.params.optionOne == "rank"){
         tempList = rankList;
-        setChampionSelect(tempList[indexNumber].optionName);
+        tempOptionOneDetail = tempList[indexNumber].optionName;
       }else if(route.params.optionOne == "position"){
         tempList = positionList;
-        setChampionSelect(tempList[indexNumber].optionName);
+        tempOptionOneDetail = tempList[indexNumber].optionName;
       }else if(route.params.optionOne == "time"){
         tempList = timeList;
-        setChampionSelect(tempList[indexNumber].optionName);
+        tempOptionOneDetail = tempList[indexNumber].optionName;
       }
-
-      
+      console.log("조건1")
+      console.log(route.params.optionOne)
+      console.log("조건1-1")
+      console.log(tempOptionOneDetail)
+      console.log("----------OptionSelectDetail.js-------------------------------")
       navigation.navigate('OptionSelectTwo',{optionOne: route.params.optionOne,
-                                              optionOneDetail: getChampionSelect
+                                              optionOneDetail: tempOptionOneDetail
                                               },{navigation});
     };
     const getChampionList = async() =>{

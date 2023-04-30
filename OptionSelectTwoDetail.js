@@ -77,7 +77,36 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     };
     // 선택하기 감지 함수
     const optionSubmit = ()=>{
-
+       // route.params.optionOne 는 option1
+      let tempList = [];
+      let indexNumber = Math.floor((ok+1)/4);
+      // tempList[indexNumber].optionName 은 option2
+      let tempOptionTwoDetail =getChampionSelect; 
+      if(route.params.optionTwo == "rank"){
+        tempList = rankList;
+        tempOptionTwoDetail = tempList[indexNumber].optionName;
+      }else if(route.params.optionTwo == "position"){
+        tempList = positionList;
+        tempOptionTwoDetail = tempList[indexNumber].optionName;
+      }else if(route.params.optionTwo == "time"){
+        tempList = timeList;
+        tempOptionTwoDetail = tempList[indexNumber].optionName;
+      }
+      console.log("조건1")
+      console.log(route.params.optionOne)
+      console.log("조건1-1")
+      console.log(route.params.optionOneDetail)
+      console.log("조건2")
+      console.log(route.params.optionTwo)
+      console.log("조건2-1")
+      console.log(tempOptionTwoDetail)
+      console.log("----------OptionSelectTwoDetail.js-------------------------------")
+      navigation.navigate('OptionSelectThree',{  optionOne: route.params.optionOne
+                                                    ,optionOneDetail: route.params.optionOneDetail
+                                                    ,optionTwo:route.params.optionTwo
+                                                    ,optionTwoDetail:tempOptionTwoDetail
+                                                    ,optionValueBox: route.params.optionValueBox
+                                                  },{navigation});
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);

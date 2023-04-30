@@ -31,14 +31,9 @@ export default function OptionSelectTwo ({ route,navigation }) {
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
                             
     const setSelectGameOtionTwo = ()=>{
-      console.log("조건1")
-      console.log(route.params.optionOne)
-      console.log("조건1-Detail")
-      console.log(route.params.optionOneDetail)
       for(let i =0; i<selectGameOtion.length; i++ ){
         if(selectGameOtion[i].optionName == route.params.optionOne ){
           selectGameOtion.splice(i, 1);
-          console.log(selectGameOtion)
         }
       }
       optionValueTwo(selectGameOtion);
@@ -46,22 +41,26 @@ export default function OptionSelectTwo ({ route,navigation }) {
     
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
-      console.log(ok) 
     };
 
      const optionSubmit = () => {
-      
-       console.log(ok)
-       console.log(changeOptionValueTwo)
-       let indexNumber = (ok+1)/4;
-       let tempOptionValueTwo = changeOptionValueTwo[indexNumber].optionName;
-       console.log(tempOptionValueTwo)
-       if(tempOptionValueTwo == "선택하지 않음"){
-         alert("게임 매칭 시작");
-       }
+
+      let indexNumber = Math.floor((ok+1)/4);
+      let tempOptionValueTwo = changeOptionValueTwo[indexNumber].optionName;
+      if(tempOptionValueTwo == "선택하지 않음"){
+        alert("게임 매칭 시작");
+      }
+      console.log("조건1")
+      console.log(route.params.optionOne)
+      console.log("조건1-1")
+      console.log(route.params.optionOneDetail)
+      console.log("조건2")
+      console.log(tempOptionValueTwo)
+      console.log("----------OptionSelectTwo.js-------------------------------")
       navigation.navigate('OptionSelectTwoDetail',{  optionOne: route.params.optionOne
                                                     ,optionOneDetail: route.params.optionOneDetail
                                                     ,optionTwo:tempOptionValueTwo
+                                                    ,optionValueBox: changeOptionValueTwo
                                                   },{navigation});
     };
 
