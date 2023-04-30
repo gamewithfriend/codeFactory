@@ -3,7 +3,7 @@ import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Im
 import {ScrollView} from 'react-native-gesture-handler';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
-export default function OptionSelectThree ({ route,navigation }) {
+export default function OptionSelectFour ({ route,navigation }) {
     const optionTrigger = false;
     const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");

@@ -100,7 +100,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       console.log(route.params.optionTwo)
       console.log("조건2-1")
       console.log(tempOptionTwoDetail)
-      console.log("----------OptionSelectTwoDetail.js-------------------------------")
+      console.log("----------OptionSelectTwoDetail.js---------------Finsh----------------")
       navigation.navigate('OptionSelectThree',{  optionOne: route.params.optionOne
                                                     ,optionOneDetail: route.params.optionOneDetail
                                                     ,optionTwo:route.params.optionTwo

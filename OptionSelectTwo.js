@@ -56,7 +56,7 @@ export default function OptionSelectTwo ({ route,navigation }) {
       console.log(route.params.optionOneDetail)
       console.log("조건2")
       console.log(tempOptionValueTwo)
-      console.log("----------OptionSelectTwo.js-------------------------------")
+      console.log("----------OptionSelectTwo.js-------------Finsh------------------")
       navigation.navigate('OptionSelectTwoDetail',{  optionOne: route.params.optionOne
                                                     ,optionOneDetail: route.params.optionOneDetail
                                                     ,optionTwo:tempOptionValueTwo

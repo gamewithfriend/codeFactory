@@ -97,7 +97,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
       console.log(route.params.optionOne)
       console.log("조건1-1")
       console.log(tempOptionOneDetail)
-      console.log("----------OptionSelectDetail.js-------------------------------")
+      console.log("----------OptionSelectDetail.js-----Finsh--------------------------")
       navigation.navigate('OptionSelectTwo',{optionOne: route.params.optionOne,
                                               optionOneDetail: tempOptionOneDetail
                                               },{navigation});

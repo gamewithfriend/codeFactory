@@ -20,6 +20,8 @@ import OptionSelectTwo from './OptionSelectTwo';
 import OptionSelectTwoDetail from './OptionSelectTwoDetail';
 import OptionSelectThree from './OptionSelectThree';
 import OptionSelectThreeDetail from './OptionSelectThreeDetail';
+import OptionSelectFour from './OptionSelectFour';
+import OptionSelectFourDetail from './OptionSelectFourDetail';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -63,6 +65,12 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="OptionSelectThreeDetail" component={OptionSelectThreeDetail} options={{
+          headerShown:false  
+        }}/>
+         <Stack.Screen name="OptionSelectFour" component={OptionSelectFour} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="OptionSelectFourDetail" component={OptionSelectFourDetail} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>
