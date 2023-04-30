@@ -19,6 +19,7 @@ import OptionSelectDetail from './OptionSelectDetail';
 import OptionSelectTwo from './OptionSelectTwo';
 import OptionSelectTwoDetail from './OptionSelectTwoDetail';
 import OptionSelectThree from './OptionSelectThree';
+import OptionSelectThreeDetail from './OptionSelectThreeDetail';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,6 +60,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="OptionSelectThree" component={OptionSelectThree} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="OptionSelectThreeDetail" component={OptionSelectThreeDetail} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>
