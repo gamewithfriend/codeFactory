@@ -45,7 +45,7 @@ export default function OptionSelect ({navigation}) {
          temp = "time";
       }
       
-      navigation.navigate('OtionSelectDetail',{optionOne: temp},{navigation});
+      navigation.navigate('OptionSelectDetail',{optionOne: temp},{navigation});
     };
 
     return (      

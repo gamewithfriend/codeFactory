@@ -3,7 +3,7 @@ import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Im
 import {ScrollView} from 'react-native-gesture-handler';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
-export default function OtionSelectThree ({ route,navigation }) {
+export default function OptionSelectTwo ({ route,navigation }) {
     const optionTrigger = false;
     const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
@@ -59,7 +59,7 @@ export default function OtionSelectThree ({ route,navigation }) {
        if(tempOptionValueTwo == "선택하지 않음"){
          alert("게임 매칭 시작");
        }
-      navigation.navigate('OtionSelectTwoDetail',{  optionOne: route.params.optionOne
+      navigation.navigate('OptionSelectTwoDetail',{  optionOne: route.params.optionOne
                                                     ,optionOneDetail: route.params.optionOneDetail
                                                     ,optionTwo:tempOptionValueTwo
                                                   },{navigation});

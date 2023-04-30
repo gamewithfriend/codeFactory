@@ -94,7 +94,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
       }
 
       
-      navigation.navigate('OtionSelectTwo',{optionOne: route.params.optionOne,
+      navigation.navigate('OptionSelectTwo',{optionOne: route.params.optionOne,
                                               optionOneDetail: getChampionSelect
                                               },{navigation});
     };

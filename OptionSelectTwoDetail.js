@@ -5,7 +5,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
-export default function OtionSelectTwoDetail ({ route,navigation }) {
+export default function OptionSelectTwoDetail ({ route,navigation }) {
     
     const [ok, setOptionName] = useState(1);
     const [championList, setChampionList] = useState([]);
