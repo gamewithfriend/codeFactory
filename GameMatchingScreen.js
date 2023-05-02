@@ -3,11 +3,20 @@ import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,Activity
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
-export default function GameMatchingScreen ({navigation}) {
+export default function GameMatchingScreen ({route,navigation}) {
     
     const [userInfos, setUserInfo] = useState([]);
-
+    const [changeOptionValueTwo, optionValueTwo] = useState([]);
     const getUserData = async() =>{
+        console.log(route.params)
+        tempOptionValueBox = route.params.optionValueBox;
+        for(let i =0; i<route.params.optionValueBox.length; i++ ){
+          if(route.params.optionValueBox[i].optionName == route.params.optionFour ){
+            tempOptionValueBox.splice(i, 1);
+          }
+        }
+        optionValueTwo(tempOptionValueBox);
+        console.log(5-tempOptionValueBox.length)
         const response = await fetch (`http://3.37.211.126:8080/common/test.do?id=aabc&pw=bbccc%27).then(response`);
         const json = await response.json();       
         console.log(json.userInfo)

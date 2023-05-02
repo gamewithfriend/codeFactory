@@ -110,15 +110,14 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
       console.log(tempOptionFourDetail)
       console.log("----------OptionSelectFourDetail.js--------Finsh-----------------------")
       alert("게임매칭 시작!")
-      const responseGameMatchingUser = fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
-      let jsonGameMatchingUser = responseGameMatchingUser.json();
-      console.log(jsonGameMatchingUser) 
-      navigation.navigate('OptionSelectFour',{  optionOne: route.params.optionOne
+      navigation.navigate('GameMatching',{  optionOne: route.params.optionOne
                                                     ,optionOneDetail: route.params.optionOneDetail
                                                     ,optionTwo:route.params.optionTwo
                                                     ,optionTwoDetail:route.params.TwoDetail
                                                     ,optionThree:route.params.optionThree
-                                                    ,optionThreeDetail:tempOptionThreeDetail
+                                                    ,optionThreeDetail:route.params.optionThreeDetail
+                                                    ,optionFour:route.params.optionFour
+                                                    ,optionFourDetail:tempOptionFourDetail
                                                     ,optionValueBox: route.params.optionValueBox
                                                   },{navigation});
     };

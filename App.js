@@ -12,7 +12,7 @@ import First from './First';
 import Login from './LoginScreen';
 import ChatScreen from './ChatScreen';
 import FriendScreen from './FriendScreen';
-import GameMatchingScreen from './GameMatchingScreen';
+import GameMatching from './GameMatchingScreen';
 import AdminScreen from './AdminScreen';
 import OptionSelect from './OptionSelect';
 import OptionSelectDetail from './OptionSelectDetail';
@@ -71,6 +71,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="OptionSelectFourDetail" component={OptionSelectFourDetail} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="GameMatching" component={GameMatching} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>
