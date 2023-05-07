@@ -99,14 +99,14 @@ export default function OptionSelectThreeDetail ({ route,navigation }) {
       console.log("조건2")
       console.log(route.params.optionTwo)
       console.log("조건2-1")
-      console.log(route.params.OptionTwoDetail)
+      console.log(route.params.optionTwoDetail)
       console.log("조건3")
       console.log(route.params.optionThree)
       console.log("----------OptionSelectThreeDetail.js--------Finsh-----------------------")
       navigation.navigate('OptionSelectFour',{  optionOne: route.params.optionOne
                                                     ,optionOneDetail: route.params.optionOneDetail
                                                     ,optionTwo:route.params.optionTwo
-                                                    ,optionTwoDetail:route.params.TwoDetail
+                                                    ,optionTwoDetail:route.params.optionTwoDetail
                                                     ,optionThree:route.params.optionThree
                                                     ,optionThreeDetail:tempOptionThreeDetail
                                                     ,optionValueBox: route.params.optionValueBox
