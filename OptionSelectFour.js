@@ -94,64 +94,92 @@ export default function OptionSelectFour ({ route,navigation }) {
                   <Button onPress={optionSubmit} title='선택하기'></Button>
                 </View>
                 <View style={styles.bottomOptionContainer} >
-              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
-              <View style={styles.bottomOptionBoxContainer}>
-                  {route.params.optionOne === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션1</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionOne}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionOneDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  }
-                  {route.params.optionTwo === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션2</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionTwo}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionTwoDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  } 
-              </View>
-              <View style={styles.bottomOptionBoxContainer}>
-                  {route.params.optionThree === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션3</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionThree}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionThreeDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  } 
-                  {route.params.optionFour === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션4</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionFour}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionFourDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  } 
-              </View>                   
-            </View>                
+                  <View style={styles.bottomOptionContainerTitleBox} >
+                    <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+                  </View>
+                  <View style={styles.bottomOptionContainerTextBox} >
+                   {route.params.optionOne === undefined? (
+                      <View>
+                      </View>
+                      ):(
+                        <View>
+                          <View style={styles.bottomOptionContainerTextInnerBox} >
+                            <View style={styles.indexText}>
+                              <Text style={styles.bottomOptionInnerText}>1</Text>
+                            </View>
+                            <View style={styles.leftText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
+                            </View>
+                            <View style={styles.centerText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
+                            </View> 
+                          </View>
+                          <View style={styles.lineDesign} />           
+                        </View>           
+                      )
+                   }
+                     {route.params.optionTwo === undefined? (
+                        <View>
+                        </View>
+                        ):(
+                          <View> 
+                            <View style={styles.bottomOptionContainerTextInnerBox} >
+                              <View style={styles.indexText}>
+                                <Text style={styles.bottomOptionInnerText}>2</Text>
+                              </View>
+                              <View style={styles.leftText}>
+                                <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwo}:</Text>
+                              </View>
+                              <View style={styles.centerText}>
+                                <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwoDetail}</Text>
+                              </View>
+                            </View>
+                            <View style={styles.lineDesign} /> 
+                          </View>
+                        )
+                     }
+                    {route.params.optionThree === undefined? (
+                        <View>
+                        </View>
+                      ):(
+                        <View>
+                          <View style={styles.bottomOptionContainerTextInnerBox} >
+                            <View style={styles.indexText}>
+                              <Text style={styles.bottomOptionInnerText}>3</Text>
+                            </View>
+                            <View style={styles.leftText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionThree}:</Text>
+                            </View>
+                            <View style={styles.centerText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionThreeDetail}</Text>
+                            </View>                          
+                          </View>
+                          <View style={styles.lineDesign} />    
+                        </View>
+                      )
+                    }
+                     {route.params.optionFour === undefined? (
+                        <View>
+                        </View>
+                        ):(
+                            <View>
+                              <View style={styles.bottomOptionContainerTextInnerBox} >
+                                <View style={styles.indexText}>
+                                  <Text style={styles.bottomOptionInnerText}>4</Text>
+                                </View>
+                                <View style={styles.leftText}>
+                                  <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionFour}:</Text>
+                                </View>
+                                <View style={styles.centerText}>
+                                  <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionFourDetail}</Text>
+                                </View>
+                              </View>
+                              <View style={styles.lineDesign} />    
+                            </View>
+                        )
+                     }
+                  </View>
+                </View>                    
             </View>  
         
       
@@ -162,29 +190,36 @@ export default function OptionSelectFour ({ route,navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container:{
+   container:{
     flex:1,
   },
+  lineDesign:{
+    height: 1, 
+    backgroundColor: "black", 
+    marginBottom: "3%",
+    marginTop: "3%",
+    opacity:0.3,
+  },
   topContainer:{       
-      flex:1,
-      alignItems:"center",
-      borderColor:"black",
-      borderStyle:"solid",
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
       
   },
   centerContainer:{       
-      flex:6,
-      alignItems:"center",
-      borderColor:"black",
-      borderStyle:"solid",
+    flex:6,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
       
   },
   centerTopContainer:{       
-      flex:1,
-      alignItems:"center",
-      borderColor:"black",
-      borderStyle:"solid",
-      width:"100%",
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+    width:"100%",
   },
   centerBottomContainer:{       
     flex:5,
@@ -192,7 +227,7 @@ const styles = StyleSheet.create({
     width:"100%",
     flexDirection:"row"
   },
-  bottomContainer:{
+    bottomContainer:{
     flex:1,
     alignItems:"center",
     borderColor:"black",
@@ -200,17 +235,51 @@ const styles = StyleSheet.create({
   },
   bottomOptionContainer:{
     flex:5,
-    alignItems:"center",
     borderColor:"black",
     borderStyle:"solid",
+  },
+  bottomOptionContainerTextBox:{
+    flex:11,
+    borderColor:"black",
+    borderStyle:"solid",
+    paddingLeft:"7%",
+    paddingRight:"7%",
+  },
+  bottomOptionContainerTextInnerBox:{
+    borderColor:"black",
+    borderStyle:"solid",
+    flexDirection:"row",
+  },
+  bottomOptionContainerTitleBox:{
+    flex:5,
+    borderColor:"black",
+    alignItems:"center",
+    borderStyle:"solid",
+    marginTop:"3%",
   },
   bottomOptionTextTitle:{
     fontSize: 20,
     textAlign: 'center',
   },
+  indexText:{
+    alignItems:"center",
+    marginLeft: "5%",
+  },
+  leftText:{
+    marginLeft: "15%",
+    width:"30%"
+  },
+  centerText:{
+  },
   bottomOptionText:{
     fontSize: 14,
     textAlign: 'center',
+  },
+  bottomOptionInnerText:{
+    fontSize: 14,
+  },
+   bottomOptionInnerCenterText:{
+    fontSize: 14,
   },
   bottomOptionBoxContainer:{
     flex:1,
@@ -259,10 +328,12 @@ const styles = StyleSheet.create({
   backImg:{
       flex:1,
       width:'100%',
-      height:610,
+      height:"100%",
       opacity:0.7
   },
   itemBoxTitle:{
     marginBottom : '5%',
+  },
+  centerText:{
   },
 });
