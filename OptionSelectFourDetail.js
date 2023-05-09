@@ -122,7 +122,23 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                                                   },{navigation});
     };
     const getChampionList = async() =>{
-    const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
+    const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectGameMatchingUserTop3.do).then(response`,{
+      method:"POST",
+      headers{
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        optionOne: route.params.optionOne
+                                                    ,optionOneDetail: route.params.optionOneDetail
+                                                    ,optionTwo:route.params.optionTwo
+                                                    ,optionTwoDetail:route.params.TwoDetail
+                                                    ,optionThree:route.params.optionThree
+                                                    ,optionThreeDetail:route.params.optionThreeDetail
+                                                    ,optionFour:route.params.optionFour
+                                                    ,optionFourDetail:tempOptionFourDetail
+                                                    ,optionValueBox: route.params.optionValueBox
+      }),
+    });
       let json = await response.json();   
       for (let i =0; i<json.gameVO.length; i++) {
         let tempChName = json.gameVO[i].chName;
