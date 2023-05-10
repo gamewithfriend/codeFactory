@@ -1,6 +1,6 @@
 import React, { Component, useState ,useEffect} from 'react';
 import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator } from 'react-native';
-
+import axios from "axios";
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function GameMatchingScreen ({route,navigation}) {
