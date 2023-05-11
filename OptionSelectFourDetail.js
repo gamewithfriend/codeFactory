@@ -110,14 +110,14 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
       console.log(tempOptionFourDetail)
       console.log("----------OptionSelectFourDetail.js--------Finsh-----------------------")
       alert("게임매칭 시작!")
-      navigation.navigate('GameMatching',{  optionOne: route.params.optionOne
-                                                    ,optionOneDetail: route.params.optionOneDetail
-                                                    ,optionTwo:route.params.optionTwo
-                                                    ,optionTwoDetail:route.params.TwoDetail
-                                                    ,optionThree:route.params.optionThree
-                                                    ,optionThreeDetail:route.params.optionThreeDetail
-                                                    ,optionFour:route.params.optionFour
-                                                    ,optionFourDetail:tempOptionFourDetail
+      navigation.navigate('GameMatching',{  0: route.params.optionOne
+                                                    ,1: route.params.optionOneDetail
+                                                    ,2:route.params.optionTwo
+                                                    ,3:route.params.optionTwoDetail
+                                                    ,4:route.params.optionThree
+                                                    ,5:route.params.optionThreeDetail
+                                                    ,6:route.params.optionFour
+                                                    ,7:tempOptionFourDetail
                                                     ,optionValueBox: route.params.optionValueBox
                                                   },{navigation});
     };

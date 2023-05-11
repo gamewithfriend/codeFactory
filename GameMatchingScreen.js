@@ -4,9 +4,9 @@ import axios from "axios";
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function GameMatchingScreen ({route,navigation}) {
-    
     const [userInfos, setUserInfo] = useState([]);
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
+    let resultUser = [];
     const getUserData = async() =>{
         console.log(route.params)
         tempOptionValueBox = route.params.optionValueBox;
@@ -17,10 +17,19 @@ export default function GameMatchingScreen ({route,navigation}) {
         }
         optionValueTwo(tempOptionValueBox);
         console.log(5-tempOptionValueBox.length)
-        const response = await fetch (`http://3.37.211.126:8080/common/test.do?id=aabc&pw=bbccc%27).then(response`);
-        const json = await response.json();       
-        console.log(json.userInfo)
-        setUserInfo(json.userInfo)
+        await fetch (`http://3.37.211.126:8080/gameMatching/selectGameMatchingUserTop3.do`,{
+          method : 'POST',//형식
+          body : JSON.stringify(route.params), //자바스크립트 객체 -> JSON객체
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Authentication: 'mysecreat' 
+          },
+        }).then((response) => response.json())
+        .then((result) => {
+            console.log(result.userInfo)
+            resultUser = result.userInfo;
+        });
+        
       };
     useEffect(() => {
         getUserData();
@@ -47,22 +56,22 @@ export default function GameMatchingScreen ({route,navigation}) {
                                 horizontal 
                                 showsHorizontalScrollIndicator = {false}
                                 contentContainerStyle={styles.contentBorder}>
-                    {userInfos.length === 0? (
+                    {resultUser.length === 0? (
                         <View style={styles.day}>
                             <ActivityIndicator color="black" size="large"/>
                         </View>
                         ) : (
-                        userInfos.map((id, index) =>  
+                            resultUser.map((id, index) =>  
                         <View key={index} style={styles.contentBottom}>
                             <View style={styles.itemBox}>
                                 <Text style={styles.matchingUserInfo}>
-                                    {id.id}
+                                    {id.glSummoner}
                                 </Text>
                                 <Text style={styles.matchingUserInfo}>
-                                    {id.name}
+                                    {id.glRank}
                                 </Text>
                                 <Text style={styles.matchingUserInfo}>
-                                    {id.pw}
+                                    {id.glTime}
                                 </Text>
                             </View>  
                         </View>
