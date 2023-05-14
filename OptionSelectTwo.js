@@ -42,6 +42,15 @@ export default function OptionSelectTwo ({ route,navigation }) {
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
     };
+    const backOption = (index)=>{
+      switch(index) {
+        case 1: 
+          navigation.navigate('OptionSelect',route.params,{navigation});
+        case 2: 
+          navigation.navigate('OptionSelectDetail',route.params,{navigation});
+      }
+      
+    }; 
 
      const optionSubmit = () => {
 
@@ -116,10 +125,10 @@ export default function OptionSelectTwo ({ route,navigation }) {
                             <View style={styles.indexText}>
                               <Text style={styles.bottomOptionInnerText}>1</Text>
                             </View>
-                            <View style={styles.leftText}>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View style={styles.centerText}>
+                            <View onStartShouldSetResponder={() =>backOption(2)} style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -136,7 +145,7 @@ export default function OptionSelectTwo ({ route,navigation }) {
                               <View style={styles.indexText}>
                                 <Text style={styles.bottomOptionInnerText}>2</Text>
                               </View>
-                              <View style={styles.leftText}>
+                              <View  style={styles.leftText}>
                                 <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwo}:</Text>
                               </View>
                               <View style={styles.centerText}>

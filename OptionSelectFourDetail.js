@@ -16,44 +16,44 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                                 {optionName:"unRank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
-                                {optionName:"brozne",
+                                {optionName:"BRONZE",
                                 optionUrl: require("./assets/images/rank/emblem-bronze.png")}
                                 ,
-                                {optionName:"silver",
+                                {optionName:"SILVER",
                                 optionUrl: require("./assets/images/rank/emblem-silver.png")}
                                 ,
-                                {optionName:"gold",
+                                {optionName:"GOLD",
                                 optionUrl: require("./assets/images/rank/emblem-gold.png")}
                                 ,
-                                {optionName:"platinum",
+                                {optionName:"PLATINUM",
                                 optionUrl: require("./assets/images/rank/emblem-platinum.png")}
                                 ,
-                                {optionName:"diamond",
+                                {optionName:"DIAMOND",
                                 optionUrl: require("./assets/images/rank/emblem-diamond.png")}
                                 ,
-                                {optionName:"master",
+                                {optionName:"MASTER",
                                 optionUrl: require("./assets/images/rank/emblem-master.png")}
                                 ,
-                                {optionName:"challenger",
+                                {optionName:"GRANDMASTER",
                                 optionUrl: require("./assets/images/rank/emblem-grandmaster.png")}
                                 ,
-                                {optionName:"ranker",
+                                {optionName:"CHALLENGER",
                                 optionUrl: require("./assets/images/rank/emblem-challenger.png")}
                             ];
     let positionList = [   
-                                {optionName:"탑",
+                                {optionName:"TOP",
                                 optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
                                 ,
-                                {optionName:"정글",
+                                {optionName:"JUNGGLE",
                                 optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
                                 ,
-                                {optionName:"미드",
+                                {optionName:"MIDDLE",
                                 optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}
                                 ,
-                                 {optionName:"원딜",
+                                 {optionName:"CARRY",
                                 optionUrl: require("./assets/images/position/ADC-CHALLENGER.png")}
                                 ,
-                                {optionName:"서폿",
+                                {optionName:"SUPPORT",
                                 optionUrl: require("./assets/images/position/SUP-CHALLENGER.png")}       
                         ];
     let timeList = [   
@@ -63,7 +63,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                                 {optionName:"주말",
                                 optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
                                 ,
-                                {optionName:"평일 + 주말",
+                                {optionName:"평일주말",
                                 optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}            
                         ]; 
     // 챔피언 선택함수                                                                

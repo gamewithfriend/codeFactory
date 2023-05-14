@@ -11,49 +11,50 @@ export default function OtionSelectDetail ({ route,navigation }) {
     const [championList, setChampionList] = useState([]);
     const [optionList, setOptionList] = useState([]);
     const [getChampionSelect, setChampionSelect] = useState("");
+    const [text, onChangeText] = React.useState('Useless Text');
     let reChampionList = [];
     let rankList = [   
                                 {optionName:"unRank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
-                                {optionName:"brozne",
+                                {optionName:"BRONZE",
                                 optionUrl: require("./assets/images/rank/emblem-bronze.png")}
                                 ,
-                                {optionName:"silver",
+                                {optionName:"SILVER",
                                 optionUrl: require("./assets/images/rank/emblem-silver.png")}
                                 ,
-                                {optionName:"gold",
+                                {optionName:"GOLD",
                                 optionUrl: require("./assets/images/rank/emblem-gold.png")}
                                 ,
-                                {optionName:"platinum",
+                                {optionName:"PLATINUM",
                                 optionUrl: require("./assets/images/rank/emblem-platinum.png")}
                                 ,
-                                {optionName:"diamond",
+                                {optionName:"DIAMOND",
                                 optionUrl: require("./assets/images/rank/emblem-diamond.png")}
                                 ,
-                                {optionName:"master",
+                                {optionName:"MASTER",
                                 optionUrl: require("./assets/images/rank/emblem-master.png")}
                                 ,
-                                {optionName:"challenger",
+                                {optionName:"GRANDMASTER",
                                 optionUrl: require("./assets/images/rank/emblem-grandmaster.png")}
                                 ,
-                                {optionName:"ranker",
+                                {optionName:"CHALLENGER",
                                 optionUrl: require("./assets/images/rank/emblem-challenger.png")}
                             ];
     let positionList = [   
-                                {optionName:"탑",
+                                {optionName:"TOP",
                                 optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
                                 ,
-                                {optionName:"정글",
+                                {optionName:"JUNGGLE",
                                 optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
                                 ,
-                                {optionName:"미드",
+                                {optionName:"MIDDLE",
                                 optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}
                                 ,
-                                 {optionName:"원딜",
+                                 {optionName:"CARRY",
                                 optionUrl: require("./assets/images/position/ADC-CHALLENGER.png")}
                                 ,
-                                {optionName:"서폿",
+                                {optionName:"SUPPORT",
                                 optionUrl: require("./assets/images/position/SUP-CHALLENGER.png")}       
                         ];
     let timeList = [   
@@ -63,13 +64,29 @@ export default function OtionSelectDetail ({ route,navigation }) {
                                 {optionName:"주말",
                                 optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
                                 ,
-                                {optionName:"평일 + 주말",
+                                {optionName:"평일주말",
                                 optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}            
                         ]; 
     // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
       setChampionSelect(index)
     };
+    const onChange = (text)=>{
+      onChangeText(text);
+      console.log(text)
+      const getSearchChampionList = async() =>{
+        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${text}).then(response`);
+        let json = await response.json();
+        console.log(json)   
+      };
+    };
+    const backOption = (index)=>{
+      switch(index) {
+        case 1: 
+          navigation.navigate('OptionSelect',route.params,{navigation});  
+      }
+      
+    };    
     // 나머지 옵션 select index 감지 함수
     const optionChange = (index)=>{
 
@@ -141,12 +158,16 @@ export default function OtionSelectDetail ({ route,navigation }) {
           }
           reChampionList.push(tempBox); 
         }
-      }       
-      // console.log(reChampionList)
+      }
       setChampionList(reChampionList)
+    };
+    const setRouteParam = async() =>{
+      console.log(route.params)
+      console.log(route.params.length)
     };
     useEffect(() => {
       getChampionList();
+      setRouteParam();
     },[]);
     if(route.params.optionOne ==="rank"){
       return (
@@ -167,7 +188,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                         ) : (
                         rankList.map( (info, index) =>    
                             <View key={index} style={styles.contentBottom}>
-                                <View style={styles.itemBox}>
+                                <View style={styles.itemBoxImg}>
                                     <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
                                     <Image  style={styles.backImg} source={info.optionUrl}/>       
                                 </View>  
@@ -192,13 +213,13 @@ export default function OtionSelectDetail ({ route,navigation }) {
                       ):(
                         <View>
                           <View style={styles.bottomOptionContainerTextInnerBox} >
-                            <View style={styles.indexText}>
+                            <View  style={styles.indexText}>
                               <Text style={styles.bottomOptionInnerText}>1</Text>
                             </View>
-                            <View style={styles.leftText}>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View style={styles.centerText}>
+                            <View  style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -276,6 +297,13 @@ export default function OtionSelectDetail ({ route,navigation }) {
             <View style={styles.topContainer}>
                    <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
             </View>
+            <View style={styles.topContainer}>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={text => onChange({text })}
+                    value={text}
+                  />
+            </View>
             <View style={styles.centerContainer} >
               <View style={styles.centerTopContainer}>
                 <ScrollView pagingEnabled  
@@ -311,7 +339,9 @@ export default function OtionSelectDetail ({ route,navigation }) {
               <Button onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
-              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionContainerTitleBox} >
+                <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              </View>
               <View style={styles.bottomOptionContainerTextBox} >
                    {route.params.optionOne === undefined? (
                       <View>
@@ -322,10 +352,10 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             <View style={styles.indexText}>
                               <Text style={styles.bottomOptionInnerText}>1</Text>
                             </View>
-                            <View style={styles.leftText}>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View style={styles.centerText}>
+                            <View  style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -416,7 +446,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                         ) : (
                         positionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
-                                <View style={styles.itemBox}>
+                                <View style={styles.itemBoxImg}>
                                     <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
                                     <Image  style={styles.backImg} source={info.optionUrl}/>       
                                 </View>  
@@ -431,7 +461,9 @@ export default function OtionSelectDetail ({ route,navigation }) {
               <Button onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
-              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionContainerTitleBox} >
+                <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              </View>
               <View style={styles.bottomOptionContainerTextBox} >
                    {route.params.optionOne === undefined? (
                       <View>
@@ -442,10 +474,10 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             <View style={styles.indexText}>
                               <Text style={styles.bottomOptionInnerText}>1</Text>
                             </View>
-                            <View style={styles.leftText}>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View style={styles.centerText}>
+                            <View  style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -551,7 +583,9 @@ export default function OtionSelectDetail ({ route,navigation }) {
               <Button onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
-              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              <View style={styles.bottomOptionContainerTitleBox} >
+                <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              </View>
               <View style={styles.bottomOptionContainerTextBox} >
                    {route.params.optionOne === undefined? (
                       <View>
@@ -562,10 +596,10 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             <View style={styles.indexText}>
                               <Text style={styles.bottomOptionInnerText}>1</Text>
                             </View>
-                            <View style={styles.leftText}>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View style={styles.centerText}>
+                            <View  style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -655,18 +689,17 @@ const styles = StyleSheet.create({
     opacity:0.3,
   },
   topContainer:{       
-    flex:1,
+    flex:2,
     alignItems:"center",
     borderColor:"black",
     borderStyle:"solid",
-      
+    marginTop:"3%",  
   },
   centerContainer:{       
-    flex:6,
+    flex:7,
     alignItems:"center",
     borderColor:"black",
-    borderStyle:"solid",
-      
+    borderStyle:"solid",  
   },
   centerTopContainer:{       
     flex:1,
@@ -776,7 +809,7 @@ const styles = StyleSheet.create({
     margin: "3%",
   },
   itemBoxImg:{
-    width:"50%",
+    width:"55%",
     height:"60%",
     margin: "3%",
   },
@@ -791,7 +824,10 @@ const styles = StyleSheet.create({
   },
   itemBoxTitle:{
     marginBottom : '5%',
+    textAlign: 'center',
   },
   centerText:{
+  },
+  input:{
   },
 });

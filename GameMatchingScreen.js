@@ -32,7 +32,7 @@ export default function GameMatchingScreen ({route,navigation}) {
             resultUser = result.userInfo;
             setUserInfo(resultUser);
         });
-        
+       
       };
     useEffect(() => {
         getUserData();

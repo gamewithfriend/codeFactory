@@ -46,7 +46,7 @@ export default function OptionSelect ({navigation}) {
       }
       
       navigation.navigate('OptionSelectDetail',{optionOne: temp},{navigation});
-    };ScrollView
+    };
 
     return (      
             <View style={styles.container} >
@@ -81,7 +81,9 @@ export default function OptionSelect ({navigation}) {
                     </View>
                 </View> 
                 <View style={styles.bottomContainer} >
-                  <Button onPress={optionSubmit} title='선택하기'></Button>
+                  <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                  <Button color={"##CCCCCC"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                  <Button  style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
                 </View>       
             </View>              
         
@@ -158,5 +160,9 @@ const styles = StyleSheet.create({
     },
     itemBoxTitle:{
       marginBottom : '5%',
+    },
+    choiceButton:{
+      opacity: 0.3,
+      color:"black",
     },
 });

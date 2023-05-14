@@ -16,44 +16,44 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                                 {optionName:"unRank",
                                 optionUrl: require("./assets/images/emblem-challenger.png")}
                                 ,
-                                {optionName:"brozne",
+                                {optionName:"BRONZE",
                                 optionUrl: require("./assets/images/rank/emblem-bronze.png")}
                                 ,
-                                {optionName:"silver",
+                                {optionName:"SILVER",
                                 optionUrl: require("./assets/images/rank/emblem-silver.png")}
                                 ,
-                                {optionName:"gold",
+                                {optionName:"GOLD",
                                 optionUrl: require("./assets/images/rank/emblem-gold.png")}
                                 ,
-                                {optionName:"platinum",
+                                {optionName:"PLATINUM",
                                 optionUrl: require("./assets/images/rank/emblem-platinum.png")}
                                 ,
-                                {optionName:"diamond",
+                                {optionName:"DIAMOND",
                                 optionUrl: require("./assets/images/rank/emblem-diamond.png")}
                                 ,
-                                {optionName:"master",
+                                {optionName:"MASTER",
                                 optionUrl: require("./assets/images/rank/emblem-master.png")}
                                 ,
-                                {optionName:"challenger",
+                                {optionName:"GRANDMASTER",
                                 optionUrl: require("./assets/images/rank/emblem-grandmaster.png")}
                                 ,
-                                {optionName:"ranker",
+                                {optionName:"CHALLENGER",
                                 optionUrl: require("./assets/images/rank/emblem-challenger.png")}
                             ];
     let positionList = [   
-                                {optionName:"탑",
+                                {optionName:"TOP",
                                 optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
                                 ,
-                                {optionName:"정글",
+                                {optionName:"JUNGGLE",
                                 optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
                                 ,
-                                {optionName:"미드",
+                                {optionName:"MIDDLE",
                                 optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}
                                 ,
-                                 {optionName:"원딜",
+                                 {optionName:"CARRY",
                                 optionUrl: require("./assets/images/position/ADC-CHALLENGER.png")}
                                 ,
-                                {optionName:"서폿",
+                                {optionName:"SUPPORT",
                                 optionUrl: require("./assets/images/position/SUP-CHALLENGER.png")}       
                         ];
     let timeList = [   
@@ -63,16 +63,48 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                                 {optionName:"주말",
                                 optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
                                 ,
-                                {optionName:"평일 + 주말",
+                                {optionName:"평일주말",
                                 optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}            
                         ]; 
     // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
       setChampionSelect(index)
     };
+    const backOption = (index)=>{
+      console.log(index)
+      console.log(route.params)
+      let deleteProperty = [
+        route.params.optionOne,
+        route.params.optionOneDetail,
+        route.params.optionTwo,
+        route.params.optionTwoDetail,
+        route.params.optionThree,
+        route.params.optionThreeDetail,
+        route.params.optionFour,
+        route.params.optionFourDetail
+      ];
+      let forUseNumner = deleteProperty.length - index;
+      // for(let i =7; i <index-2; i--){
+      //     console.log(i)
+      //     deleteProperty[i];
+      // }
+      switch(index) {
+        case 1: 
+          navigation.navigate('OptionSelect',route.params,{navigation});
+          delete route.params.optionTwo;
+          break;
+        case 2:
+          navigation.navigate('OptionSelectDetail',route.params,{navigation});
+          delete route.params.optionTwo;
+          break;
+        case 3: 
+          navigation.navigate('OptionSelectTwo',route.params,{navigation});
+          break;    
+      }
+      
+    }; 
     // 나머지 옵션 select index 감지 함수
     const optionChange = (index)=>{
-
       setOptionName(Math.floor(index/100))     
     };
     // 선택하기 감지 함수
@@ -188,63 +220,91 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
               <Button onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
-              <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
-              <View style={styles.bottomOptionBoxContainer}>
-                  {route.params.optionOne === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션1</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionOne}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionOneDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  }
-                  {route.params.optionTwo === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션2</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionTwo}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionTwoDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  } 
+              <View style={styles.bottomOptionContainerTitleBox} >
+                    <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
               </View>
-              <View style={styles.bottomOptionBoxContainer}>
-                  {route.params.optionThree === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션3</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionThree}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionThreeDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  } 
-                  {route.params.optionFour === undefined? (
-                    <View style={styles.bottomOptionBox} >
-                    </View>
-                    ):(
-                    <View style={styles.bottomOptionBox} >
-                      <Text style={styles.bottomOptionTextTitle}>옵션4</Text>
-                      <View style={styles.bottomOptionBoxText} >
-                        <Text style={styles.bottomOptionText}>{route.params.optionFour}</Text>
-                        <Text style={styles.bottomOptionText}>{route.params.optionFourDetail}</Text>
-                      </View> 
-                    </View>
-                    )
-                  } 
-              </View>                   
+              <View style={styles.bottomOptionContainerTextBox} >
+                   {route.params.optionOne === undefined? (
+                      <View>
+                      </View>
+                      ):(
+                        <View>
+                          <View style={styles.bottomOptionContainerTextInnerBox} >
+                            <View  style={styles.indexText}>
+                              <Text style={styles.bottomOptionInnerText}>1</Text>
+                            </View>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
+                            </View>
+                            <View onStartShouldSetResponder={() =>backOption(2)} style={styles.centerText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
+                            </View> 
+                          </View>
+                          <View style={styles.lineDesign} />           
+                        </View>           
+                      )
+                   }
+                     {route.params.optionTwo === undefined? (
+                        <View>
+                        </View>
+                        ):(
+                          <View> 
+                            <View style={styles.bottomOptionContainerTextInnerBox} >
+                              <View style={styles.indexText}>
+                                <Text style={styles.bottomOptionInnerText}>2</Text>
+                              </View>
+                              <View onStartShouldSetResponder={() =>backOption(3)} style={styles.leftText}>
+                                <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwo}:</Text>
+                              </View>
+                              <View style={styles.centerText}>
+                                <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwoDetail}</Text>
+                              </View>
+                            </View>
+                            <View style={styles.lineDesign} /> 
+                          </View>
+                        )
+                     }
+                    {route.params.optionThree === undefined? (
+                        <View>
+                        </View>
+                      ):(
+                        <View>
+                          <View style={styles.bottomOptionContainerTextInnerBox} >
+                            <View style={styles.indexText}>
+                              <Text style={styles.bottomOptionInnerText}>3</Text>
+                            </View>
+                            <View style={styles.leftText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionThree}:</Text>
+                            </View>
+                            <View style={styles.centerText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionThreeDetail}</Text>
+                            </View>                          
+                          </View>
+                          <View style={styles.lineDesign} />    
+                        </View>
+                      )
+                    }
+                     {route.params.optionFour === undefined? (
+                        <View>
+                        </View>
+                        ):(
+                            <View>
+                              <View style={styles.bottomOptionContainerTextInnerBox} >
+                                <View style={styles.indexText}>
+                                  <Text style={styles.bottomOptionInnerText}>4</Text>
+                                </View>
+                                <View style={styles.leftText}>
+                                  <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionFour}:</Text>
+                                </View>
+                                <View style={styles.centerText}>
+                                  <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionFourDetail}</Text>
+                                </View>
+                              </View>
+                              <View style={styles.lineDesign} />    
+                            </View>
+                        )
+                     }
+                  </View>                  
             </View>            
         </View>
       );
@@ -302,10 +362,10 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                             <View style={styles.indexText}>
                               <Text style={styles.bottomOptionInnerText}>1</Text>
                             </View>
-                            <View style={styles.leftText}>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View style={styles.centerText}>
+                            <View onStartShouldSetResponder={() =>backOption(2)} style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -322,7 +382,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                               <View style={styles.indexText}>
                                 <Text style={styles.bottomOptionInnerText}>2</Text>
                               </View>
-                              <View style={styles.leftText}>
+                              <View onStartShouldSetResponder={() =>backOption(3)} style={styles.leftText}>
                                 <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwo}:</Text>
                               </View>
                               <View style={styles.centerText}>
