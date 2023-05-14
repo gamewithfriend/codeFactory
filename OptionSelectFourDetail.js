@@ -99,7 +99,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
       console.log("조건2")
       console.log(route.params.optionTwo)
       console.log("조건2-1")
-      console.log(route.params.OptionTwoDetail)
+      console.log(route.params.optionTwoDetail)
       console.log("조건3")
       console.log(route.params.optionThree)
       console.log("조건3-1")
@@ -800,12 +800,6 @@ const styles = StyleSheet.create({
   backImg:{
     width:'100%',
     height:'100%',
-  },
-  contentBottom:{
-    width:SCREEN_WIDTH,
-    alignItems:"center",
-    justifyContent:"center",
-    height:"100%",
   },
   centerText:{
   },

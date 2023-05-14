@@ -46,7 +46,7 @@ export default function OptionSelect ({navigation}) {
       }
       
       navigation.navigate('OptionSelectDetail',{optionOne: temp},{navigation});
-    };
+    };ScrollView
 
     return (      
             <View style={styles.container} >
@@ -71,7 +71,7 @@ export default function OptionSelect ({navigation}) {
                                 <View   key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
                                         <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                        <Image style={styles.backImg} source={info.optionUrl}/>       
+                                        <Image resizeMode='cover' style={styles.backImg} source={info.optionUrl}/>       
                                     </View>  
                                 </View>
                             )
@@ -117,13 +117,6 @@ const styles = StyleSheet.create({
         borderStyle:"solid",
         width:"100%",
     },
-    centerBottomContainer:{       
-        flex:5,
-        alignItems:"center",
-        borderColor:"red",
-        borderStyle:"solid",
-        width:"100%",
-    },
     bottomContainer:{
         flex:3,
         alignItems:"center",
@@ -143,21 +136,25 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center",
     },
-    itemBox:{
-        width:"50%",
-        height:"80%",
-        alignItems:"center",
-        borderRadius:30,
-    },
     testWhiteText:{
         color:"red",
     },
     backImg:{
-        flex:1,
-        width:'100%',
-        height:610,
-        opacity:0.7,
-        
+        flex:2,
+        width:'90%',
+        height:'100%',
+    },
+     itemBox:{
+        width:"70%",
+        height:"70%",
+        alignItems:"center",
+    },
+    centerBottomContainer:{       
+        flex:6,
+        alignItems:"center",
+        borderColor:"red",
+        borderStyle:"solid",
+        width:"100%",
     },
     itemBoxTitle:{
       marginBottom : '5%',

@@ -227,13 +227,7 @@ const styles = StyleSheet.create({
     borderStyle:"solid",
     width:"100%",
   },
-  centerBottomContainer:{       
-    flex:5,
-    alignItems:"center",
-    width:"100%",
-    flexDirection:"row"
-  },
-    bottomContainer:{
+  bottomContainer:{
     flex:1,
     alignItems:"center",
     borderColor:"black",
@@ -322,20 +316,25 @@ const styles = StyleSheet.create({
       justifyContent:"center",
       height:"100%",
   },
-  itemBox:{
-      width:"50%",
-      height:"80%",
-      alignItems:"center",
-      borderRadius:30,
-  },
   testWhiteText:{
       color:"red",
   },
   backImg:{
-      flex:1,
-      width:'100%',
-      height:"100%",
-      opacity:0.7
+        flex:2,
+        width:'90%',
+        height:'100%',
+  },
+  itemBox:{
+        width:"70%",
+        height:"70%",
+        alignItems:"center",
+  },
+  centerBottomContainer:{       
+        flex:6,
+        alignItems:"center",
+        borderColor:"red",
+        borderStyle:"solid",
+        width:"100%",
   },
   itemBoxTitle:{
     marginBottom : '5%',

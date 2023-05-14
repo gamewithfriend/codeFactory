@@ -1,7 +1,9 @@
 import React, { Component, useState ,useEffect} from 'react';
-import { ScrollView, View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator } from 'react-native';
-import axios from "axios";
+import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
+
+
 
 export default function GameMatchingScreen ({route,navigation}) {
     const [userInfos, setUserInfo] = useState([]);
@@ -28,6 +30,7 @@ export default function GameMatchingScreen ({route,navigation}) {
         .then((result) => {
             console.log(result.userInfo)
             resultUser = result.userInfo;
+            setUserInfo(resultUser);
         });
         
       };
@@ -56,12 +59,12 @@ export default function GameMatchingScreen ({route,navigation}) {
                                 horizontal 
                                 showsHorizontalScrollIndicator = {false}
                                 contentContainerStyle={styles.contentBorder}>
-                    {resultUser.length === 0? (
+                    {userInfos.length === 0? (
                         <View style={styles.day}>
                             <ActivityIndicator color="black" size="large"/>
                         </View>
                         ) : (
-                            resultUser.map((id, index) =>  
+                            userInfos.map((id, index) =>  
                         <View key={index} style={styles.contentBottom}>
                             <View style={styles.itemBox}>
                                 <Text style={styles.matchingUserInfo}>
@@ -72,6 +75,15 @@ export default function GameMatchingScreen ({route,navigation}) {
                                 </Text>
                                 <Text style={styles.matchingUserInfo}>
                                     {id.glTime}
+                                </Text>
+                                <Text style={styles.matchingUserInfo}>
+                                    {id.glChampion}
+                                </Text>
+                                <Text style={styles.matchingUserInfo}>
+                                    {id.glPosition}
+                                </Text>
+                                <Text style={styles.matchingUserInfo}>
+                                  매칭점수:  {id.matchingScore} 점 
                                 </Text>
                             </View>  
                         </View>
@@ -112,7 +124,7 @@ const styles = StyleSheet.create({
         fontSize:20,
     },
     bottomContainer:{
-        flex:3,
+        flex:8,
         alignItems:"center",
     },
     contentContainer:{
@@ -135,7 +147,7 @@ const styles = StyleSheet.create({
     itemBox:{
         backgroundColor:"black",
         width:"50%",
-        height:"80%",
+        height:"90%",
         alignItems:"center",
         borderRadius:30,
     },
