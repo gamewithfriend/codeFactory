@@ -75,8 +75,8 @@ export default function OtionSelectDetail ({ route,navigation }) {
       onChangeText(text);
       console.log(text)
       let searchKeyWord =text;
-      const responseChampion = fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do).then(?keyWord=${text}`);
-      console.log(responseChampion.gameVO)
+      const responseChampion = fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do).then(?keyWord=${text}`).then((response) => response.json());
+      console.log(responseChampion)
       // let jsonChampion = responseChampion.json();
       // console.log(jsonChampion)   
     };

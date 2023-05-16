@@ -1,5 +1,5 @@
 import React, { Component, useState ,useEffect} from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -9,6 +9,9 @@ export default function GameMatchingScreen ({route,navigation}) {
     const [userInfos, setUserInfo] = useState([]);
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
     let resultUser = [];
+    const addFriend = (index)=>{
+      alert(index)
+    };
     const getUserData = async() =>{
         console.log(route.params)
         tempOptionValueBox = route.params.optionValueBox;
@@ -67,9 +70,12 @@ export default function GameMatchingScreen ({route,navigation}) {
                             userInfos.map((id, index) =>  
                         <View key={index} style={styles.contentBottom}>
                             <View style={styles.itemBox}>
-                                <Text style={styles.matchingUserInfo}>
-                                    {id.glSummoner}
-                                </Text>
+                                <View onStartShouldSetResponder={() =>addFriend(id.glSummoner)} style={styles.frendBox}>
+                                  <Text style={styles.frendName}>
+                                      {id.glSummoner}
+                                  </Text>
+                                  <Image resizeMode='cover' style={styles.frendAdd} source={require('./assets/images/plus.jpg')}/>
+                                </View>
                                 <Text style={styles.matchingUserInfo}>
                                     {id.glRank}
                                 </Text>
@@ -145,7 +151,6 @@ const styles = StyleSheet.create({
         justifyContent:"center",
     },
     itemBox:{
-        backgroundColor:"black",
         width:"50%",
         height:"90%",
         alignItems:"center",
@@ -161,7 +166,18 @@ const styles = StyleSheet.create({
         marginTop:15,
     },
     matchingUserInfo:{
-        color:"white",
-        margin:"10%"
+        color:"black",
+        marginTop:'10%',
+    },
+    frendAdd:{
+      width:'30%',
+      height:"50%",
+      opacity:1
+    },
+    frendBox:{
+      flexDirection:"row"
+    },
+    frendName:{
+      color:"black",
     },
   });
