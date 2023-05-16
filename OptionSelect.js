@@ -82,7 +82,7 @@ export default function OptionSelect ({navigation}) {
                 </View> 
                 <View style={styles.bottomContainer} >
                   <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
-                  <Button color={"##CCCCCC"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                  <Button color={"#CCCCCC"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
                   <Button  style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
                 </View>       
             </View>              

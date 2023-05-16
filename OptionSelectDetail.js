@@ -74,11 +74,11 @@ export default function OtionSelectDetail ({ route,navigation }) {
     const onChange = (text)=>{
       onChangeText(text);
       console.log(text)
-      const getSearchChampionList = async() =>{
-        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${text}).then(response`);
-        let json = await response.json();
-        console.log(json)   
-      };
+      let searchKeyWord =text;
+      const responseChampion = fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do).then(?keyWord=${text}`);
+      console.log(responseChampion.gameVO)
+      // let jsonChampion = responseChampion.json();
+      // console.log(jsonChampion)   
     };
     const backOption = (index)=>{
       switch(index) {
@@ -300,7 +300,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
             <View style={styles.topContainer}>
                   <TextInput
                     style={styles.input}
-                    onChangeText={text => onChange({text })}
+                    onChangeText={text => onChange(text)}
                     value={text}
                   />
             </View>
