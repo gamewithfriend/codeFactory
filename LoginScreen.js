@@ -2,12 +2,12 @@ import React, { Component, useState, useEffect } from 'react';
 import { View, Text, Button,StyleSheet,TextInput, Alert } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-
+import { makeRedirectUri } from 'expo-auth-session';
 
 WebBrowser.maybeCompleteAuthSession();
 const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.googleusercontent.com';
 const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleusercontent.com';
-const androidClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleusercontent.com';
+const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
 
 export default function MainScreen ({navigation}) {
     const [token, setToken] = useState("");
@@ -16,36 +16,33 @@ export default function MainScreen ({navigation}) {
 
     const [request, response, promptAsync] = Google.useAuthRequest({
         expoClientId: expoClientId,
-        iosClientId: iosClientId,
-        androidClientId: androidClientId,
-        webClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+        
+        androidClientId: androidClientId
+        
       });
     
       useEffect(() => {
-        if (response?.type === 'success') {
+        if (response?.type === 'success') { 
             setToken(response.authentication.accessToken);
             getUserInfo();
           }
-      }, [response, token]);
+      }, [response]);
 
     const getUserInfo = async () => {
+        console.log(token);
     try {
         const response = await fetch(
         "https://www.googleapis.com/userinfo/v2/me",
         {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}` }
         }
         );
 
         const user = await response.json();
-        
+        console.log(user);
         setUserInfo(user);
         
-        console.log(userInfo);
-        if (userInfo != null) {
-            setLoaded(true);
-        }
-        console.log(loaded);
+        
 
     } catch (error) {
         Alert.alert("Error!");
@@ -91,7 +88,7 @@ export default function MainScreen ({navigation}) {
                 promptAsync();
                 }}
             />
-            {loaded ? <Text>Google ID : {userInfo.name}</Text> : <Text>No sync!!</Text>}
+            
             
         </View>
     );
