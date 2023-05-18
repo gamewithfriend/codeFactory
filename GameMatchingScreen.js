@@ -72,12 +72,15 @@ export default function GameMatchingScreen ({route,navigation}) {
                             <View style={styles.itemBox}>
                                 <View onStartShouldSetResponder={() =>addFriend(id.glSummoner)} style={styles.frendBox}>
                                   <Text style={styles.frendName}>
-                                      {id.glSummoner}
+                                     닉네임:{id.glNick}
                                   </Text>
                                   <Image resizeMode='cover' style={styles.frendAdd} source={require('./assets/images/plus.jpg')}/>
                                 </View>
                                 <Text style={styles.matchingUserInfo}>
-                                    {id.glRank}
+                                 소환사명: {id.glSummoner} 
+                                </Text>
+                                <Text style={styles.matchingUserInfo}>
+                                  {id.glRank}
                                 </Text>
                                 <Text style={styles.matchingUserInfo}>
                                     {id.glTime}
