@@ -5,7 +5,7 @@ export default function FriendScreen ({navigation}) {
     return (
         <View >
             <View >
-                   <Text>Friend</Text>
+                   <Text style={styles.titleFont}>친구</Text>
             </View>
               
         </View>
@@ -16,3 +16,12 @@ export default function FriendScreen ({navigation}) {
   
 
 }
+
+const styles = StyleSheet.create({
+      titleFont: {
+        fontSize:30,
+        marginTop:"10%",
+        marginLeft:"5%",
+      },
+
+});

@@ -9,8 +9,11 @@ export default function GameMatchingScreen ({route,navigation}) {
     const [userInfos, setUserInfo] = useState([]);
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
     let resultUser = [];
-    const addFriend = (index)=>{
-      alert(index)
+    const addFriend = (userNick)=>{
+      let yourNick = userNick;
+      let myNick ="TEST15";
+      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myNick}&yourNick=${yourNick}`);
+      console.log(responseAddFriend)
     };
     const getUserData = async() =>{
         console.log(route.params)
@@ -36,7 +39,8 @@ export default function GameMatchingScreen ({route,navigation}) {
             setUserInfo(resultUser);
         });
        
-      };
+    };
+    
     useEffect(() => {
         getUserData();
     },[]);
@@ -70,7 +74,7 @@ export default function GameMatchingScreen ({route,navigation}) {
                             userInfos.map((id, index) =>  
                         <View key={index} style={styles.contentBottom}>
                             <View style={styles.itemBox}>
-                                <View onStartShouldSetResponder={() =>addFriend(id.glSummoner)} style={styles.frendBox}>
+                                <View onStartShouldSetResponder={() =>addFriend(id.glNick)} style={styles.frendBox}>
                                   <Text style={styles.frendName}>
                                      닉네임:{id.glNick}
                                   </Text>
