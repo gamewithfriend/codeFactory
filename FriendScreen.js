@@ -12,6 +12,7 @@ export default function FriendScreen ({navigation}) {
       const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${myNick}`)
       const json = await response.json();
       console.log(json.friendList)
+      console.log(json.friendNum)
       setStateFriendList(json.friendList)
     };
     useEffect(() => {
