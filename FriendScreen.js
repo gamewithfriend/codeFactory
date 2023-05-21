@@ -5,6 +5,7 @@ const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function FriendScreen ({navigation}) {
     const [getMyNick, setMyNick] = useState("");
+    const [getFriendNum, setFriendNum] = useState(1);
     const [getStateFriendList, setStateFriendList] = useState([]);
     const getFriendList = async() =>{
       let myNick ="TEST15";
@@ -14,6 +15,7 @@ export default function FriendScreen ({navigation}) {
       console.log(json.friendList)
       console.log(json.friendNum)
       setStateFriendList(json.friendList)
+      setFriendNum(json.friendNum)
     };
     useEffect(() => {
       getFriendList();
@@ -40,7 +42,7 @@ export default function FriendScreen ({navigation}) {
                   <Text style={styles.statusMessageFont} >친구수:</Text>
                 </View>
                 <View  >
-                  <Text style={styles.statusMessageFont} >100</Text>
+                  <Text style={styles.statusMessageFont} >{getFriendNum}</Text>
                 </View>   
               </View>
               <View style={styles.friendListView}>
