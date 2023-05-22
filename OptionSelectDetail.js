@@ -71,14 +71,51 @@ export default function OtionSelectDetail ({ route,navigation }) {
     const selectChampion = (index)=>{
       setChampionSelect(index)
     };
+    const getSearchChampionList = async(keyWord) =>{
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
+      const json = await response.json();
+      for (let i =0; i<json.gameVO.length; i++) {
+        let tempChName = json.gameVO[i].chName;
+        let tempUrl = `./assets/images/chmapion/${tempChName}_0.jpg`;
+        json.gameVO[i]= {
+          chIndex : json.gameVO[i].chIndex,
+          chName : json.gameVO[i].chName,
+          chNameK: json.gameVO[i].chNameK,
+          optionUrl : tempUrl
+        };
+        if((i+1)%4 ==0){
+          let tempBox = [];
+          tempBox.push(json.gameVO[i]);
+          tempBox.push(json.gameVO[i-1]);
+          tempBox.push(json.gameVO[i-2]);
+          tempBox.push(json.gameVO[i-3]);
+          reChampionList.push(tempBox);
+        }
+        if(i == json.gameVO.length-1){
+          let tempLength = (i+1)%4;
+          let tempBox = [];
+          for(let n =0; n<tempLength; n++){
+            tempBox.push(json.gameVO[i-n]);  
+          }
+          if(tempBox.length !=4){
+            let tempTwoLength = 4-tempBox.length;
+            for(let u=0; u<tempTwoLength; u++){
+              let tempObjec = {
+                chName : "",
+                chIndex : "",
+                url : ""
+              };
+              tempBox.push(tempObjec);
+            }
+          }
+          reChampionList.push(tempBox); 
+        }
+      }
+      setChampionList(reChampionList)
+    };
     const onChange = (text)=>{
       onChangeText(text);
-      console.log(text)
-      let searchKeyWord =text;
-      const responseChampion = fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do).then(?keyWord=${text}`).then((response) => response.json());
-      console.log(responseChampion)
-      // let jsonChampion = responseChampion.json();
-      // console.log(jsonChampion)   
+      getSearchChampionList(text);   
     };
     const backOption = (index)=>{
       switch(index) {
@@ -817,10 +854,10 @@ const styles = StyleSheet.create({
       color:"red",
   },
   backImg:{
-      flex:1,
-      width:'100%',
-      height:"100%",
-      opacity:1
+    flex:1,
+    width:'100%',
+    height:"100%",
+    opacity:1
   },
   itemBoxTitle:{
     marginBottom : '5%',
