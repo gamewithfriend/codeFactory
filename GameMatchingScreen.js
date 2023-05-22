@@ -78,7 +78,7 @@ export default function GameMatchingScreen ({route,navigation}) {
                                   <Text style={styles.frendName}>
                                      닉네임:{id.glNick}
                                   </Text>
-                                  <Image resizeMode='cover' style={styles.frendAdd} source={require('./assets/images/plus.jpg')}/>
+                                  <Image resizeMode='contain' style={styles.frendAdd} source={require('./assets/images/plus.jpg')}/>
                                 </View>
                                 <Text style={styles.matchingUserInfo}>
                                  소환사명: {id.glSummoner} 
@@ -177,8 +177,8 @@ const styles = StyleSheet.create({
         marginTop:'10%',
     },
     frendAdd:{
-      width:'30%',
-      height:"50%",
+      width:'10%',
+      height:"60%",
       opacity:1
     },
     frendBox:{

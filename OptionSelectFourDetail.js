@@ -11,6 +11,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
     const [championList, setChampionList] = useState([]);
     const [optionList, setOptionList] = useState([]);
     const [getChampionSelect, setChampionSelect] = useState("");
+    const [text, onChangeText] = React.useState('Useless Text');
     let reChampionList = [];
     let rankList = [   
                                 {optionName:"unRank",
@@ -69,6 +70,52 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
     // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
       setChampionSelect(index)
+    };
+    const getSearchChampionList = async(keyWord) =>{
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
+      const json = await response.json();
+      for (let i =0; i<json.gameVO.length; i++) {
+        let tempChName = json.gameVO[i].chName;
+        let tempUrl = `./assets/images/chmapion/${tempChName}_0.jpg`;
+        json.gameVO[i]= {
+          chIndex : json.gameVO[i].chIndex,
+          chName : json.gameVO[i].chName,
+          chNameK: json.gameVO[i].chNameK,
+          optionUrl : tempUrl
+        };
+        if((i+1)%4 ==0){
+          let tempBox = [];
+          tempBox.push(json.gameVO[i]);
+          tempBox.push(json.gameVO[i-1]);
+          tempBox.push(json.gameVO[i-2]);
+          tempBox.push(json.gameVO[i-3]);
+          reChampionList.push(tempBox);
+        }
+        if(i == json.gameVO.length-1){
+          let tempLength = (i+1)%4;
+          let tempBox = [];
+          for(let n =0; n<tempLength; n++){
+            tempBox.push(json.gameVO[i-n]);  
+          }
+          if(tempBox.length !=4){
+            let tempTwoLength = 4-tempBox.length;
+            for(let u=0; u<tempTwoLength; u++){
+              let tempObjec = {
+                chName : "",
+                chIndex : "",
+                url : ""
+              };
+              tempBox.push(tempObjec);
+            }
+          }
+          reChampionList.push(tempBox); 
+        }
+      }
+      setChampionList(reChampionList)
+    };
+    const onChange = (text)=>{
+      onChangeText(text);
+      getSearchChampionList(text);   
     };
     // 나머지 옵션 select index 감지 함수
     const optionChange = (index)=>{
@@ -198,7 +245,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
                   <View style={styles.bottomOptionContainerTitleBox} >
@@ -293,7 +340,14 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
       return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
-                   <Text style={styles.topContainerTitle}>{route.params.optionFour}</Text>
+                   <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
+            </View>
+            <View style={styles.topContainer}>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={text => onChange(text)}
+                    value={text}
+                  />
             </View>
             <View style={styles.centerContainer} >
               <View style={styles.centerTopContainer}>
@@ -327,7 +381,129 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
+            </View>
+            <View style={styles.bottomOptionContainer} >
+              <View style={styles.bottomOptionContainerTitleBox} >
+                <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              </View>
+              <View style={styles.bottomOptionContainerTextBox} >
+                   {route.params.optionOne === undefined? (
+                      <View>
+                      </View>
+                      ):(
+                        <View>
+                          <View style={styles.bottomOptionContainerTextInnerBox} >
+                            <View style={styles.indexText}>
+                              <Text style={styles.bottomOptionInnerText}>1</Text>
+                            </View>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
+                            </View>
+                            <View  style={styles.centerText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
+                            </View> 
+                          </View>
+                          <View style={styles.lineDesign} />           
+                        </View>           
+                      )
+                   }
+                     {route.params.optionTwo === undefined? (
+                        <View>
+                        </View>
+                        ):(
+                          <View> 
+                            <View style={styles.bottomOptionContainerTextInnerBox} >
+                              <View style={styles.indexText}>
+                                <Text style={styles.bottomOptionInnerText}>2</Text>
+                              </View>
+                              <View style={styles.leftText}>
+                                <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwo}:</Text>
+                              </View>
+                              <View style={styles.centerText}>
+                                <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwoDetail}</Text>
+                              </View>
+                            </View>
+                            <View style={styles.lineDesign} /> 
+                          </View>
+                        )
+                     }
+                    {route.params.optionThree === undefined? (
+                        <View>
+                        </View>
+                      ):(
+                        <View>
+                          <View style={styles.bottomOptionContainerTextInnerBox} >
+                            <View style={styles.indexText}>
+                              <Text style={styles.bottomOptionInnerText}>3</Text>
+                            </View>
+                            <View style={styles.leftText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionThree}:</Text>
+                            </View>
+                            <View style={styles.centerText}>
+                              <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionThreeDetail}</Text>
+                            </View>                          
+                          </View>
+                          <View style={styles.lineDesign} />    
+                        </View>
+                      )
+                    }
+                     {route.params.optionFour === undefined? (
+                        <View>
+                        </View>
+                        ):(
+                            <View>
+                              <View style={styles.bottomOptionContainerTextInnerBox} >
+                                <View style={styles.indexText}>
+                                  <Text style={styles.bottomOptionInnerText}>4</Text>
+                                </View>
+                                <View style={styles.leftText}>
+                                  <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionFour}:</Text>
+                                </View>
+                                <View style={styles.centerText}>
+                                  <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionFourDetail}</Text>
+                                </View>
+                              </View>
+                              <View style={styles.lineDesign} />    
+                            </View>
+                        )
+                     }
+                  </View>                  
+            </View>   
+        </View>
+      );
+    }else if(route.params.optionTwo ==="position"){
+      return (
+        <View style={styles.container}>
+            <View style={styles.topContainer}>
+                   <Text style={styles.topContainerTitle}>{route.params.optionTwo}</Text>
+            </View>
+            <View style={styles.centerContainer} >
+              <View style={styles.centerTopContainer}>
+                <ScrollView pagingEnabled 
+                            horizontal
+                            onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
+                            showsHorizontalScrollIndicator = {false}>
+                    {timeList.length === 0? (
+                        <View >
+                            <ActivityIndicator color="black" size="large"/>
+                        </View>
+                        ) : (
+                        positionList.map( (info, index) =>    
+                            <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
+                                <View style={styles.itemBox}>
+                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
+                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                </View>  
+                            </View>
+                        )
+                        )
+                    }         
+                </ScrollView>
+              </View>
+            </View>
+            <View style={styles.bottomContainer} >
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
                   <View style={styles.bottomOptionContainerTitleBox} >
@@ -415,7 +591,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                         )
                      }
                   </View>
-                </View>            
+                </View>         
         </View>
       );
     }else if(route.params.optionFour ==="position"){
@@ -449,7 +625,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
                   <View style={styles.bottomOptionContainerTitleBox} >
@@ -571,7 +747,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
                   <View style={styles.bottomOptionContainerTitleBox} >

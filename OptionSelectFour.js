@@ -91,7 +91,7 @@ export default function OptionSelectFour ({ route,navigation }) {
                     </View>
                 </View> 
                 <View style={styles.bottomContainer} >
-                  <Button onPress={optionSubmit} title='선택하기'></Button>
+                  <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
                 </View>
                 <View style={styles.bottomOptionContainer} >
                   <View style={styles.bottomOptionContainerTitleBox} >

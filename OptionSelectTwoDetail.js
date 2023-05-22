@@ -11,6 +11,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     const [championList, setChampionList] = useState([]);
     const [optionList, setOptionList] = useState([]);
     const [getChampionSelect, setChampionSelect] = useState("");
+    const [text, onChangeText] = React.useState('Useless Text');
     let reChampionList = [];
     let rankList = [   
                                 {optionName:"unRank",
@@ -70,6 +71,52 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     const selectChampion = (index)=>{
       setChampionSelect(index)
     };
+    const getSearchChampionList = async(keyWord) =>{
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
+      const json = await response.json();
+      for (let i =0; i<json.gameVO.length; i++) {
+        let tempChName = json.gameVO[i].chName;
+        let tempUrl = `./assets/images/chmapion/${tempChName}_0.jpg`;
+        json.gameVO[i]= {
+          chIndex : json.gameVO[i].chIndex,
+          chName : json.gameVO[i].chName,
+          chNameK: json.gameVO[i].chNameK,
+          optionUrl : tempUrl
+        };
+        if((i+1)%4 ==0){
+          let tempBox = [];
+          tempBox.push(json.gameVO[i]);
+          tempBox.push(json.gameVO[i-1]);
+          tempBox.push(json.gameVO[i-2]);
+          tempBox.push(json.gameVO[i-3]);
+          reChampionList.push(tempBox);
+        }
+        if(i == json.gameVO.length-1){
+          let tempLength = (i+1)%4;
+          let tempBox = [];
+          for(let n =0; n<tempLength; n++){
+            tempBox.push(json.gameVO[i-n]);  
+          }
+          if(tempBox.length !=4){
+            let tempTwoLength = 4-tempBox.length;
+            for(let u=0; u<tempTwoLength; u++){
+              let tempObjec = {
+                chName : "",
+                chIndex : "",
+                url : ""
+              };
+              tempBox.push(tempObjec);
+            }
+          }
+          reChampionList.push(tempBox); 
+        }
+      }
+      setChampionList(reChampionList)
+    };
+    const onChange = (text)=>{
+      onChangeText(text);
+      getSearchChampionList(text);   
+    };
     const backOption = (index)=>{
       console.log(index)
       console.log(route.params)
@@ -84,10 +131,6 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
         route.params.optionFourDetail
       ];
       let forUseNumner = deleteProperty.length - index;
-      // for(let i =7; i <index-2; i--){
-      //     console.log(i)
-      //     deleteProperty[i];
-      // }
       switch(index) {
         case 1: 
           navigation.navigate('OptionSelect',route.params,{navigation});
@@ -180,7 +223,6 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
           reChampionList.push(tempBox); 
         }
       }       
-      // console.log(reChampionList)
       setChampionList(reChampionList)
     };
     useEffect(() => {
@@ -217,7 +259,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
               <View style={styles.bottomOptionContainerTitleBox} >
@@ -312,7 +354,14 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       return (
         <View style={styles.container}>
             <View style={styles.topContainer}>
-                   <Text style={styles.topContainerTitle}>{route.params.optionTwo}</Text>
+                   <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
+            </View>
+            <View style={styles.topContainer}>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={text => onChange(text)}
+                    value={text}
+                  />
             </View>
             <View style={styles.centerContainer} >
               <View style={styles.centerTopContainer}>
@@ -346,13 +395,13 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
-                  <View style={styles.bottomOptionContainerTitleBox} >
-                    <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
-                  </View>
-                  <View style={styles.bottomOptionContainerTextBox} >
+              <View style={styles.bottomOptionContainerTitleBox} >
+                <Text style={styles.topContainerTitle}>지금까지 선택한 옵션</Text>
+              </View>
+              <View style={styles.bottomOptionContainerTextBox} >
                    {route.params.optionOne === undefined? (
                       <View>
                       </View>
@@ -365,7 +414,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                             <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View onStartShouldSetResponder={() =>backOption(2)} style={styles.centerText}>
+                            <View  style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -382,7 +431,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                               <View style={styles.indexText}>
                                 <Text style={styles.bottomOptionInnerText}>2</Text>
                               </View>
-                              <View onStartShouldSetResponder={() =>backOption(3)} style={styles.leftText}>
+                              <View style={styles.leftText}>
                                 <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionTwo}:</Text>
                               </View>
                               <View style={styles.centerText}>
@@ -433,8 +482,8 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                             </View>
                         )
                      }
-                  </View>
-                </View>                    
+                  </View>                  
+            </View>   
         </View>
       );
     }else if(route.params.optionTwo ==="position"){
@@ -468,7 +517,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
                   <View style={styles.bottomOptionContainerTitleBox} >
@@ -590,7 +639,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
               </View>
             </View>
             <View style={styles.bottomContainer} >
-              <Button onPress={optionSubmit} title='선택하기'></Button>
+              <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
                   <View style={styles.bottomOptionContainerTitleBox} >
