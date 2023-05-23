@@ -10,26 +10,25 @@ const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleu
 const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
 
 export default function MainScreen ({navigation}) {
-    const [token, setToken] = useState("");
-    const [userInfo, setUserInfo] = useState(null);
+    // const [userInfo, setUserInfo] = useState(null);
     const [loaded, setLoaded] = useState(false);
+    let token;
+    let userInfo = {};
 
     const [request, response, promptAsync] = Google.useAuthRequest({
         expoClientId: expoClientId,
-        
+        iosClientId : iosClientId,
         androidClientId: androidClientId
-        
       });
     
       useEffect(() => {
         if (response?.type === 'success') { 
-            setToken(response.authentication.accessToken);
+            token = response.authentication.accessToken;
             getUserInfo();
           }
       }, [response]);
 
     const getUserInfo = async () => {
-        console.log(token);
     try {
         const response = await fetch(
         "https://www.googleapis.com/userinfo/v2/me",
@@ -39,10 +38,11 @@ export default function MainScreen ({navigation}) {
         );
 
         const user = await response.json();
-        console.log(user);
-        setUserInfo(user);
-        
-        
+        if (user != null && user != undefined) {
+            userInfo = user;
+        }
+        // setUserInfo(user);
+        console.log(userInfo);
 
     } catch (error) {
         Alert.alert("Error!");
@@ -107,4 +107,8 @@ const styles = StyleSheet.create({
     },
 
   });
+
+const validUserInfo = function () {
+
+}
 
