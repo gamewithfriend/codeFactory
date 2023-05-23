@@ -58,19 +58,26 @@ export default function OptionSelectTwo ({ route,navigation }) {
       let tempOptionValueTwo = changeOptionValueTwo[indexNumber].optionName;
       if(tempOptionValueTwo == "선택하지 않음"){
         alert("게임 매칭 시작");
-      }
-      console.log("조건1")
-      console.log(route.params.optionOne)
-      console.log("조건1-1")
-      console.log(route.params.optionOneDetail)
-      console.log("조건2")
-      console.log(tempOptionValueTwo)
-      console.log("----------OptionSelectTwo.js-------------Finsh------------------")
-      navigation.navigate('OptionSelectTwoDetail',{  optionOne: route.params.optionOne
-                                                    ,optionOneDetail: route.params.optionOneDetail
-                                                    ,optionTwo:tempOptionValueTwo
+        navigation.navigate('GameMatching',{  0: route.params.optionOne
+                                                    ,1: route.params.optionOneDetail
+                                                    ,2:tempOptionValueTwo
                                                     ,optionValueBox: changeOptionValueTwo
                                                   },{navigation});
+      }else{
+        console.log("조건1")
+        console.log(route.params.optionOne)
+        console.log("조건1-1")
+        console.log(route.params.optionOneDetail)
+        console.log("조건2")
+        console.log(tempOptionValueTwo)
+        console.log("----------OptionSelectTwo.js-------------Finsh------------------")
+        navigation.navigate('OptionSelectTwoDetail',{  optionOne: route.params.optionOne
+                                                      ,optionOneDetail: route.params.optionOneDetail
+                                                      ,optionTwo:tempOptionValueTwo
+                                                      ,optionValueBox: changeOptionValueTwo
+                                                    },{navigation});
+      }
+      
     };
 
      useEffect(() => {

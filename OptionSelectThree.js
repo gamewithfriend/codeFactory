@@ -28,25 +28,34 @@ export default function OptionSelectThree ({ route,navigation }) {
       let tempOptionValueThree = changeOptionValueTwo[indexNumber].optionName;
       if(tempOptionValueThree == "선택하지 않음"){
         alert("게임 매칭 시작");
-      }
-      console.log("조건1")
-      console.log(route.params.optionOne)
-      console.log("조건1-1")
-      console.log(route.params.optionOneDetail)
-      console.log("조건2")
-      console.log(route.params.optionTwo)
-      console.log("조건2-2")
-      console.log(route.params.optionTwoDetail)
-      console.log("조건3")
-      console.log(tempOptionValueThree)
-      console.log("----------OptionSelectThree.js---------Finsh----------------------")
-      navigation.navigate('OptionSelectThreeDetail',{  optionOne: route.params.optionOne
-                                                    ,optionOneDetail: route.params.optionOneDetail
-                                                    ,optionTwo:route.params.optionTwo
-                                                    ,optionTwoDetail:route.params.optionTwoDetail
-                                                    ,optionThree:tempOptionValueThree
+        navigation.navigate('GameMatching',{  0: route.params.optionOne
+                                                    ,1: route.params.optionOneDetail
+                                                    ,2:route.params.optionTwo
+                                                    ,3:route.params.optionTwoDetail
+                                                    ,4:tempOptionValueThree
                                                     ,optionValueBox: route.params.optionValueBox
                                                   },{navigation});
+      }else{
+        console.log("조건1")
+        console.log(route.params.optionOne)
+        console.log("조건1-1")
+        console.log(route.params.optionOneDetail)
+        console.log("조건2")
+        console.log(route.params.optionTwo)
+        console.log("조건2-2")
+        console.log(route.params.optionTwoDetail)
+        console.log("조건3")
+        console.log(tempOptionValueThree)
+        console.log("----------OptionSelectThree.js---------Finsh----------------------")
+        navigation.navigate('OptionSelectThreeDetail',{  optionOne: route.params.optionOne
+                                                      ,optionOneDetail: route.params.optionOneDetail
+                                                      ,optionTwo:route.params.optionTwo
+                                                      ,optionTwoDetail:route.params.optionTwoDetail
+                                                      ,optionThree:tempOptionValueThree
+                                                      ,optionValueBox: route.params.optionValueBox
+                                                    },{navigation});
+      }
+      
     };
 
      useEffect(() => {
