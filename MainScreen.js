@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { View, Text, Button,StyleSheet,TextInput } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Image } from 'react-native';
 import GameMatchingScreen from './GameMatchingScreen';
 export default function MainScreen ({navigation}) {
     
@@ -14,16 +14,23 @@ export default function MainScreen ({navigation}) {
     };
     return (
         <View style={styles.mainContainer}>
-            <View style={styles.testClick}>
-                   
+            <View style={styles.mainSatusView}>
+              <View style={styles.mainSatusItemView}>
+                <Image resizeMode='contain' style={styles.statusImg} 
+                source={require("./assets/images/bell.png")}/>     
+              </View>
+              <View style={styles.mainSatusItemView}>
+                <Image resizeMode='contain' style={styles.statusImg} 
+                source={require("./assets/images/chat.png")}/>     
+              </View>     
             </View>
             <View style={styles.testClickCenter}>
-                <Button color={"black"} title='매칭' onPress={()=> navigation.navigate('GameMatching')}   style={styles.clickButton}>
-                    
-                </Button>
+                
             </View>
-            <View style={styles.testClick}>
-
+            <View style={styles.testClickCenter}>
+              <Button color={"black"} title='매칭' onPress={()=> navigation.navigate('OptionSelect')}   style={styles.clickButton}>
+                    
+              </Button>
             </View>
               
         </View>
@@ -43,6 +50,18 @@ const styles = StyleSheet.create({
         borderRadius:30,
         marginTop:20,
         fontSize:15
+    },
+    mainSatusView: {
+      width:"100%",
+      height:"4%",
+      flexDirection:"row",
+      marginTop:"15%",
+      justifyContent:"flex-end",
+    },
+    mainSatusItemView: {
+      width:"10%",
+      height:"100%",
+      marginRight:"3%",
     },
     testClick: {
         borderColor:"black",
@@ -68,6 +87,11 @@ const styles = StyleSheet.create({
     whiteTitle:{
         fontSize:20,
         color:"white"
+    },
+    statusImg: {
+        width:"100%",
+        height:"100%",
+        
     },
 
   });
