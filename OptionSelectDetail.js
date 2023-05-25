@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState } from 'react';
 import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity  } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
@@ -73,7 +73,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
     };
     sessionGet = async () => {
       try {
-        const value = await AsyncStorage.getItem('TASKS');
+        const value = await AsyncStorage.getItem('myNick');
         if (value !== null) {
           // We have data!!
           console.log(value);

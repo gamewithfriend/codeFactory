@@ -1,7 +1,7 @@
 import React, { Component, useState,useEffect } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Image,AsyncStorage } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Image } from 'react-native';
 import GameMatchingScreen from './GameMatchingScreen';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function MainScreen ({navigation}) {
     
     const [id, setid] = useState("");
@@ -13,10 +13,10 @@ export default function MainScreen ({navigation}) {
         alert(passWord);
         navigation.navigate("DETAIL");
     };
-    sessionSave = async   ()=>{
-        let myNick= "폴리보이";
+    sessionSave = async ()=>{
+        let myNick= '폴리보이';
         await AsyncStorage.setItem(
-            '@MySuperStore:myNick',
+            'myNick',
             myNick,
           );
     };

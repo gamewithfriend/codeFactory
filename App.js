@@ -13,7 +13,7 @@ import Login from './LoginScreen';
 import ChatScreen from './ChatScreen';
 import FriendScreen from './FriendScreen';
 import GameMatching from './GameMatchingScreen';
-import AdminScreen from './AdminScreen';
+import SettingScreen from './SettingScreen';
 import OptionSelect from './OptionSelect';
 import OptionSelectDetail from './OptionSelectDetail';
 import OptionSelectTwo from './OptionSelectTwo';
@@ -36,7 +36,7 @@ function HomeTab(){
         <Tab.Screen name='ChatScreen' component={ChatScreen}/>
         <Tab.Screen name='FriendScreen' component={FriendScreen}/>
         <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/>
-        <Tab.Screen name='AdminScreen' component={AdminScreen}/>
+        <Tab.Screen name='Setting' component={SettingScreen}/>
       </Tab.Navigator>
   
   );
