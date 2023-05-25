@@ -71,6 +71,17 @@ export default function OtionSelectDetail ({ route,navigation }) {
     const selectChampion = (index)=>{
       setChampionSelect(index)
     };
+    sessionGet = async () => {
+      try {
+        const value = await AsyncStorage.getItem('TASKS');
+        if (value !== null) {
+          // We have data!!
+          console.log(value);
+        }
+      } catch (error) {
+        // Error retrieving data
+      }
+    };
     const getSearchChampionList = async(keyWord) =>{
       const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
       const json = await response.json();
@@ -205,6 +216,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
     useEffect(() => {
       getChampionList();
       setRouteParam();
+      sessionGet();
     },[]);
     if(route.params.optionOne ==="rank"){
       return (

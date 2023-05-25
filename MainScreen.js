@@ -1,6 +1,7 @@
-import React, { Component, useState } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Image } from 'react-native';
+import React, { Component, useState,useEffect } from 'react';
+import { View, Text, Button,StyleSheet,TextInput,Image,AsyncStorage } from 'react-native';
 import GameMatchingScreen from './GameMatchingScreen';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 export default function MainScreen ({navigation}) {
     
     const [id, setid] = useState("");
@@ -12,6 +13,16 @@ export default function MainScreen ({navigation}) {
         alert(passWord);
         navigation.navigate("DETAIL");
     };
+    sessionSave = async   ()=>{
+        let myNick= "폴리보이";
+        await AsyncStorage.setItem(
+            '@MySuperStore:myNick',
+            myNick,
+          );
+    };
+    useEffect(() => {
+        sessionSave();
+      },[]);
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
