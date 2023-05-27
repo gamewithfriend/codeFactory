@@ -69,7 +69,7 @@ export default function MainScreen ({navigation}) {
                             ) : (
                             getUserLikeTop5List.map( (info, index) =>    
                                 <View   key={index} style={styles.contentBottom}>
-                                    <Text style={styles.itemBoxTitle} >추천 매너 유저 TOP5</Text>
+                                    <Text style={styles.itemBoxTitle} >추천 매너 유저 TOP{index+1}</Text>
                                     <View style={styles.itemBox}>
                                         <Text style={styles.itemBoxTitle} >닉네임: {info.unickname}</Text>
                                         <Text style={styles.itemBoxTitle} >좋아요 수 :{info.ulike}</Text>
