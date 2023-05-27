@@ -23,7 +23,6 @@ export default function MainScreen ({navigation}) {
     const serverGetUserLikeTop5List = async(keyWord) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
-      console.log(jsonUserList.selectLikeTop5List)
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
     };
     sessionSave = async ()=>{
@@ -161,6 +160,14 @@ const styles = StyleSheet.create({
     },
     itemBoxTitle:{
       marginBottom : '5%',
+    },
+    frendBox:{
+      flexDirection:"row"
+    },
+    frendAdd:{
+      width:'10%',
+      height:"60%",
+      opacity:1
     },
 
   });
