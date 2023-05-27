@@ -41,8 +41,11 @@ export default function MainScreen ({navigation}) {
         if (user != null && user != undefined) {
             userInfo = user;
         }
-        // setUserInfo(user);
         console.log(userInfo);
+
+        if (userInfo != null) {
+            validUserInfo();
+        }
 
     } catch (error) {
         Alert.alert("Error!");
