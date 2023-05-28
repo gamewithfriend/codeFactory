@@ -110,7 +110,7 @@ export default function MainScreen ({navigation}) {
                                           </View>
                                           <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLike(info.uNickname)}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
-                                            source={require('./emptyHeart.png')}/>
+                                            source={require('./assets/images/emptyHeart.png')}/>
                                           </View>
                                         </View>
                                         <Text style={styles.itemBoxTitle} >좋아요 수 :{info.cnt}</Text>
