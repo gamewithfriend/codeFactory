@@ -35,7 +35,9 @@ export default function MainScreen ({navigation}) {
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
     };
     const serverGetTargetUserLikeYn = async(youId) =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do`)
+      console.log(getSessionId)
+      console.log(youId)
+      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?`)
       const jsonUserLikeYn = await response.json();
       console.log(jsonUserLikeYn)
       console.log("---------------------------------")
@@ -44,8 +46,6 @@ export default function MainScreen ({navigation}) {
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
-      console.log(indexNumber)
-      console.log(getUserLikeTop5List[indexNumber].ylYouId)
       let youId =getUserLikeTop5List[indexNumber].ylYouId;
       serverGetTargetUserLikeYn(youId);      
     };
