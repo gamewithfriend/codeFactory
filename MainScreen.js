@@ -34,14 +34,20 @@ export default function MainScreen ({navigation}) {
       console.log(jsonUserList.selectLikeTop5List)
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
     };
-    const serverGetTargetUserLikeYn = async() =>{
+    const serverGetTargetUserLikeYn = async(youId) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do`)
       const jsonUserLikeYn = await response.json();
       console.log(jsonUserLikeYn)
+      console.log("---------------------------------")
+      console.log(youId)
     };
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
-      console.log(Math.floor(index/100))     
+      let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
+      console.log(indexNumber)
+      console.log(getUserLikeTop5List[indexNumber].ylYouId)
+      let youId =getUserLikeTop5List[indexNumber].ylYouId;
+      serverGetTargetUserLikeYn(youId);      
     };
     const addFriend = (userNick)=>{
       let yourNick = userNick;

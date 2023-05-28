@@ -87,7 +87,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
       const json = await response.json();
       for (let i =0; i<json.gameVO.length; i++) {
         let tempChName = json.gameVO[i].chName;
-        let tempUrl = `./assets/images/chmapion/${tempChName}_0.jpg`;
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/champ/${json.gameVO[i].url}`;
         json.gameVO[i]= {
           chIndex : json.gameVO[i].chIndex,
           chName : json.gameVO[i].chName,
