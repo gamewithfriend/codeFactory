@@ -2,7 +2,8 @@ import React, { Component, useState, useEffect } from 'react';
 import { View, Text, Button,StyleSheet,TextInput, Alert } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { makeRedirectUri } from 'expo-auth-session';
+import *  as Device from 'expo-device';
+import * as Network from 'expo-network';
 
 WebBrowser.maybeCompleteAuthSession();
 const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.googleusercontent.com';
@@ -38,9 +39,19 @@ export default function MainScreen ({navigation}) {
         );
 
         const user = await response.json();
-        if (user != null && user != undefined) {
-            userInfo = user;
+        console.log(user.verified_email == true)
+        if (user != null && user != undefined && user.verified_email ==true) {
+            userInfo.uGgId = user.id;
+            userInfo.uName = user.name;
+            userInfo.email = user.email;
         }
+        
+        let ipAddress = await Network.getIpAddressAsync();
+        let modelName = Device.modelName;
+        
+        userInfo.uLastLoginIp = ipAddress;
+        userInfo.uLastTerminalKind = modelName;
+        
         console.log(userInfo);
 
         if (userInfo != null) {
@@ -48,6 +59,7 @@ export default function MainScreen ({navigation}) {
         }
 
     } catch (error) {
+        console.log(error);
         Alert.alert("Error!");
     }
     };
@@ -114,4 +126,3 @@ const styles = StyleSheet.create({
 const validUserInfo = function () {
 
 }
-
