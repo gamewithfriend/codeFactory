@@ -39,11 +39,10 @@ export default function MainScreen ({navigation}) {
         );
 
         const user = await response.json();
-        console.log(user.verified_email == true)
+        
         if (user != null && user != undefined && user.verified_email ==true) {
-            userInfo.uGgId = user.id;
+            userInfo.uIntgId = user.id;
             userInfo.uName = user.name;
-            userInfo.email = user.email;
         }
         
         let ipAddress = await Network.getIpAddressAsync();
@@ -55,7 +54,16 @@ export default function MainScreen ({navigation}) {
         console.log(userInfo);
 
         if (userInfo != null) {
-            validUserInfo();
+            const paramData = JSON.stringify(userInfo);
+            console.log(paramData);
+            const userInfo = fetch("http://3.37.211.126:8080/login/loginCheck.do", {
+                                    method : "POST",
+                                    headers : {
+                                        "Content-Type" : "application/json"
+                                    },
+                                    body : paramData
+                                  })
+                                   .then(response => response.json());
         }
 
     } catch (error) {
@@ -85,12 +93,12 @@ export default function MainScreen ({navigation}) {
                 style={styles.input}/>             
             </View>
             <View>
-                <TextInput 
+                {/* <TextInput 
                 onSubmitEditing={sendApi}
                 onChangeText={onChangepassWord}
                 value={passWord}  
                 placeholder={"passWord"} 
-                style={styles.input}/>               
+                style={styles.input}/>                */}
             </View>
             <View>
                 <Text style={{fontSize:30}}>Main Screen</Text>
@@ -122,7 +130,3 @@ const styles = StyleSheet.create({
     },
 
   });
-
-const validUserInfo = function () {
-
-}
