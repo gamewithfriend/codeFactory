@@ -52,18 +52,18 @@ export default function MainScreen ({navigation}) {
         userInfo.uLastTerminalKind = modelName;
         
         console.log(userInfo);
+        let paramData = JSON.stringify(userInfo);
 
         if (userInfo != null) {
-            const paramData = JSON.stringify(userInfo);
-            console.log(paramData);
-            const userInfo = fetch("http://3.37.211.126:8080/login/loginCheck.do", {
+            const userInfo = await fetch("http://3.37.211.126:8080/login/loginCheck.do", {
                                     method : "POST",
                                     headers : {
-                                        "Content-Type" : "application/json"
+                                        'Content-Type': 'application/json; charset=utf-8',
                                     },
                                     body : paramData
                                   })
-                                   .then(response => response.json());
+                                   .then(response => response.json())
+                                   ;
         }
 
     } catch (error) {
