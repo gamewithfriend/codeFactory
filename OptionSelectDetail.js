@@ -169,10 +169,10 @@ export default function OtionSelectDetail ({ route,navigation }) {
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
-      let json = await response.json();   
+      let json = await response.json(); 
       for (let i =0; i<json.gameVO.length; i++) {
         let tempChName = json.gameVO[i].chName;
-        let tempUrl = `./assets/images/chmapion/${tempChName}_0.jpg`;
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/champ/${json.gameVO[i].url}`;
         json.gameVO[i]= {
           chIndex : json.gameVO[i].chIndex,
           chName : json.gameVO[i].chName,
@@ -365,16 +365,40 @@ export default function OtionSelectDetail ({ route,navigation }) {
                         championList.map((champion, index) =>         
                           <View key={index} style={styles.centerBottomContainer}> 
                                                   
-                            <View onStartShouldSetResponder={() =>selectChampion(champion[0].chNameK)} style={styles.itemBox}>
+                            <View onStartShouldSetResponder={() =>selectChampion(champion[0].chNameK)} style={styles.champItemBox}>
+                              <Image
+                                style={styles.champImg}
+                                source={{
+                                  uri: `${champion[0].optionUrl}`,
+                                }}
+                              />
                               <Text>{champion[0].chNameK}</Text>
                             </View> 
-                            <View onStartShouldSetResponder={() => selectChampion(champion[1].chNameK)} style={styles.itemBox}>
+                            <View onStartShouldSetResponder={() => selectChampion(champion[1].chNameK)} style={styles.champItemBox}>
+                               <Image
+                                style={styles.champImg}
+                                source={{
+                                  uri: `${champion[1].optionUrl}`,
+                                }}
+                              />
                               <Text>{champion[1].chNameK}</Text>
                             </View>
-                            <View onStartShouldSetResponder={() => selectChampion(champion[2].chNameK)} style={styles.itemBox}>
+                            <View onStartShouldSetResponder={() => selectChampion(champion[2].chNameK)} style={styles.champItemBox}>
+                               <Image
+                                style={styles.champImg}
+                                source={{
+                                  uri: `${champion[2].optionUrl}`,
+                                }}
+                              />
                               <Text>{champion[2].chNameK}</Text>
                             </View> 
-                            <View onStartShouldSetResponder={() => selectChampion(champion[3].chNameK)} style={styles.itemBox}>
+                            <View onStartShouldSetResponder={() => selectChampion(champion[3].chNameK)} style={styles.champItemBox}>
+                               <Image
+                                style={styles.champImg}
+                                source={{
+                                  uri: `${champion[3].optionUrl}`,
+                                }}
+                              />
                               <Text>{champion[3].chNameK}</Text>
                             </View>
                           </View> 
@@ -758,7 +782,7 @@ const styles = StyleSheet.create({
     width:"100%",
   },
   centerBottomContainer:{       
-    flex:5,
+    height:"7%",
     alignItems:"center",
     width:"100%",
     flexDirection:"row"
@@ -857,10 +881,21 @@ const styles = StyleSheet.create({
     height:"60%",
     margin: "3%",
   },
+  champItemBox:{
+    width:"20%",
+    height:"90%",
+    marginTop: "3%",
+    marginRight:"2%",
+    marginLeft:"2%",
+  },
   itemBoxImg:{
     width:"55%",
     height:"60%",
     margin: "3%",
+  },
+  champImg:{
+    width:"100%",
+    height:"90%",
   },
   testWhiteText:{
       color:"red",

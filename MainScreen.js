@@ -10,30 +10,50 @@ export default function MainScreen ({navigation}) {
     
     const [id, setid] = useState("");
     const [passWord, setpassWord] = useState("");
+    const [getSessionId, setSessionId] = useState("");
+    const [getLikeYn, setLikeYn] = useState("");
     const [getUserLikeTop5List, setUserLikeTop5List] = useState([]);
     const [ok, setOptionName] = useState(1);
     const onChangeid = (payload)=>setid(payload);
     const onChangepassWord = (payload)=>setpassWord(payload);
      let reChampionList = [];
     const sendApi = ()=>{
-        alert(id);
-        alert(passWord);
         navigation.navigate("DETAIL");
-    };
-    const serverGetUserLikeTop5List = async(keyWord) =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
-      const jsonUserList = await response.json();
-      setUserLikeTop5List(jsonUserList.selectLikeTop5List);
     };
     sessionSave = async ()=>{
         let myNick= 'TEST15';
         await AsyncStorage.setItem(
             'myNick',
             myNick,
-          );
+        );
+        setSessionId(myNick);
+    };
+    const serverGetUserLikeTop5List = async() =>{
+      const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
+      const jsonUserList = await response.json();
+      console.log(jsonUserList.selectLikeTop5List)
+      setUserLikeTop5List(jsonUserList.selectLikeTop5List);
+    };
+    const serverGetTargetUserLikeYn = async() =>{
+      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do`)
+      const jsonUserLikeYn = await response.json();
+      console.log(jsonUserLikeYn)
     };
     const optionChange = (index)=>{
-      setOptionName(Math.floor(index/100))     
+      setOptionName(Math.floor(index/100))
+      console.log(Math.floor(index/100))     
+    };
+    const addFriend = (userNick)=>{
+      let yourNick = userNick;
+      let myNick = getSessionId;
+      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myNick}&yourNick=${yourNick}`);
+      console.log(responseAddFriend)
+    };
+    const targetLike = (userNick)=>{
+      let yourNick = userNick;
+      let myNick = getSessionId;
+      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/likeTarget.do?myNick=${myNick}&yourNick=${yourNick}`);
+      console.log(responseAddFriend)
     };
     useEffect(() => {
         sessionSave();
@@ -67,11 +87,31 @@ export default function MainScreen ({navigation}) {
                             </View>
                             ) : (
                             getUserLikeTop5List.map( (info, index) =>    
-                                <View   key={index} style={styles.contentBottom}>
+                                <View key={index} style={styles.contentBottom}>
                                     <Text style={styles.itemBoxTitle} >추천 매너 유저 TOP{index+1}</Text>
                                     <View style={styles.itemBox}>
-                                        <Text style={styles.itemBoxTitle} >닉네임: {info.unickname}</Text>
-                                        <Text style={styles.itemBoxTitle} >좋아요 수 :{info.ulike}</Text>
+                                        <View style={styles.userHeader}>
+                                          <View >
+                                            <Text >닉네임: {info.uNickname}</Text>
+                                          </View>
+                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriend(info.uNickname)}>
+                                            <Image resizeMode='contain' style={styles.frendAdd} 
+                                            source={require('./assets/images/plus.jpg')}/>
+                                          </View>
+                                          <View style={styles.userItemView}>
+                                            <Image resizeMode='contain' style={styles.frendAdd} 
+                                            source={require('./assets/images/chat.png')}/>
+                                          </View>
+                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLike(info.uNickname)}>
+                                            <Image resizeMode='contain' style={styles.frendAdd} 
+                                            source={require('./emptyHeart.png')}/>
+                                          </View>
+                                        </View>
+                                        <Text style={styles.itemBoxTitle} >좋아요 수 :{info.cnt}</Text>
+                                        <Text style={styles.itemBoxTitle} >랭크 :{info.glRank}</Text>
+                                        <Text style={styles.itemBoxTitle} >포지션 :{info.glPosition}</Text>
+                                        <Text style={styles.itemBoxTitle} >자주쓰는 챔피언 :{info.glChampion}</Text>
+                                        <Text style={styles.itemBoxTitle} >자주하는 시간 :{info.glTime}</Text>
                                     </View>  
                                 </View>
                             )
@@ -165,9 +205,18 @@ const styles = StyleSheet.create({
       flexDirection:"row"
     },
     frendAdd:{
-      width:'10%',
-      height:"60%",
-      opacity:1
+      width:'100%',
+      height:"100%",
+      opacity:1,
+    },
+    userHeader:{
+      flexDirection:"row",
+      height:"10%",
+    },
+    userItemView:{
+      height:"70%",
+      width:"10%",
+      marginLeft:"3%",
     },
 
   });
