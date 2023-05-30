@@ -37,11 +37,10 @@ export default function MainScreen ({navigation}) {
     const serverGetTargetUserLikeYn = async(youId) =>{
       console.log(getSessionId)
       console.log(youId)
-      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?`)
-      const jsonUserLikeYn = await response.json();
-      console.log(jsonUserLikeYn)
-      console.log("---------------------------------")
-      console.log(youId)
+      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
+       console.log(response)
+      const jsonMsg = await response.json();
+      console.log(jsonMsg)
     };
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
