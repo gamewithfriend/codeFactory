@@ -22,6 +22,7 @@ import OptionSelectThree from './OptionSelectThree';
 import OptionSelectThreeDetail from './OptionSelectThreeDetail';
 import OptionSelectFour from './OptionSelectFour';
 import OptionSelectFourDetail from './OptionSelectFourDetail';
+import SetNickNameScreen from './SetNickNameScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -74,6 +75,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="GameMatching" component={GameMatching} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="SetNickNameScreen" component={SetNickNameScreen} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>

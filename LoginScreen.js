@@ -11,7 +11,7 @@ const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.google
 const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleusercontent.com';
 const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
 
-export default function MainScreen ({navigation}) {
+export default function LoginScreen ({navigation}) {
     let token;
     let userInfo = {};
     let session = "";
@@ -24,20 +24,19 @@ export default function MainScreen ({navigation}) {
     
     useEffect(() => {
         loginCheck();
-    }, []);
+    }, [response]);
 
     // sessionGet 메서드의 비동기적 처리를해결하기 위한 조치
     const loginCheck = async () => {
         await sessionGet("userInfo");
         // await sessionClear();
-        // session = "";
+        
         console.log(session)
         console.log(session == "");
         // 세션값이 확인이 되지 않으면 구글로그인 연동 -> 구글 로그인 안에서 session setting 컨트롤
         if (session == null || session == undefined || session == "") {
             try {
                 promptAsync();
-
                 if (response?.type === 'success') { 
                     token = response.authentication.accessToken;
                     getUserInfo();
@@ -45,9 +44,11 @@ export default function MainScreen ({navigation}) {
             } catch (error) {
                 console.error(error);
             }
+        } else {    // 세션값 확인되면 닉네임 체크 로직 
+            checkNickName(session);
         }
     }
-    
+
     const getUserInfo = async () => {
     try {
         const response = await fetch(
@@ -57,7 +58,7 @@ export default function MainScreen ({navigation}) {
         }
         );
         const user = await response.json();
-        
+        console.log(user);
         if (user != null && user != undefined && user.verified_email ==true) {
             userInfo.uIntgId = user.id;
             userInfo.uName = user.name;
@@ -68,9 +69,10 @@ export default function MainScreen ({navigation}) {
         
         userInfo.uLastLoginIp = ipAddress;
         userInfo.uLastTerminalKind = modelName;
-
+        console.log(userInfo);
         if (userInfo != null) {
-            await fetch("http://3.37.211.126:8080/login/loginCheck.do", {
+            // await fetch("http://3.37.211.126:8080/login/loginCheck.do", {
+            await fetch("http://192.168.243.164:8080/login/loginCheck.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',
@@ -79,10 +81,14 @@ export default function MainScreen ({navigation}) {
                                   }).then(response => response.json()
                                    ).then(async (result) => {
                                         // 최초로그인 및 로그인 확인이 끝났으면 session 값을 set 및 get 해준다
-                                        console.log("성공여부 chec1");
-                                        let tmpSessionData = JSON.stringify(result.userInfo);
-                                        await sessionSave(tmpSessionData);
-                                        await sessionGet("userInfo");
+                                        if (result.userInfo.uIntgId != null && result.userInfo.uIntgId != undefined && result.userInfo.uIntgId != "") {
+                                            let tmpSessionData = JSON.stringify(result.userInfo);
+    
+                                            await sessionSave(tmpSessionData);
+                                            await sessionGet("userInfo");
+
+                                            checkNickName(session);
+                                        }
                                         console.log("여기까지 성공적으로 도달");
                                    }).catch( error => {
                                         console.error(error);
@@ -114,6 +120,20 @@ export default function MainScreen ({navigation}) {
             tmpSessionData,
         );
     };
+
+    // session 정보의 nickName 설정여부를 체크하고 화면을 리턴
+    const checkNickName = (sessionInfo) => {
+        // 닉네임 설정이 되어있으면 메인 화면으로 이동
+        if (sessionInfo.uNickname != null) {
+            console.log("There's is NickName!!");
+            navigation.navigate('MainScreen');
+        
+        // 닉네임 설정이 되어 있지 않으면 닉네임 설정화면으로 이동
+        } else {    
+            console.log("There's no NickName!!");
+            navigation.navigate('SetNickNameScreen');
+        }
+    }
     // 테스트를 위한 임시
     const sessionClear = async () => {
         await AsyncStorage.clear();
