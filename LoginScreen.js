@@ -11,10 +11,14 @@ const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.google
 const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleusercontent.com';
 const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
 
+const realUrl = "3.37.211.126";
+const testUrl = "192.168.243.164";
+
 export default function LoginScreen ({navigation}) {
     let token;
     let userInfo = {};
     let session = "";
+    
 
     const [request, response, promptAsync] = Google.useAuthRequest({
         expoClientId: expoClientId,
@@ -71,8 +75,7 @@ export default function LoginScreen ({navigation}) {
         userInfo.uLastTerminalKind = modelName;
         console.log(userInfo);
         if (userInfo != null) {
-            // await fetch("http://3.37.211.126:8080/login/loginCheck.do", {
-            await fetch("http://192.168.243.164:8080/login/loginCheck.do", {
+            await fetch("http://" + testUrl + ":8080/login/loginCheck.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',
