@@ -18,6 +18,7 @@ export default function MainScreen ({navigation}) {
     const onChangeid = (payload)=>setid(payload);
     const onChangepassWord = (payload)=>setpassWord(payload);
      let reChampionList = [];
+     let youserLikeCheck ="";
     const sendApi = ()=>{
         navigation.navigate("DETAIL");
     };
@@ -32,26 +33,40 @@ export default function MainScreen ({navigation}) {
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
-      console.log(jsonUserList.selectLikeTop5List)
+      for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
+        let youId = jsonUserList.selectLikeTop5List[i].ylYouId;
+        const response = await fetch (`http://192.168.1.3/hexa/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
+        const jsonMsg = await response.json();
+        const youserLikeTemp = jsonMsg.msg;
+        if(youserLikeTemp == "N"){
+          jsonUserList.selectLikeTop5List[i].url =require('./assets/images/emptyHeart.png');
+          jsonUserList.selectLikeTop5List[i].test = "N";
+        }else{
+          jsonUserList.selectLikeTop5List[i].url =require('./assets/images/fullHeart.png');
+          jsonUserList.selectLikeTop5List[i].test = "Y";
+        }
+      }
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
+      console.log(jsonUserList.selectLikeTop5List)
     };
-    const serverGetTargetUserLikeYn = async(youId) =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
+    const serverGetTargetUserLikeYn = async(youId,indexNumber) =>{
+      const response = await fetch (`http://192.168.1.3/hexa/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
       const jsonMsg = await response.json();
       setLikeYn(jsonMsg.msg);
+      youserLikeCheck = jsonMsg.msg;
+      if(youserLikeCheck == "N"){
+        getUserLikeTop5List[indexNumber].url =require('./assets/images/emptyHeart.png');
+      }else{
+        getUserLikeTop5List[indexNumber].url =require('./assets/images/fullHeart.png');
+      }
+      setUserLikeTop5List(getUserLikeTop5List) 
 
     };
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
       let youId =getUserLikeTop5List[indexNumber].ylYouId;
-      serverGetTargetUserLikeYn(youId);
-      if(getLikeYn == "N"){
-        getUserLikeTop5List[indexNumber].url =require('./assets/images/emptyHeart.png');
-      }else{
-        getUserLikeTop5List[indexNumber].url =require('./assets/images/fullHeart.png');
-      }
-      setUserLikeTop5List(getUserLikeTop5List)  
+      serverGetTargetUserLikeYn(youId,indexNumber); 
     };
     const addFriend = (userNick)=>{
       let yourNick = userNick;
