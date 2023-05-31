@@ -14,6 +14,7 @@ export default function MainScreen ({navigation}) {
     const [getLikeYn, setLikeYn] = useState("");
     const [getUserLikeTop5List, setUserLikeTop5List] = useState([]);
     const [ok, setOptionName] = useState(1);
+    const [getUserLike, setUserLike] = useState("");
     const onChangeid = (payload)=>setid(payload);
     const onChangepassWord = (payload)=>setpassWord(payload);
      let reChampionList = [];
@@ -35,18 +36,22 @@ export default function MainScreen ({navigation}) {
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
     };
     const serverGetTargetUserLikeYn = async(youId) =>{
-      console.log(getSessionId)
-      console.log(youId)
       const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
-       console.log(response)
       const jsonMsg = await response.json();
-      console.log(jsonMsg)
+      setLikeYn(jsonMsg.msg);
+
     };
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
       let youId =getUserLikeTop5List[indexNumber].ylYouId;
-      serverGetTargetUserLikeYn(youId);      
+      serverGetTargetUserLikeYn(youId);
+      if(getLikeYn == "N"){
+        getUserLikeTop5List[indexNumber].url =require('./assets/images/emptyHeart.png');
+      }else{
+        getUserLikeTop5List[indexNumber].url =require('./assets/images/fullHeart.png');
+      }
+      setUserLikeTop5List(getUserLikeTop5List)  
     };
     const addFriend = (userNick)=>{
       let yourNick = userNick;
@@ -59,6 +64,7 @@ export default function MainScreen ({navigation}) {
       let myNick = getSessionId;
       const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/likeTarget.do?myNick=${myNick}&yourNick=${yourNick}`);
       console.log(responseAddFriend)
+    
     };
     useEffect(() => {
         sessionSave();
@@ -109,7 +115,7 @@ export default function MainScreen ({navigation}) {
                                           </View>
                                           <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLike(info.uNickname)}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
-                                            source={require('./assets/images/emptyHeart.png')}/>
+                                            source={info.url}/>
                                           </View>
                                         </View>
                                         <Text style={styles.itemBoxTitle} >좋아요 수 :{info.cnt}</Text>
