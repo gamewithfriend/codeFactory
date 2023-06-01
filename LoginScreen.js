@@ -12,7 +12,7 @@ const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleu
 const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
 
 const realUrl = "3.37.211.126";
-const testUrl = "192.168.243.164";
+const testUrl = "192.168.125.185";
 
 export default function LoginScreen ({navigation}) {
     let token;
@@ -34,9 +34,7 @@ export default function LoginScreen ({navigation}) {
     const loginCheck = async () => {
         await sessionGet("userInfo");
         // await sessionClear();
-        
-        console.log(session)
-        console.log(session == "");
+
         // 세션값이 확인이 되지 않으면 구글로그인 연동 -> 구글 로그인 안에서 session setting 컨트롤
         if (session == null || session == undefined || session == "") {
             try {
