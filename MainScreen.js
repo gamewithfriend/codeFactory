@@ -1,5 +1,5 @@
 import React, { Component, useState,useEffect } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Image,Dimensions,ActivityIndicator } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Image,Dimensions,ActivityIndicator,Modal,Pressable,Alert } from 'react-native';
 import GameMatchingScreen from './GameMatchingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -10,6 +10,7 @@ export default function MainScreen ({navigation}) {
     
     const [id, setid] = useState("");
     const [passWord, setpassWord] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
     const [getSessionId, setSessionId] = useState("");
     const [getLikeYn, setLikeYn] = useState("");
     const [getUserLikeTop5List, setUserLikeTop5List] = useState([]);
@@ -19,10 +20,8 @@ export default function MainScreen ({navigation}) {
     const onChangepassWord = (payload)=>setpassWord(payload);
      let reChampionList = [];
      let youserLikeCheck ="";
-    const sendApi = ()=>{
-        navigation.navigate("DETAIL");
-    };
     sessionSave = async ()=>{
+        console.log("sessionSaving")
         let myNick= 'TEST15';
         await AsyncStorage.setItem(
             'myNick',
@@ -30,12 +29,17 @@ export default function MainScreen ({navigation}) {
         );
         setSessionId(myNick);
     };
+    const targetLike = async(targetId) =>{
+      const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`);
+      serverGetUserLikeTop5List();
+    };
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
+      const sessionId = await AsyncStorage.getItem('myNick');
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         let youId = jsonUserList.selectLikeTop5List[i].ylYouId;
-        const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
+        const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
         const jsonMsg = await response.json();
         const youserLikeTemp = jsonMsg.msg;
         if(youserLikeTemp == "N"){
@@ -68,18 +72,12 @@ export default function MainScreen ({navigation}) {
       let youId =getUserLikeTop5List[indexNumber].ylYouId;
       serverGetTargetUserLikeYn(youId,indexNumber); 
     };
-    const addFriend = (userNick)=>{
-      let yourNick = userNick;
-      let myNick = getSessionId;
-      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myNick}&yourNick=${yourNick}`);
+    const addFriendTrigger = (targetId)=>{
+      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${getSessionId}&yourNick=${targetId}`);
       console.log(responseAddFriend)
     };
-    const targetLike = (userNick)=>{
-      let yourNick = userNick;
-      let myNick = getSessionId;
-      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/likeTarget.do?myNick=${myNick}&yourNick=${yourNick}`);
-      console.log(responseAddFriend)
-    
+    const targetLikeTrigger = (targetId)=>{
+      targetLike(targetId);   
     };
     useEffect(() => {
         sessionSave();
@@ -88,14 +86,38 @@ export default function MainScreen ({navigation}) {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
-              <View style={styles.mainSatusItemView}>
+              <View style={styles.mainSatusItemView} onStartShouldSetResponder={() =>setModalVisible(true)} >
                 <Image resizeMode='contain' style={styles.statusImg} 
-                source={require("./assets/images/bell.png")}/>     
+                source={require("./assets/images/bell.png")}/>      
               </View>
               <View style={styles.mainSatusItemView}>
                 <Image resizeMode='contain' style={styles.statusImg} 
                 source={require("./assets/images/chat.png")}/>     
               </View>     
+            </View>
+            <View style={styles.centeredView}>
+              <Modal
+              animationType="fade"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+              }}>
+              <Pressable style={{
+              flex:1,
+              backgroundColor:'transparent',
+              }}
+              onPress={()=>setModalVisible(false)}
+              />
+              <View style={styles.centeredView} >
+                <View style={styles.modalView}>
+                  <View>
+                    <Text style={styles.modalText}>Hello World!</Text>
+                  </View>
+                </View>
+              </View>
+              </Modal>
             </View>
             <View style={styles.mainCenter}>
               <View style={styles.mainButtonView}>
@@ -120,15 +142,15 @@ export default function MainScreen ({navigation}) {
                                           <View >
                                             <Text >닉네임: {info.uNickname}</Text>
                                           </View>
-                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriend(info.uNickname)}>
+                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriendTrigger(info.ylYouId)}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
-                                            source={require('./assets/images/plus.jpg')}/>
+                                            source={require('./assets/images/addFriend.png')}/>
                                           </View>
                                           <View style={styles.userItemView}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
                                             source={require('./assets/images/chat.png')}/>
                                           </View>
-                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLike(info.uNickname)}>
+                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLikeTrigger(info.ylYouId)}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
                                             source={info.url}/>
                                           </View>
@@ -243,6 +265,48 @@ const styles = StyleSheet.create({
       height:"70%",
       width:"10%",
       marginLeft:"3%",
+    },
+    centeredView: {
+      flex: 1,
+      marginTop: "5%",
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: 'white',
+      padding: 35,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+      position:'absolute',
+      top:-270,
+      bottom:500,
+      left:120,
+      right:40,
+    },
+    button: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+    },
+    buttonOpen: {
+      backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+      backgroundColor: '#2196F3',
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    modalText: {
+      textAlign:'center',
+      position:"absolute"
     },
 
   });
