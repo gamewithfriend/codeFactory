@@ -35,7 +35,7 @@ export default function MainScreen ({navigation}) {
       const jsonUserList = await response.json();
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         let youId = jsonUserList.selectLikeTop5List[i].ylYouId;
-        const response = await fetch (`http://192.168.1.3/hexa/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
+        const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
         const jsonMsg = await response.json();
         const youserLikeTemp = jsonMsg.msg;
         if(youserLikeTemp == "N"){
@@ -50,7 +50,7 @@ export default function MainScreen ({navigation}) {
       console.log(jsonUserList.selectLikeTop5List)
     };
     const serverGetTargetUserLikeYn = async(youId,indexNumber) =>{
-      const response = await fetch (`http://192.168.1.3/hexa/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
+      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
       const jsonMsg = await response.json();
       setLikeYn(jsonMsg.msg);
       youserLikeCheck = jsonMsg.msg;
