@@ -3,6 +3,7 @@ import { View, Text, Button,StyleSheet,TextInput,Image,Dimensions,ActivityIndica
 import GameMatchingScreen from './GameMatchingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
+import * as Session from './utils/session.js';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -21,6 +22,8 @@ export default function MainScreen ({navigation}) {
      let reChampionList = [];
      let youserLikeCheck ="";
     sessionSave = async ()=>{
+        // let sessions = await Session.sessionGet("sessionInfo");
+        
         console.log("sessionSaving")
         let myNick= 'TEST15';
         await AsyncStorage.setItem(
