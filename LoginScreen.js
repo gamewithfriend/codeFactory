@@ -1,11 +1,11 @@
-import React, { Component, useState, useEffect } from 'react';
-import { View, Text, Button,StyleSheet,TextInput, Alert,TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Alert,TouchableOpacity } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import *  as Device from 'expo-device';
 import * as Network from 'expo-network';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Session from './utils/session.js';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 WebBrowser.maybeCompleteAuthSession();
 const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.googleusercontent.com';

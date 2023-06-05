@@ -28,9 +28,9 @@ export default function SetNickNameScreen ({navigation}) {
         console.log(isValid==true);
         if (isValid) {
             // 세션정보에 닉네임값을 담아 전달할 데이터 구성
-            let userInfo = JSON.parse(await Session.sessionGet("userInfo"));
+            let userInfo = JSON.parse(await Session.sessionGet("sessionInfo"));
             userInfo.uNickname = nickName;
-            
+            console.log(userInfo);
             // 서버통신 실행
             await fetch("http://" + testUrl + ":8080/login/saveUserNickName.do", {
                                     method : "POST",
