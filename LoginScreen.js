@@ -64,7 +64,6 @@ export default function LoginScreen ({navigation}) {
         console.log(user);
         if (user != null && user != undefined && user.verified_email ==true) {
             userInfo.uIntgId = user.id;
-            userInfo.uName = user.name;
         }
         
         let ipAddress = await Network.getIpAddressAsync();
