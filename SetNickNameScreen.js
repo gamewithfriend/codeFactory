@@ -73,6 +73,11 @@ export default function SetNickNameScreen ({navigation}) {
         // 특수문자 정규식
         const specialChracterRegex = /[!@#$%^&*(),.?":{}|<>]/;
         // 특수문자 포함 체크로직
+        if (nickName.length == 0 || nickName.includes(" ")) {
+            Alert.alert("공백이 있습니다요!");
+            
+            return false;
+        }
         if (specialChracterRegex.test(nickName)) {
             Alert.alert("닉네임에 특수문자는 사용할 수 없습니다.");
             nickNameInput.current.focus();
