@@ -1,15 +1,15 @@
 import React, { Component, useState, useEffect, useRef } from 'react';
 import { KeyboardAvoidingView, View, Platform, Image, StyleSheet, Dimensions, Text,TouchableOpacity, Alert } from 'react-native';
-import * as WebBrowser from 'expo-web-browser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
+import * as Session from './utils/session.js'
 
 // 화면을 반응형으로 만들기 위한 노력....
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 
 const realUrl = "3.37.211.126";
-const testUrl = "192.168.125.185";
+const testUrl = "192.168.105.27";
 
 export default function SetNickNameScreen ({navigation}) {
     // 닉네임 설정을 위한 useState 선언
@@ -28,9 +28,9 @@ export default function SetNickNameScreen ({navigation}) {
         console.log(isValid==true);
         if (isValid) {
             // 세션정보에 닉네임값을 담아 전달할 데이터 구성
-            let userInfo = JSON.parse(await sessionGet("userInfo"));
+            let userInfo = JSON.parse(await Session.sessionGet("sessionInfo"));
             userInfo.uNickname = nickName;
-            
+            console.log(userInfo);
             // 서버통신 실행
             await fetch("http://" + testUrl + ":8080/login/saveUserNickName.do", {
                                     method : "POST",
@@ -42,9 +42,9 @@ export default function SetNickNameScreen ({navigation}) {
                                    ).then(async (result) => {
                                         // 최초로그인 및 로그인 확인이 끝났으면 session 값을 set 및 get 해준다
                                         if (result.isSaved = "Y") {
-                                            let tmpSessionData = JSON.stringify(result.userInfo);
+                                            let tmpSessionInfo = JSON.stringify(result.sessionInfo);
     
-                                            await sessionSave("userInfo", tmpSessionData);
+                                            await Session.sessionSave("sessionInfo", tmpSessionInfo);
                                             // 테스트용
                                             // let newUserInfo = await sessionGet("userInfo");
                                             // console.log(newUserInfo);
