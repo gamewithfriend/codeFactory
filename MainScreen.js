@@ -13,6 +13,8 @@ export default function MainScreen ({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [getSessionId, setSessionId] = useState("");
     const [getLikeYn, setLikeYn] = useState("");
+    const [getAlramRecentOneMsg, setAlramRecentOneMsg] = useState("");
+    const [getAlramCount, setAlramCount] = useState(0);
     const [getUserLikeTop5List, setUserLikeTop5List] = useState([]);
     const [ok, setOptionName] = useState(1);
     const [getUserLike, setUserLike] = useState("");
@@ -30,8 +32,9 @@ export default function MainScreen ({navigation}) {
         setSessionId(myNick);
     };
     const targetLike = async(targetId) =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`);
+      const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
       serverGetUserLikeTop5List();
+      serverGetFindMyAlramList();
     };
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
@@ -66,6 +69,20 @@ export default function MainScreen ({navigation}) {
       setUserLikeTop5List(getUserLikeTop5List) 
 
     };
+    const serverGetFindMyAlramList = async() =>{
+      const sessionId = await AsyncStorage.getItem('myNick');
+      const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
+      const jsonAlramList = await response.json();
+      console.log(jsonAlramList.findMyAlramList)
+      console.log(jsonAlramList.findMyAlramList.length)
+      let alramCount =jsonAlramList.findMyAlramList.length;
+      console.log(jsonAlramList.findMyAlramList[0].alSendId)
+      console.log(jsonAlramList.findMyAlramList[0].cdDtlDesc)
+      let alramRecentOneMsg = jsonAlramList.findMyAlramList[0].alSendId + " "+ jsonAlramList.findMyAlramList[0].cdDtlDesc;
+      setAlramRecentOneMsg(alramRecentOneMsg);
+      setAlramCount(alramCount);
+      
+    };
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
@@ -82,13 +99,15 @@ export default function MainScreen ({navigation}) {
     useEffect(() => {
         sessionSave();
         serverGetUserLikeTop5List();
+        serverGetFindMyAlramList();
       },[]);
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
-              <View style={styles.mainSatusItemView} onStartShouldSetResponder={() =>setModalVisible(true)} >
+              <View style={styles.mainSatusItemView} onStartShouldSetResponder={() =>setModalVisible(true)} >                
                 <Image resizeMode='contain' style={styles.statusImg} 
-                source={require("./assets/images/bell.png")}/>      
+                source={require("./assets/images/bell.png")}/>
+                <Text style={styles.mainSatusCountFont}>{getAlramCount}</Text>      
               </View>
               <View style={styles.mainSatusItemView}>
                 <Image resizeMode='contain' style={styles.statusImg} 
@@ -113,7 +132,7 @@ export default function MainScreen ({navigation}) {
               <View style={styles.centeredView} >
                 <View style={styles.modalView}>
                   <View>
-                    <Text style={styles.modalText}>Hello World!</Text>
+                    <Text style={styles.modalText}>{getAlramRecentOneMsg}</Text>
                   </View>
                 </View>
               </View>
@@ -196,6 +215,16 @@ const styles = StyleSheet.create({
       width:"10%",
       height:"100%",
       marginRight:"3%",
+      flexDirection:"row",
+    },
+    mainSatusCountFont: {
+      position:'absolute',
+      right:"10%",
+      top:"-20%",
+      // right:"40%",
+      // top:"20%",
+      color:"red",
+
     },
     mainButtonView: {
       width:"40%",
@@ -273,7 +302,7 @@ const styles = StyleSheet.create({
     modalView: {
       margin: 20,
       backgroundColor: 'white',
-      padding: 35,
+      padding: "5%",
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -306,7 +335,8 @@ const styles = StyleSheet.create({
     },
     modalText: {
       textAlign:'center',
-      position:"absolute"
+      position:"absolute",
+      paddingTop:"2%",
     },
 
   });
