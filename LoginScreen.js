@@ -48,7 +48,7 @@ export default function LoginScreen ({navigation}) {
                 console.error(error);
             }
         } else {    // 세션값 확인되면 로그인 정보 최신화 후 닉네임 체크 로직 
-            checkLoginUserInfo(testUrl, session);
+            checkLoginUserInfo(realUrl, session);
         }
     }
 
@@ -73,7 +73,7 @@ export default function LoginScreen ({navigation}) {
         userInfo.uLastTerminalKind = modelName;
         
         if (userInfo != null) {
-            checkLoginUserInfo(testUrl, userInfo);
+            checkLoginUserInfo(realUrl, userInfo);
         }
 
     } catch (error) {

@@ -32,7 +32,7 @@ export default function SetNickNameScreen ({navigation}) {
             userInfo.uNickname = nickName;
             
             // 서버통신 실행
-            await fetch("http://" + testUrl + ":8080/login/saveUserNickName.do", {
+            await fetch("http://" + realUrl + ":8080/login/saveUserNickName.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',
