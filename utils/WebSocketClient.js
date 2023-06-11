@@ -33,6 +33,6 @@ const realUrl = "3.37.211.126";
 const testUrl = "192.168.105.27";
 const testUrl2 = "192.168.219.142";
 
-const client = new WebSocketClient("ws://" + testUrl2 + ":8080/chat/1");
+const client = new WebSocketClient("ws://" + realUrl + ":8080/chat/1");
 
 export default client;
