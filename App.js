@@ -23,6 +23,7 @@ import OptionSelectThreeDetail from './OptionSelectThreeDetail';
 import OptionSelectFour from './OptionSelectFour';
 import OptionSelectFourDetail from './OptionSelectFourDetail';
 import SetNickNameScreen from './SetNickNameScreen';
+import TextChat from './TextChat';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,6 +39,7 @@ function HomeTab(){
         <Tab.Screen name='FriendScreen' component={FriendScreen}/>
         <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/>
         <Tab.Screen name='Setting' component={SettingScreen}/>
+        <Tab.Screen name='TextChat' component={TextChat}/>
       </Tab.Navigator>
   
   );
@@ -78,6 +80,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="SetNickNameScreen" component={SetNickNameScreen} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="TextChat" component={TextChat} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>

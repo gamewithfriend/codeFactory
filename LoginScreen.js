@@ -48,7 +48,7 @@ export default function LoginScreen ({navigation}) {
                 console.error(error);
             }
         } else {    // 세션값 확인되면 로그인 정보 최신화 후 닉네임 체크 로직 
-            checkLoginUserInfo(testUrl, session);
+            checkLoginUserInfo(realUrl, session);
         }
     }
 
@@ -73,7 +73,7 @@ export default function LoginScreen ({navigation}) {
         userInfo.uLastTerminalKind = modelName;
         
         if (userInfo != null) {
-            checkLoginUserInfo(testUrl, userInfo);
+            checkLoginUserInfo(realUrl, userInfo);
         }
 
     } catch (error) {
@@ -108,6 +108,7 @@ export default function LoginScreen ({navigation}) {
     // session 정보의 nickName 설정여부를 체크하고 화면을 리턴
     const checkNickName = (sessionInfo) => {
         // 닉네임 설정이 되어있으면 메인 화면으로 이동
+        console.log("sesisonInfo : ",sessionInfo);
         if (sessionInfo.uNickname != null) {
             console.log("There's is NickName!!");
             navigation.navigate('MainScreen');

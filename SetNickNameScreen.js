@@ -32,7 +32,7 @@ export default function SetNickNameScreen ({navigation}) {
             userInfo.uNickname = nickName;
             
             // 서버통신 실행
-            await fetch("http://" + testUrl + ":8080/login/saveUserNickName.do", {
+            await fetch("http://" + realUrl + ":8080/login/saveUserNickName.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',
@@ -74,8 +74,8 @@ export default function SetNickNameScreen ({navigation}) {
         const specialChracterRegex = /[!@#$%^&*(),.?":{}|<>]/;
         // 특수문자 포함 체크로직
         if (nickName.length == 0 || nickName.includes(" ")) {
-            Alert.alert("공백이 있습니다요!");
-            
+            console.log("공백이 있습니다요!");
+
             return false;
         }
         if (specialChracterRegex.test(nickName)) {
