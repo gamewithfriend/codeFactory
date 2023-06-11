@@ -145,7 +145,49 @@ export default function MainScreen ({navigation}) {
               <View style={styles.mainButtonView}>
                 <Button color={"black"} title='매칭' onPress={()=> navigation.navigate('OptionSelect')}   style={styles.clickButton}>
                 </Button> 
-              </View>   
+              </View>
+              <View style={styles.mainCenterSelectView}>
+                <ScrollView pagingEnabled 
+                                  horizontal
+                                  onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}}
+                                  showsHorizontalScrollIndicator = {false}>
+                          {getUserLikeTop5List.length === 0? (
+                              <View >
+                              </View>
+                              ) : (
+                              getUserLikeTop5List.map( (info, index) =>    
+                                  <View key={index} style={styles.contentBottom}>
+                                      <Text style={styles.itemBoxTitle} >추천 매너 유저 TOP{index+1}</Text>
+                                      <View style={styles.itemBox}>
+                                          <View style={styles.userHeader}>
+                                            <View >
+                                              <Text >닉네임: {info.uNickname}</Text>
+                                            </View>
+                                            <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriendTrigger(info.ylYouId)}>
+                                              <Image resizeMode='contain' style={styles.frendAdd} 
+                                              source={require('./assets/images/addFriend.png')}/>
+                                            </View>
+                                            <View style={styles.userItemView}>
+                                              <Image resizeMode='contain' style={styles.frendAdd} 
+                                              source={require('./assets/images/chat.png')}/>
+                                            </View>
+                                            <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLikeTrigger(info.ylYouId)}>
+                                              <Image resizeMode='contain' style={styles.frendAdd} 
+                                              source={info.url}/>
+                                            </View>
+                                          </View>
+                                          <Text style={styles.itemBoxTitle} >좋아요 수 :{info.cnt}</Text>
+                                          <Text style={styles.itemBoxTitle} >랭크 :{info.glRank}</Text>
+                                          <Text style={styles.itemBoxTitle} >포지션 :{info.glPosition}</Text>
+                                          <Text style={styles.itemBoxTitle} >자주쓰는 챔피언 :{info.glChampion}</Text>
+                                          <Text style={styles.itemBoxTitle} >자주하는 시간 :{info.glTime}</Text>
+                                      </View>  
+                                  </View>
+                              )
+                              )
+                          }         
+                </ScrollView>
+              </View>     
             </View>
             <View style={styles.mainBottom}>
               <ScrollView pagingEnabled 
@@ -231,8 +273,11 @@ const styles = StyleSheet.create({
     },
     mainButtonView: {
       width:"40%",
-      height:"100%",
-      marginTop:"20%",
+      height:"20%",
+    },
+    mainCenterSelectView: {
+      width:"100%",
+      height:"80%",
     },
     testClick: {
         borderColor:"black",
