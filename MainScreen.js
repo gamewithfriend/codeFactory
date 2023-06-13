@@ -4,11 +4,13 @@ import GameMatchingScreen from './GameMatchingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
 import * as Session from './utils/session.js';
+import { useIsFocused } from '@react-navigation/native';
+
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function MainScreen ({navigation}) {
-    
+    const isFocused = useIsFocused();
     const [id, setid] = useState("");
     const [passWord, setpassWord] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
@@ -24,15 +26,11 @@ export default function MainScreen ({navigation}) {
      let reChampionList = [];
      let youserLikeCheck ="";
     sessionSave = async ()=>{
-        // let sessions = await Session.sessionGet("sessionInfo");
-        
+        let sessions = await Session.sessionGet("sessionInfo");
         console.log("sessionSaving")
-        let myNick= 'TEST15';
-        await AsyncStorage.setItem(
-            'myNick',
-            myNick,
-        );
-        setSessionId(myNick);
+        let myId= sessions.uIntgId;
+        //let myId= "TEST15";         
+        setSessionId(myId);
     };
     const targetLike = async(targetId) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
@@ -42,9 +40,10 @@ export default function MainScreen ({navigation}) {
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
-      const sessionId = await AsyncStorage.getItem('myNick');
+      const sessionId =getSessionId;
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         let youId = jsonUserList.selectLikeTop5List[i].ylYouId;
+        console.log(youId)
         const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
         const jsonMsg = await response.json();
         const youserLikeTemp = jsonMsg.msg;
@@ -57,7 +56,6 @@ export default function MainScreen ({navigation}) {
         }
       }
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
-      console.log(jsonUserList.selectLikeTop5List)
     };
     const serverGetTargetUserLikeYn = async(youId,indexNumber) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
@@ -73,18 +71,13 @@ export default function MainScreen ({navigation}) {
 
     };
     const serverGetFindMyAlramList = async() =>{
-      const sessionId = await AsyncStorage.getItem('myNick');
+      const sessionId = getSessionId;
       const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
       const jsonAlramList = await response.json();
-      console.log(jsonAlramList.findMyAlramList)
-      console.log(jsonAlramList.findMyAlramList.length)
       let alramCount =jsonAlramList.findMyAlramList.length;
-      console.log(jsonAlramList.findMyAlramList[0].alSendId)
-      console.log(jsonAlramList.findMyAlramList[0].cdDtlDesc)
-      let alramRecentOneMsg = jsonAlramList.findMyAlramList[0].alSendId + " "+ jsonAlramList.findMyAlramList[0].cdDtlDesc;
+      let alramRecentOneMsg = jsonAlramList.findMyAlramList[0].sendNickName + " "+ jsonAlramList.findMyAlramList[0].cdDtlDesc;
       setAlramRecentOneMsg(alramRecentOneMsg);
       setAlramCount(alramCount);
-      
     };
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
@@ -94,7 +87,6 @@ export default function MainScreen ({navigation}) {
     };
     const addFriendTrigger = (targetId)=>{
       const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${getSessionId}&yourNick=${targetId}`);
-      console.log(responseAddFriend)
     };
     const targetLikeTrigger = (targetId)=>{
       targetLike(targetId);   
@@ -103,7 +95,7 @@ export default function MainScreen ({navigation}) {
         sessionSave();
         serverGetUserLikeTop5List();
         serverGetFindMyAlramList();
-      },[]);
+      },[isFocused]);
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
@@ -135,7 +127,11 @@ export default function MainScreen ({navigation}) {
               <View style={styles.centeredView} >
                 <View style={styles.modalView}>
                   <View>
-                    <Text style={styles.modalText}>{getAlramRecentOneMsg}</Text>
+                  {getAlramRecentOneMsg === ""? (
+                                                        <Text style={styles.modalText}>알람이 없습니다.</Text>
+                                                      ) : (
+                                                          <Text style={styles.modalText}>{getAlramRecentOneMsg}</Text>
+                                                      )}
                   </View>
                 </View>
               </View>
@@ -173,7 +169,7 @@ export default function MainScreen ({navigation}) {
                                             </View>
                                             <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLikeTrigger(info.ylYouId)}>
                                               <Image resizeMode='contain' style={styles.frendAdd} 
-                                              source={info.url}/>
+                                                source={info.url}/>
                                             </View>
                                           </View>
                                           <Text style={styles.itemBoxTitle} >좋아요 수 :{info.cnt}</Text>
@@ -216,7 +212,7 @@ export default function MainScreen ({navigation}) {
                                           </View>
                                           <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLikeTrigger(info.ylYouId)}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
-                                            source={info.url}/>
+                                            source={info.url}/>                                          
                                           </View>
                                         </View>
                                         <Text style={styles.itemBoxTitle} >좋아요 수 :{info.cnt}</Text>
