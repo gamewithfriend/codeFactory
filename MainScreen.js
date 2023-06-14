@@ -18,6 +18,7 @@ export default function MainScreen ({navigation}) {
     const [getLikeYn, setLikeYn] = useState("");
     const [getAlramRecentOneMsg, setAlramRecentOneMsg] = useState("");
     const [getAlramCount, setAlramCount] = useState(0);
+    const [getOptionList, setOptionList] = useState([]);
     const [getUserLikeTop5List, setUserLikeTop5List] = useState([]);
     const [ok, setOptionName] = useState(1);
     const [getUserLike, setUserLike] = useState("");
@@ -37,6 +38,12 @@ export default function MainScreen ({navigation}) {
       serverGetUserLikeTop5List();
       serverGetFindMyAlramList();
     };
+    const serverGetOptionList = async() =>{
+      const response = await fetch (`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
+      const jsonOptionList = await response.json();
+      console.log(jsonOptionList)
+      setOptionList();
+    };  
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
