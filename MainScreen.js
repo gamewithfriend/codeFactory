@@ -39,10 +39,9 @@ export default function MainScreen ({navigation}) {
       serverGetFindMyAlramList();
     };
     const serverGetOptionList = async() =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
-      const jsonOptionList = await response.json();
-      console.log(jsonOptionList)
-      setOptionList();
+      // const response = await fetch (`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
+      // const jsonOptionList = await response.json();
+      // console.log(jsonOptionList)
     };  
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
