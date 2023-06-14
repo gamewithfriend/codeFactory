@@ -42,8 +42,8 @@ export default function MainScreen ({navigation}) {
       const jsonUserList = await response.json();
       const sessionId =getSessionId;
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
+        //////좋아요 확인////////
         let youId = jsonUserList.selectLikeTop5List[i].ylYouId;
-        console.log(youId)
         const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
         const jsonMsg = await response.json();
         const youserLikeTemp = jsonMsg.msg;
@@ -54,8 +54,24 @@ export default function MainScreen ({navigation}) {
           jsonUserList.selectLikeTop5List[i].url =require('./assets/images/fullHeart.png');
           jsonUserList.selectLikeTop5List[i].test = "Y";
         }
+        //////친구 확인////////
+        const responseTwo = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
+        const jsonUserFriendState = await responseTwo.json();
+        if(jsonUserFriendState.selectUserFriendState == null){
+          jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus.png');
+        }else{
+          if(jsonUserFriendState.selectUserFriendState.fStateCd == "10501"){
+            jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/minus.png');
+          }else if(jsonUserFriendState.selectUserFriendState.fStateCd == "10502"){
+            jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/send.png');
+          }else{
+            jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus.png');
+          }
+        }
+        
       }
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
+      
     };
     const serverGetTargetUserLikeYn = async(youId,indexNumber) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
@@ -68,6 +84,23 @@ export default function MainScreen ({navigation}) {
         getUserLikeTop5List[indexNumber].url =require('./assets/images/fullHeart.png');
       }
       setUserLikeTop5List(getUserLikeTop5List) 
+
+    };
+    const serverGetTargetUserFriendState = async(youId,indexNumber) =>{
+      const response = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${getSessionId}&youId=${youId}`)
+      const jsonUserFriendState = await response.json();
+      if(jsonUserFriendState.selectUserFriendState == null){
+        getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
+      }else{
+        if(jsonUserFriendState.selectUserFriendState.fStateCd == "10501"){
+          getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/minus.png');
+        }else if(jsonUserFriendState.selectUserFriendState.fStateCd == "10502"){
+          getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/send.png');
+        }else{
+          getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
+        }
+      }
+      setUserLikeTop5List(getUserLikeTop5List)
 
     };
     const serverGetFindMyAlramList = async() =>{
@@ -83,7 +116,8 @@ export default function MainScreen ({navigation}) {
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
       let youId =getUserLikeTop5List[indexNumber].ylYouId;
-      serverGetTargetUserLikeYn(youId,indexNumber); 
+      serverGetTargetUserLikeYn(youId,indexNumber);
+      serverGetTargetUserFriendState(youId,indexNumber); 
     };
     const addFriendTrigger = (targetId)=>{
       const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${getSessionId}&yourNick=${targetId}`);
@@ -161,7 +195,7 @@ export default function MainScreen ({navigation}) {
                                             </View>
                                             <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriendTrigger(info.ylYouId)}>
                                               <Image resizeMode='contain' style={styles.frendAdd} 
-                                              source={require('./assets/images/addFriend.png')}/>
+                                              source={require('./assets/images/plus.png')}/>
                                             </View>
                                             <View style={styles.userItemView}>
                                               <Image resizeMode='contain' style={styles.frendAdd} 
@@ -204,7 +238,7 @@ export default function MainScreen ({navigation}) {
                                           </View>
                                           <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriendTrigger(info.ylYouId)}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
-                                            source={require('./assets/images/addFriend.png')}/>
+                                            source={info.friendUrl}/>      
                                           </View>
                                           <View style={styles.userItemView}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
