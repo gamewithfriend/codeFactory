@@ -46,6 +46,7 @@ export default function MainScreen ({navigation}) {
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
+      console.log(jsonUserList)
       const sessionId =getSessionId;
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         //////좋아요 확인////////
@@ -121,6 +122,7 @@ export default function MainScreen ({navigation}) {
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
+      console.log(getUserLikeTop5List)
       let youId =getUserLikeTop5List[indexNumber].ylYouId;
       serverGetTargetUserLikeYn(youId,indexNumber);
       serverGetTargetUserFriendState(youId,indexNumber); 
