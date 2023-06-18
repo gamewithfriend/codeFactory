@@ -1,53 +1,144 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState,useEffect } from 'react';
 import {View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground  } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
 
-export default function OptionSelect ({navigation}) {
+export default function OptionSelect ({route,navigation}) {
     const optionTrigger = false;
     const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
-    const selectGameOtion = [   
-                                {optionName:"rank",
-                                optionUrl: require("./assets/images/emblem-challenger.png"),
-                                optionIndex : 0}
-                                ,
-                                {optionName:"champion",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg"),
-                                optionIndex : 1}
-                                ,
-                                 {optionName:"position",
-                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png"),
-                                optionIndex : 2}
-                                , 
-                                {optionName:"자주하는시간",
-                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg"),
-                                optionIndex : 3}
-                            ];
+    const [getOptionList, setOptionList] = useState([]);
+    const [getNumberList, setNumberList] = useState([]);
+    const isFocused = useIsFocused();
     
+    let numberList = [   
+        {optionName:"한명",
+        optionUrl: require("./assets/images/one.png")}
+        ,
+        {optionName:"두명",
+        optionUrl: require("./assets/images/two.png")}
+        ,
+        {optionName:"세명",
+        optionUrl: require("./assets/images/three.png")}
+        ,
+        {optionName:"네명",
+        optionUrl: require("./assets/images/four.png")}                    
+    ];
+    
+    ////setRecommendUserList----격전 인원수 조정함수 함수///////
+    const setRecommendUserList = async() =>{ 
+
+       let  ueserNum= gameTypePlusIndex+1;
+       console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$44")
+       console.log(ueserNum)
+
+        
+    };
+
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100)) 
     };
 
-    const optionSubmit = () => {
-      
-      let temp = "";
-      if(ok == 0){   
-         temp = "rank";   
-      }else if(ok==3){
-         temp = "champion";
-      }else if(ok==7){
-         temp = "position";
-      }else if(ok==11){
-         temp = "time";
-      }
-      
-      navigation.navigate('OptionSelectDetail',{optionOne: temp},{navigation});
+    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
+    const serverGetOptionList = async() =>{
+        const gameType= route.params.gameType.cdDtlName    
+        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}`)
+        const jsonOptionList = await response.json();
+        for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+          let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+          jsonOptionList.selectOptionList[i].url = tempUrl;
+        }
+        setOptionList(jsonOptionList.selectOptionList);
+        
     };
 
+    const optionSubmit = () => {
+
+      let indexNumber = Math.floor((ok+1)/4);
+      let userNumber = getNumberList[indexNumber].optionName;
+      if(route.params.gameTypePlus == ""){
+        navigation.navigate('OptionSelect',{gameType: route.params.gameType
+                                            ,gameTypePlus:userNumber
+                                            ,gameTypePlusIndex:indexNumber
+                                            },{navigation});
+      }else{
+        let optionOne = getOptionList[indexNumber].cdDtlName;
+        navigation.navigate('OptionSelectDetail',{gameType: route.params.gameType
+                                                    ,gameTypePlus:userNumber
+                                                    ,gameTypePlus:indexNumber
+                                                    ,optionOne: optionOne
+                                                    ,optionOneArr:getOptionList[indexNumber]
+                                                },{navigation});
+      }
+      
+    };
+    useEffect(() => {        
+        serverGetOptionList();
+        setNumberList(numberList);
+        setRecommendUserList();
+      },[isFocused]);
+      if(route.params.gameType.cdDtlName ==="격전" && route.params.gameTypePlus !="" ){
+        return (      
+        <View style={styles.container} >
+        <View style={styles.topContainer} >
+            <Text style={styles.topContainerTitle}>매칭 옵션 선택</Text> 
+        </View>
+        <View style={styles.centerContainer} >
+            <View style={styles.centerTopContainer}>
+                <Text style={styles.centerContainerTitle}>격전</Text>
+            </View>
+            <View style={styles.centerBottomContainer}>
+                   
+            </View>
+                </View> 
+                <View style={styles.bottomContainer} >
+                  <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                </View>       
+            </View>
+            );                  
+    }else if(route.params.gameType.cdDtlName ==="격전" ){
+        return (      
+        <View style={styles.container} >
+        <View style={styles.topContainer} >
+            <Text style={styles.topContainerTitle}>매칭 옵션 선택</Text> 
+        </View>
+        <View style={styles.centerContainer} >
+            <View style={styles.centerTopContainer}>
+                <Text style={styles.centerContainerTitle}>매칭인원</Text>
+            </View>
+            <View style={styles.centerBottomContainer}>
+                    <ScrollView pagingEnabled 
+                                        horizontal
+                                        onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}}
+                                        showsHorizontalScrollIndicator = {false}>
+                                {numberList.length === 0? (
+                                    <View >
+                                        <ActivityIndicator color="black" size="large"/>
+                                    </View>
+                                    ) : (
+                                        numberList.map( (info, index) =>    
+                                        <View   key={index} style={styles.contentBottom}>
+                                            <View style={styles.itemBox}>
+                                                <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                                <Image resizeMode='cotain' style={styles.backImg} s source={info.optionUrl}/>       
+                                            </View>  
+                                        </View>
+                                    )
+                                    )
+                                }         
+                    </ScrollView>
+            </View>
+                </View> 
+                <View style={styles.bottomContainer} >
+                  <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                </View>       
+            </View>
+            );                  
+    }else{
     return (      
             <View style={styles.container} >
                 <View style={styles.topContainer} >
@@ -62,16 +153,18 @@ export default function OptionSelect ({navigation}) {
                                 horizontal
                                 onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}}
                                 showsHorizontalScrollIndicator = {false}>
-                        {selectGameOtion.length === 0? (
+                        {getOptionList.length === 0? (
                             <View >
                                 <ActivityIndicator color="black" size="large"/>
                             </View>
                             ) : (
-                            selectGameOtion.map( (info, index) =>    
+                                getOptionList.map( (info, index) =>    
                                 <View   key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
-                                        <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                        <Image resizeMode='cover' style={styles.backImg} source={info.optionUrl}/>       
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                        <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                                uri: `${info.url}`,
+                                              }}/>       
                                     </View>  
                                 </View>
                             )
@@ -87,8 +180,8 @@ export default function OptionSelect ({navigation}) {
         
       
       
-    );
-  
+            );
+        }
     
 }
 
@@ -146,7 +239,7 @@ const styles = StyleSheet.create({
     },
      itemBox:{
         width:"70%",
-        height:"70%",
+        height:"80%",
         alignItems:"center",
     },
     centerBottomContainer:{       

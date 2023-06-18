@@ -20,12 +20,14 @@ export default function MainScreen ({navigation}) {
     const [getAlramCount, setAlramCount] = useState(0);
     const [getOptionList, setOptionList] = useState([]);
     const [getUserLikeTop5List, setUserLikeTop5List] = useState([]);
+    const [getSelectedOption, setSelectedOption] = useState([]);
     const [ok, setOptionName] = useState(1);
     const [getUserLike, setUserLike] = useState("");
     const onChangeid = (payload)=>setid(payload);
     const onChangepassWord = (payload)=>setpassWord(payload);
-     let reChampionList = [];
-     let youserLikeCheck ="";
+    let reChampionList = [];
+    let youserLikeCheck ="";
+
     sessionSave = async ()=>{
         let sessions = await Session.sessionGet("sessionInfo");
         console.log("sessionSaving")
@@ -33,20 +35,31 @@ export default function MainScreen ({navigation}) {
         //let myId= "TEST15";         
         setSessionId(myId);
     };
+
+    ////targetLike----좋아요 기능함수///////
     const targetLike = async(targetId) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
       serverGetUserLikeTop5List();
       serverGetFindMyAlramList();
     };
+
+    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionList = async() =>{
-      // const response = await fetch (`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
-      // const jsonOptionList = await response.json();
-      // console.log(jsonOptionList)
-    };  
+      const response = await fetch (`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
+      const jsonOptionList = await response.json();
+      console.log(jsonOptionList)
+      console.log(jsonOptionList.selectMatchingOptionList)
+      for(var i=0; i<jsonOptionList.selectMatchingOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
+        jsonOptionList.selectMatchingOptionList[i].url = tempUrl;
+      }
+      setOptionList(jsonOptionList.selectMatchingOptionList);
+    };
+
+    ////serverGetUserLikeTop5List----좋아요 TOP5리스트 서버에서 가져오기 함수///////  
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
-      console.log(jsonUserList)
       const sessionId =getSessionId;
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         //////좋아요 확인////////
@@ -80,6 +93,8 @@ export default function MainScreen ({navigation}) {
       setUserLikeTop5List(jsonUserList.selectLikeTop5List);
       
     };
+
+    ////serverGetTargetUserLikeYn----로그인 유저 상대 유저 좋아요 상태값 서버에서 가져오기 함수/////// 
     const serverGetTargetUserLikeYn = async(youId,indexNumber) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
       const jsonMsg = await response.json();
@@ -93,6 +108,8 @@ export default function MainScreen ({navigation}) {
       setUserLikeTop5List(getUserLikeTop5List) 
 
     };
+
+    ////serverGetTargetUserFriendState----로그인 유저 상대 유저 친구 상태값 서버에서 가져오기 함수/////// 
     const serverGetTargetUserFriendState = async(youId,indexNumber) =>{
       const response = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${getSessionId}&youId=${youId}`)
       const jsonUserFriendState = await response.json();
@@ -110,6 +127,8 @@ export default function MainScreen ({navigation}) {
       setUserLikeTop5List(getUserLikeTop5List)
 
     };
+
+    ////serverGetFindMyAlramList----로그인 유저 알람리스트 서버에서 가져오기 함수/////// 
     const serverGetFindMyAlramList = async() =>{
       const sessionId = getSessionId;
       const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
@@ -119,24 +138,57 @@ export default function MainScreen ({navigation}) {
       setAlramRecentOneMsg(alramRecentOneMsg);
       setAlramCount(alramCount);
     };
+
+    ////optionChange----옵션 리스트 인덱스 함수/////// 
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
-      console.log(getUserLikeTop5List)
+      setSelectedOption(getOptionList[indexNumber]);
+      console.log(getOptionList[indexNumber])   
+      console.log(getOptionList[indexNumber].cdDtlId)
+      console.log(getOptionList[indexNumber].cdDtlName)
+    };
+
+    ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
+    const friendChange = (index)=>{
+      setOptionName(Math.floor(index/100))
+      let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
       let youId =getUserLikeTop5List[indexNumber].ylYouId;
       serverGetTargetUserLikeYn(youId,indexNumber);
       serverGetTargetUserFriendState(youId,indexNumber); 
     };
+
+    ////addFriendTrigger----친구신청 함수/////// 
     const addFriendTrigger = (targetId)=>{
       const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${getSessionId}&yourNick=${targetId}`);
     };
+
+    ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 
     const targetLikeTrigger = (targetId)=>{
       targetLike(targetId);   
     };
+
+    const optionSubmit = () => {
+      if(getSelectedOption.length ==0){
+        navigation.navigate('OptionSelect',{gameType:getOptionList[0]
+                                            ,gameTypePlus:""
+                                            ,gameTypePlusIndex:0
+                                            },{navigation});
+      }else{
+        navigation.navigate('OptionSelect',{gameType:getSelectedOption
+                                            ,gameTypePlus:""
+                                            ,gameTypePlusIndex:0
+                                            },{navigation});
+      }
+      
+
+    };
+
     useEffect(() => {
         sessionSave();
         serverGetUserLikeTop5List();
         serverGetFindMyAlramList();
+        serverGetOptionList();
       },[isFocused]);
     return (
         <View style={styles.mainContainer}>
@@ -180,57 +232,40 @@ export default function MainScreen ({navigation}) {
               </Modal>
             </View>
             <View style={styles.mainCenter}>
-              <View style={styles.mainButtonView}>
-                <Button color={"black"} title='매칭' onPress={()=> navigation.navigate('OptionSelect')}   style={styles.clickButton}>
-                </Button> 
-              </View>
               <View style={styles.mainCenterSelectView}>
                 <ScrollView pagingEnabled 
                                   horizontal
                                   onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}}
                                   showsHorizontalScrollIndicator = {false}>
-                          {getUserLikeTop5List.length === 0? (
+                          {getOptionList.length === 0? (
                               <View >
                               </View>
                               ) : (
-                              getUserLikeTop5List.map( (info, index) =>    
+                                getOptionList.map( (info, index) =>    
                                   <View key={index} style={styles.contentBottom}>
-                                      <Text style={styles.itemBoxTitle} >추천 매너 유저 TOP{index+1}</Text>
+                                      <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
                                       <View style={styles.itemBox}>
-                                          <View style={styles.userHeader}>
-                                            <View >
-                                              <Text >닉네임: {info.uNickname}</Text>
-                                            </View>
-                                            <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriendTrigger(info.ylYouId)}>
                                               <Image resizeMode='contain' style={styles.frendAdd} 
-                                              source={require('./assets/images/plus.png')}/>
-                                            </View>
-                                            <View style={styles.userItemView}>
-                                              <Image resizeMode='contain' style={styles.frendAdd} 
-                                              source={require('./assets/images/chat.png')}/>
-                                            </View>
-                                            <View style={styles.userItemView} onStartShouldSetResponder={() =>targetLikeTrigger(info.ylYouId)}>
-                                              <Image resizeMode='contain' style={styles.frendAdd} 
-                                                source={info.url}/>
-                                            </View>
-                                          </View>
-                                          <Text style={styles.itemBoxTitle} >좋아요 수 :{info.cnt}</Text>
-                                          <Text style={styles.itemBoxTitle} >랭크 :{info.glRank}</Text>
-                                          <Text style={styles.itemBoxTitle} >포지션 :{info.glPosition}</Text>
-                                          <Text style={styles.itemBoxTitle} >자주쓰는 챔피언 :{info.glChampion}</Text>
-                                          <Text style={styles.itemBoxTitle} >자주하는 시간 :{info.glTime}</Text>
+                                              source={{
+                                                uri: `${info.url}`,
+                                              }}
+                                              />
                                       </View>  
                                   </View>
                               )
                               )
                           }         
                 </ScrollView>
-              </View>     
+              </View> 
+              <View style={styles.mainButtonView}>
+                <Button color={"black"} title='선택하기' onPress={optionSubmit}  style={styles.clickButton}>
+                </Button> 
+              </View>    
             </View>
             <View style={styles.mainBottom}>
               <ScrollView pagingEnabled 
                                 horizontal
-                                onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}}
+                                onMomentumScrollEnd={(event) => {friendChange(event.nativeEvent.contentOffset.x)}}
                                 showsHorizontalScrollIndicator = {false}>
                         {getUserLikeTop5List.length === 0? (
                             <View >

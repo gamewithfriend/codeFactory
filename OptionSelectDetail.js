@@ -1,46 +1,20 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity  } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity ,Modal,Pressable,Alert  } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
+const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 
 
 export default function OtionSelectDetail ({ route,navigation }) {
     
     const [ok, setOptionName] = useState(1);
     const [championList, setChampionList] = useState([]);
-    const [optionList, setOptionList] = useState([]);
+    const [getoptionList, setOptionList] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
     const [getChampionSelect, setChampionSelect] = useState("");
     const [text, onChangeText] = React.useState('Useless Text');
     let reChampionList = [];
-    let rankList = [   
-                                {optionName:"unRank",
-                                optionUrl: require("./assets/images/emblem-challenger.png")}
-                                ,
-                                {optionName:"BRONZE",
-                                optionUrl: require("./assets/images/rank/emblem-bronze.png")}
-                                ,
-                                {optionName:"SILVER",
-                                optionUrl: require("./assets/images/rank/emblem-silver.png")}
-                                ,
-                                {optionName:"GOLD",
-                                optionUrl: require("./assets/images/rank/emblem-gold.png")}
-                                ,
-                                {optionName:"PLATINUM",
-                                optionUrl: require("./assets/images/rank/emblem-platinum.png")}
-                                ,
-                                {optionName:"DIAMOND",
-                                optionUrl: require("./assets/images/rank/emblem-diamond.png")}
-                                ,
-                                {optionName:"MASTER",
-                                optionUrl: require("./assets/images/rank/emblem-master.png")}
-                                ,
-                                {optionName:"GRANDMASTER",
-                                optionUrl: require("./assets/images/rank/emblem-grandmaster.png")}
-                                ,
-                                {optionName:"CHALLENGER",
-                                optionUrl: require("./assets/images/rank/emblem-challenger.png")}
-                            ];
     let positionList = [   
                                 {optionName:"TOP",
                                 optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
@@ -81,6 +55,18 @@ export default function OtionSelectDetail ({ route,navigation }) {
       } catch (error) {
         // Error retrieving data
       }
+    };
+    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
+    const serverGetOptionList = async() =>{
+        const matchingOptionCode= route.params.optionOneArr.cdDtlName;   
+        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingGameOption.do?matchingOptionCode=${matchingOptionCode}`)
+        const jsonOptionList = await response.json();
+        for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+          let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+          jsonOptionList.selectOptionList[i].url = tempUrl;
+        }
+        setOptionList(jsonOptionList.selectOptionList);
+        
     };
     const getSearchChampionList = async(keyWord) =>{
       const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
@@ -149,8 +135,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
       // tempList[indexNumber].optionName 은 option2
       let tempOptionOneDetail =getChampionSelect; 
       if(route.params.optionOne == "rank"){
-        tempList = rankList;
-        tempOptionOneDetail = tempList[indexNumber].optionName;
+        tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
       }else if(route.params.optionOne == "position"){
         tempList = positionList;
         tempOptionOneDetail = tempList[indexNumber].optionName;
@@ -209,14 +194,11 @@ export default function OtionSelectDetail ({ route,navigation }) {
       }
       setChampionList(reChampionList)
     };
-    const setRouteParam = async() =>{
-      console.log(route.params)
-      console.log(route.params.length)
-    };
+
     useEffect(() => {
       getChampionList();
-      setRouteParam();
       sessionGet();
+      serverGetOptionList();
     },[]);
     if(route.params.optionOne ==="rank"){
       return (
@@ -225,29 +207,59 @@ export default function OtionSelectDetail ({ route,navigation }) {
                    <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
             </View>
             <View style={styles.centerContainer} >
-              <View style={styles.centerTopContainer}>
-                <ScrollView pagingEnabled 
-                            horizontal
-                            onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
-                            showsHorizontalScrollIndicator = {false}>
-                    {rankList.length === 0? (
-                        <View >
-                            <ActivityIndicator color="black" size="large"/>
-                        </View>
-                        ) : (
-                        rankList.map( (info, index) =>    
-                            <View key={index} style={styles.contentBottom}>
-                                <View style={styles.itemBoxImg}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
-                                </View>  
-                            </View>
-                        )
-                        )
-                    }         
-                </ScrollView>
+              <View style={styles.centerTopContainerRank}>
+                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>setModalVisible(true)}>
+                  <Image resizeMode='contain' style={styles.itemBoxImgRank} 
+                  source={require("./assets/images/rank_resize/emblem-gold_res.png")}/>
+                </View>
+                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>setModalVisible(true)}>
+                  <Image resizeMode='contain' style={styles.itemBoxImgRank} 
+                  source={require("./assets/images/rank_resize/emblem-gold_res.png")}/>
+                </View>            
               </View>
             </View>
+              <Modal
+              animationType="fade"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+              }}>
+              <Pressable style={{
+              flex:1,
+              backgroundColor:'transparent',
+              }}
+              onPress={()=>setModalVisible(false)}
+              />
+              <View style={styles.centeredView} >
+                <View style={styles.modalView}>
+                  <View style={styles.modalSelectView}>
+                    <ScrollView pagingEnabled
+                                horizontal 
+                                  showsHorizontalScrollIndicator = {false}>      
+                        {getoptionList.length === 0? (
+                            <View >
+                                <ActivityIndicator color="black" size="large"/>
+                            </View>
+                            ) : (
+                              getoptionList.map( (info, index) =>    
+                                <View key={index} style={styles.contentBottomRank}>
+                                    <View style={styles.itemBoxImgRank}>
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                        <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>       
+                                    </View>  
+                                </View>
+                            )
+                            )
+                        }         
+                    </ScrollView>
+                  </View>
+                </View>
+              </View>
+              </Modal>
             <View style={styles.bottomContainer} >
               <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
@@ -512,16 +524,18 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             horizontal
                             onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
                             showsHorizontalScrollIndicator = {false}>
-                    {positionList.length === 0? (
+                    {getoptionList.length === 0? (
                         <View >
                             <ActivityIndicator color="black" size="large"/>
                         </View>
                         ) : (
-                        positionList.map( (info, index) =>    
+                          getoptionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                 <View style={styles.itemBoxImg}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                    <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                    <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                                uri: `${info.url}`,
+                                              }}/>       
                                 </View>  
                             </View>
                         )
@@ -634,16 +648,18 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             horizontal
                             onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
                             showsHorizontalScrollIndicator = {false}>
-                    {timeList.length === 0? (
+                    {getoptionList.length === 0? (
                         <View >
                             <ActivityIndicator color="black" size="large"/>
                         </View>
                         ) : (
-                        timeList.map( (info, index) =>    
+                          getoptionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                 <View style={styles.itemBoxImg}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                    <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                    <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                    uri: `${info.url}`,
+                                    }}/>  
                                 </View>  
                             </View>
                         )
@@ -781,6 +797,17 @@ const styles = StyleSheet.create({
     borderStyle:"solid",
     width:"100%",
   },
+  centerTopContainerRank:{       
+    flex:1,
+    borderColor:"black",
+    borderStyle:"solid",
+    flexDirection:"row",
+    width:"100%",
+  },
+  centerTopContainerRankUnder:{       
+    height:"100%",
+    width:"50%",
+  },
   centerBottomContainer:{       
     height:"7%",
     alignItems:"center",
@@ -876,6 +903,10 @@ const styles = StyleSheet.create({
       justifyContent:"center",
       height:"100%",
   },
+  contentBottomRank:{
+    width:SCREEN_WIDTH,
+    height:"100%",
+  },
   itemBox:{
     width:"20%",
     height:"60%",
@@ -889,8 +920,13 @@ const styles = StyleSheet.create({
     marginLeft:"2%",
   },
   itemBoxImg:{
-    width:"55%",
+    width:"50%",
     height:"60%",
+    margin: "3%",
+  },
+  itemBoxImgRank:{
+    width:"70%",
+    height:"70%",
     margin: "3%",
   },
   champImg:{
@@ -906,6 +942,12 @@ const styles = StyleSheet.create({
     height:"100%",
     opacity:1
   },
+  modalRankImg:{
+    flex:1,
+    width:'50%',
+    height:"50%",
+    opacity:1
+  },
   itemBoxTitle:{
     marginBottom : '5%',
     textAlign: 'center',
@@ -913,5 +955,30 @@ const styles = StyleSheet.create({
   centerText:{
   },
   input:{
+  },
+  modalView: {
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position:'absolute',
+    top:-200,
+    bottom:100,
+    left:0,
+    right:0,
+  },
+  centeredView: {
+    flex: 1,
+    marginTop: "5%",
+  },
+  modalSelectView: {
+    width:"100%",
+    marginTop:"10%",
+    marginLeft:"12%",
   },
 });
