@@ -124,7 +124,7 @@ export default function OptionSelect ({route,navigation}) {
                                         <View   key={index} style={styles.contentBottom}>
                                             <View style={styles.itemBox}>
                                                 <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
-                                                <Image resizeMode='cotain' style={styles.backImg} s source={info.optionUrl}/>       
+                                                <Image resizeMode='contain' style={styles.backImg} s source={info.optionUrl}/>       
                                             </View>  
                                         </View>
                                     )
@@ -162,7 +162,7 @@ export default function OptionSelect ({route,navigation}) {
                                 <View   key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
                                         <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
-                                        <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                        <Image resizeMode='contain' style={styles.backImg} s source={{
                                                 uri: `${info.url}`,
                                               }}/>       
                                     </View>  

@@ -247,7 +247,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                                 <View key={index} style={styles.contentBottomRank}>
                                     <View style={styles.itemBoxImgRank}>
                                         <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
-                                        <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                        <Image resizeMode='contain' style={styles.backImg} s source={{
                                                     uri: `${info.url}`,
                                                   }}/>       
                                     </View>  
@@ -533,7 +533,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                 <View style={styles.itemBoxImg}>
                                     <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
-                                    <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                    <Image resizeMode='contain' style={styles.backImg} s source={{
                                                 uri: `${info.url}`,
                                               }}/>       
                                 </View>  
@@ -657,7 +657,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                 <View style={styles.itemBoxImg}>
                                     <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
-                                    <Image resizeMode='cotain' style={styles.backImg} s source={{
+                                    <Image resizeMode='contain' style={styles.backImg} s source={{
                                     uri: `${info.url}`,
                                     }}/>  
                                 </View>  
