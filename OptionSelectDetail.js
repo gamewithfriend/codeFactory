@@ -9,10 +9,20 @@ const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 export default function OtionSelectDetail ({ route,navigation }) {
     
     const [ok, setOptionName] = useState(1);
+    const [getModalChangeIndex, setModalChangeIndex] = useState(0);
     const [championList, setChampionList] = useState([]);
     const [getoptionList, setOptionList] = useState([]);
+    const [getRankUnderOptionListOne, setRankUnderOptionListOne] = useState([]);
+    const [getRankUnderOptionListTwo, setRankUnderOptionListTwo] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const [getModalIndex, setModalIndex] = useState(0);
+    const [getSelectedModalImgOne, setSelectedModalImgOne] = useState("http://3.37.211.126:8080/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
+    const [getSelectedModalImgTwo, setSelectedModalImgTwo] = useState("http://3.37.211.126:8080/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
+    const [getSelectedModalRankNameOne, setSelectedModalRankNameOne] = useState("");
+    const [getSelectedModalRankNameTwo, setSelectedModalRankNameTwo] = useState("");
     const [getChampionSelect, setChampionSelect] = useState("");
+    const [getUnderRankIndexOne, setUnderRankIndexOne] = useState("");
+    const [getUnderRankIndexTwo, setUnderRankIndexTwo] = useState("");
     const [text, onChangeText] = React.useState('Useless Text');
     let reChampionList = [];
     let positionList = [   
@@ -65,8 +75,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
           let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
           jsonOptionList.selectOptionList[i].url = tempUrl;
         }
-        setOptionList(jsonOptionList.selectOptionList);
-        
+        setOptionList(jsonOptionList.selectOptionList);        
     };
     const getSearchChampionList = async(keyWord) =>{
       const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
@@ -118,14 +127,21 @@ export default function OtionSelectDetail ({ route,navigation }) {
       switch(index) {
         case 1: 
           navigation.navigate('OptionSelect',route.params,{navigation});  
-      }
-      
+      }     
     };    
     // 나머지 옵션 select index 감지 함수
     const optionChange = (index)=>{
-
-      setOptionName(Math.floor(index/100))     
+      setOptionName(Math.floor(index/100))
     };
+    const modalRankChange = (index)=>{
+      let changeIndex =Math.floor(index/100);
+      let indexNumber = Math.ceil((changeIndex+1)/4);
+      setModalChangeIndex(indexNumber);      
+    };
+    const setOptionListTriger = ()=>{      
+      setOptionList(getoptionList.slice(getModalChangeIndex,getoptionList.length));  
+    };
+
     // 선택하기 감지 함수
     const optionSubmit = ()=>{
 
@@ -151,6 +167,55 @@ export default function OtionSelectDetail ({ route,navigation }) {
       navigation.navigate('OptionSelectTwo',{optionOne: route.params.optionOne,
                                               optionOneDetail: tempOptionOneDetail
                                               },{navigation});
+    };
+    const rankSubmit = ()=>{
+      if(getModalIndex ==0){
+        setSelectedModalImgOne(getoptionList[getModalChangeIndex].url);
+        setSelectedModalRankNameOne(getoptionList[getModalChangeIndex].cdDtlName);
+      }else{
+        setSelectedModalImgTwo(getoptionList[getModalChangeIndex].url);
+        setSelectedModalRankNameTwo(getoptionList[getModalChangeIndex].cdDtlName);
+      }
+      const forRankUnderOptionListCode = getoptionList[getModalChangeIndex].cdDtlId;
+      setOptionListTriger();   
+      serverGetRankUnderOptionList(forRankUnderOptionListCode);
+      setModalVisible(false);
+      if(getModalIndex !=0){
+        serverGetOptionList();
+        setUnderRankIndexTwo("");
+      }else{
+        setUnderRankIndexOne("");
+      }
+      
+    };
+    const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
+      const matchingOptionCode=forRankUnderOptionListCode;   
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      if(getModalIndex ==0){
+        setRankUnderOptionListOne(jsonOptionList.selectOptionList);
+      }else{
+        setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+      }      
+    };
+    const rankIndex = (modalSet,index)=>{
+      setModalVisible(modalSet);
+      setModalIndex(index);
+      setModalChangeIndex(0);
+    };
+    const rankUnderIndex = (index)=>{
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+      console.log(index)
+      if(getModalIndex ==0){
+        setUnderRankIndexOne(index);
+      }else{
+        setUnderRankIndexTwo(index);
+      }
+      
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
@@ -203,18 +268,22 @@ export default function OtionSelectDetail ({ route,navigation }) {
     if(route.params.optionOne ==="rank"){
       return (
         <View style={styles.container}>
-            <View style={styles.topContainer}>
+            <View style={styles.topContainerRank}>
                    <Text style={styles.topContainerTitle}>{route.params.optionOne}</Text>
             </View>
-            <View style={styles.centerContainer} >
+            <View style={styles.centerContainerRank} >
               <View style={styles.centerTopContainerRank}>
-                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>setModalVisible(true)}>
-                  <Image resizeMode='contain' style={styles.itemBoxImgRank} 
-                  source={require("./assets/images/rank_resize/emblem-gold_res.png")}/>
+                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>rankIndex(true,0)}>
+                  <Image resizeMode='cover' style={styles.itemBoxImgRank} 
+                  source={{
+                    uri: `${getSelectedModalImgOne}`,
+                  }}/>       
                 </View>
-                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>setModalVisible(true)}>
-                  <Image resizeMode='contain' style={styles.itemBoxImgRank} 
-                  source={require("./assets/images/rank_resize/emblem-gold_res.png")}/>
+                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>rankIndex(true,1)}>
+                  <Image resizeMode='cover' style={styles.itemBoxImgRank} 
+                  source={{
+                    uri: `${getSelectedModalImgTwo}`,
+                  }}/>       
                 </View>            
               </View>
             </View>
@@ -236,7 +305,8 @@ export default function OtionSelectDetail ({ route,navigation }) {
                 <View style={styles.modalView}>
                   <View style={styles.modalSelectView}>
                     <ScrollView pagingEnabled
-                                horizontal 
+                                horizontal
+                                onMomentumScrollEnd={(event) => {modalRankChange(event.nativeEvent.contentOffset.x)}} 
                                   showsHorizontalScrollIndicator = {false}>      
                         {getoptionList.length === 0? (
                             <View >
@@ -245,9 +315,9 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             ) : (
                               getoptionList.map( (info, index) =>    
                                 <View key={index} style={styles.contentBottomRank}>
-                                    <View style={styles.itemBoxImgRank}>
+                                    <View style={styles.itemBoxImgRank} >
                                         <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
-                                        <Image resizeMode='contain' style={styles.backImg} s source={{
+                                        <Image resizeMode='contain' style={styles.backImg} source={{
                                                     uri: `${info.url}`,
                                                   }}/>       
                                     </View>  
@@ -256,11 +326,58 @@ export default function OtionSelectDetail ({ route,navigation }) {
                             )
                         }         
                     </ScrollView>
+                    <View style={styles.modalBottomContainer} >
+                      <Button color={"black"} onPress={rankSubmit} title='선택하기'></Button>
+                    </View>
                   </View>
                 </View>
               </View>
               </Modal>
-            <View style={styles.bottomContainer} >
+              <View style={styles.sectionView}>
+                      <View style={styles.sectionViewTop}>
+                        <View style={styles.sectionViewButtonBox}>
+                        {getRankUnderOptionListOne.length === 0? (
+                          <View  style={styles.sectionViewButtonImgBox}>
+                          </View>
+                          )  : (
+                            getRankUnderOptionListOne.map( (info, index) =>    
+                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1)} >
+                                <Image resizeMode='contain' style={styles.champImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>
+                                <Text></Text>                      
+                              </View>
+                            )
+                            )
+                        }      
+                        </View>
+                        <View style={styles.sectionViewButtonBox}>
+                        {getRankUnderOptionListTwo.length === 0? (
+                          <View style={styles.sectionViewButtonImgBox}>
+                          </View>
+                          )  : (
+                            getRankUnderOptionListTwo.map( (info, index) =>    
+                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1)} >
+                                 <Image resizeMode='contain' style={styles.champImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>    
+                              </View>
+                            )
+                            )
+                        }      
+                        </View> 
+                      </View>
+                      <View style={styles.sectionViewCenter}>
+                        <View style={styles.sectionViewBoxFix}><Text>시작 랭크</Text></View>
+                        <View style={styles.sectionViewBoxFix}><Text>~</Text></View>
+                        <View style={styles.sectionViewBoxFix}><Text>끝 랭크</Text></View>  
+                      </View>
+                      <View style={styles.sectionViewBottom}>
+                        <View style={styles.sectionViewBox}><Text>{getSelectedModalRankNameOne} {getUnderRankIndexOne}</Text></View>
+                        <View style={styles.sectionViewBox}><Text>{getSelectedModalRankNameTwo} {getUnderRankIndexTwo}</Text></View> 
+                      </View>  
+              </View>
+            <View style={styles.bottomContainerRank} >
               <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
@@ -367,7 +484,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
             </View>
             <View style={styles.centerContainer} >
               <View style={styles.centerTopContainer}>
-                <ScrollView pagingEnabled  
+                <ScrollView 
                               showsHorizontalScrollIndicator = {false}>                
                     {championList.length === 0? (
                         <View >
@@ -784,8 +901,21 @@ const styles = StyleSheet.create({
     borderStyle:"solid",
     marginTop:"3%",  
   },
+  topContainerRank:{       
+    flex:2,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+    marginTop:"3%",  
+  },
   centerContainer:{       
-    flex:7,
+    flex:5,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",  
+  },
+  centerContainerRank:{       
+    flex:3,
     alignItems:"center",
     borderColor:"black",
     borderStyle:"solid",  
@@ -807,6 +937,7 @@ const styles = StyleSheet.create({
   centerTopContainerRankUnder:{       
     height:"100%",
     width:"50%",
+    alignItems:"center",
   },
   centerBottomContainer:{       
     height:"7%",
@@ -814,11 +945,60 @@ const styles = StyleSheet.create({
     width:"100%",
     flexDirection:"row"
   },
-    bottomContainer:{
+  bottomContainer:{
     flex:1,
     alignItems:"center",
     borderColor:"black",
     borderStyle:"solid",
+  },
+  bottomContainerRank:{
+    flex:1,
+    marginTop:"10%",
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+  },
+  modalBottomContainer:{
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+    marginRight:"23%",
+  },
+  sectionView:{
+    flex:2,
+    width:"100%",
+  },
+  sectionViewTop:{
+    height:"40%",
+    width:"100%",
+    flexDirection:"row",
+  },
+  sectionViewCenter:{
+    marginTop:"5%",
+    width:"100%",
+    flexDirection:"row"
+  },
+  sectionViewBottom:{
+    marginTop:"5%",
+    width:"100%",
+    flexDirection:"row"
+  },
+  sectionViewBox:{
+    width:"50%",
+    alignItems:"center",
+  },
+  sectionViewBoxFix:{
+    width:"33%",
+    alignItems:"center",
+  },
+  sectionViewButtonBox:{
+    width:"50%",
+    flexDirection:"row"
+  },
+  sectionViewButtonImgBox:{
+    width:"25%",
+    flexDirection:"row"
   },
   bottomOptionContainer:{
     flex:5,
