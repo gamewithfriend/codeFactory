@@ -2,13 +2,18 @@ import React, { Component, useState } from 'react';
 import { View, Text, Button,StyleSheet,TextInput,Image } from 'react-native';
 
 export default function SettingScreen ({navigation}) {
+  const optionSubmit = () => {
+    navigation.navigate('MatchingHistoryScreen',"jonghwi", "latest");
+  };
+  
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-              <View style={styles.rowView}>
+              <View style={styles.rowView} onPress={optionSubmit}>
                    <Image resizeMode='contain' style={styles.statusImg} 
                     source={require("./assets/images/bell.png")}/>     
                    <Text>LogOut</Text>
+                   <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
               </View>
               <View style={styles.lineDesign} />
               <View style={styles.rowView}>
@@ -38,11 +43,12 @@ export default function SettingScreen ({navigation}) {
             </View>
            
         </View>
-        
-      
-      
     );
   
+  
+
+
+
 
 }
 const styles = StyleSheet.create({

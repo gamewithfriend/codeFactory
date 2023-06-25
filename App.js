@@ -24,6 +24,7 @@ import OptionSelectFour from './OptionSelectFour';
 import OptionSelectFourDetail from './OptionSelectFourDetail';
 import SetNickNameScreen from './SetNickNameScreen';
 import TextChat from './TextChat';
+import MatchingHistoryScreen from './MatchingHistoryScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -83,6 +84,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="TextChat" component={TextChat} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="MatchingHistoryScreen" component={MatchingHistoryScreen} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>
