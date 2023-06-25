@@ -39,7 +39,6 @@ export default function MainScreen ({navigation}) {
     ////targetLike----좋아요 기능함수///////
     const targetLike = async(targetId) =>{
       const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
-      serverGetUserLikeTop5List();
       serverGetFindMyAlramList();
     };
 
@@ -47,8 +46,6 @@ export default function MainScreen ({navigation}) {
     const serverGetOptionList = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
       const jsonOptionList = await response.json();
-      console.log(jsonOptionList)
-      console.log(jsonOptionList.selectMatchingOptionList)
       for(var i=0; i<jsonOptionList.selectMatchingOptionList.length; i++){ 
         let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
         jsonOptionList.selectMatchingOptionList[i].url = tempUrl;
@@ -144,9 +141,6 @@ export default function MainScreen ({navigation}) {
       setOptionName(Math.floor(index/100))
       let indexNumber = Math.floor(((Math.floor(index/100))+1)/4);
       setSelectedOption(getOptionList[indexNumber]);
-      console.log(getOptionList[indexNumber])   
-      console.log(getOptionList[indexNumber].cdDtlId)
-      console.log(getOptionList[indexNumber].cdDtlName)
     };
 
     ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
@@ -165,7 +159,18 @@ export default function MainScreen ({navigation}) {
 
     ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 
     const targetLikeTrigger = (targetId)=>{
-      targetLike(targetId);   
+        targetLike(targetId);
+        serverGetUserLikeTop5List();
+    };
+
+    ////alramListTrigger---- 알람 리스트 함수/////// 
+    const alramListTrigger = ()=>{
+      navigation.navigate('AlarmScreen',{navigation});
+      setModalVisible(false);
+    };
+
+    const testFuntcion = ()=>{
+      console.log("ssssssssssssssssssssssssssssssssssssssssssssssssss")
     };
 
     const optionSubmit = () => {
@@ -189,7 +194,7 @@ export default function MainScreen ({navigation}) {
         serverGetUserLikeTop5List();
         serverGetFindMyAlramList();
         serverGetOptionList();
-      },[isFocused]);
+    },[isFocused]);
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
@@ -220,7 +225,7 @@ export default function MainScreen ({navigation}) {
               />
               <View style={styles.centeredView} >
                 <View style={styles.modalView}>
-                  <View>
+                  <View onStartShouldSetResponder={() =>alramListTrigger()}>
                   {getAlramRecentOneMsg === ""? (
                                                         <Text style={styles.modalText}>알람이 없습니다.</Text>
                                                       ) : (

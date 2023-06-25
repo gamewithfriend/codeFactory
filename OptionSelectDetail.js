@@ -25,32 +25,6 @@ export default function OtionSelectDetail ({ route,navigation }) {
     const [getUnderRankIndexTwo, setUnderRankIndexTwo] = useState("");
     const [text, onChangeText] = React.useState('Useless Text');
     let reChampionList = [];
-    let positionList = [   
-                                {optionName:"TOP",
-                                optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
-                                ,
-                                {optionName:"JUNGGLE",
-                                optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
-                                ,
-                                {optionName:"MIDDLE",
-                                optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}
-                                ,
-                                 {optionName:"CARRY",
-                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png")}
-                                ,
-                                {optionName:"SUPPORT",
-                                optionUrl: require("./assets/images/position/SUP-CHALLENGER.png")}       
-                        ];
-    let timeList = [   
-                                {optionName:"평일",
-                                optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
-                                ,
-                                {optionName:"주말",
-                                optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
-                                ,
-                                {optionName:"평일주말",
-                                optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}            
-                        ]; 
     // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
       setChampionSelect(index)
@@ -75,7 +49,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
           let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
           jsonOptionList.selectOptionList[i].url = tempUrl;
         }
-        setOptionList(jsonOptionList.selectOptionList);        
+        setOptionList(jsonOptionList.selectOptionList);       
     };
     const getSearchChampionList = async(keyWord) =>{
       const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
@@ -135,11 +109,14 @@ export default function OtionSelectDetail ({ route,navigation }) {
     };
     const modalRankChange = (index)=>{
       let changeIndex =Math.floor(index/100);
-      let indexNumber = Math.ceil((changeIndex+1)/4);
+      let indexNumber =0;
+      if(changeIndex != 0){
+        indexNumber = Math.ceil((changeIndex+1)/4);
+      }
       setModalChangeIndex(indexNumber);      
     };
-    const setOptionListTriger = ()=>{      
-      setOptionList(getoptionList.slice(getModalChangeIndex,getoptionList.length));  
+    const setOptionListTriger = ()=>{  
+      setOptionList(getoptionList.slice(getModalChangeIndex,getoptionList.length));
     };
 
     // 선택하기 감지 함수
@@ -153,11 +130,9 @@ export default function OtionSelectDetail ({ route,navigation }) {
       if(route.params.optionOne == "rank"){
         tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
       }else if(route.params.optionOne == "position"){
-        tempList = positionList;
-        tempOptionOneDetail = tempList[indexNumber].optionName;
+        tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
       }else if(route.params.optionOne == "time"){
-        tempList = timeList;
-        tempOptionOneDetail = tempList[indexNumber].optionName;
+        tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
       }
       console.log("조건1")
       console.log(route.params.optionOne)
@@ -177,14 +152,16 @@ export default function OtionSelectDetail ({ route,navigation }) {
         setSelectedModalRankNameTwo(getoptionList[getModalChangeIndex].cdDtlName);
       }
       const forRankUnderOptionListCode = getoptionList[getModalChangeIndex].cdDtlId;
-      setOptionListTriger();   
+         
       serverGetRankUnderOptionList(forRankUnderOptionListCode);
       setModalVisible(false);
+      console.log(getModalIndex)
       if(getModalIndex !=0){
         serverGetOptionList();
         setUnderRankIndexTwo("");
       }else{
         setUnderRankIndexOne("");
+        setOptionListTriger();
       }
       
     };
@@ -202,16 +179,62 @@ export default function OtionSelectDetail ({ route,navigation }) {
         setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
       }      
     };
+    const serverGetRankUnderOptionListForSelectFirst = async(forRankUnderOptionListCode,underRankIndexOne) =>{
+      const matchingOptionCode=forRankUnderOptionListCode;   
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      console.log("test@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@3")
+      console.log(underRankIndexOne)
+      console.log(jsonOptionList.selectOptionList.length)
+      const tempTwoArrLength =  jsonOptionList.selectOptionList.length;
+      console.log(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength))
+      if(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength).length == 0){
+        console.log("이거 쉬운게 아니였구나")
+        console.log(getoptionList[0].cdDtlName)
+        console.log(getSelectedModalRankNameOne)
+        if(getoptionList[0].cdDtlName == getSelectedModalRankNameOne){
+          setOptionList(getoptionList.slice(1,getoptionList.length));
+          setSelectedModalImgTwo(getoptionList[1].url);
+          setSelectedModalRankNameTwo(getoptionList[1].cdDtlName);
+          console.log("@@@@@@@@@@@@@@@jsonOptionList.selectOptionList@@@@@@@@@@@@@@@@@@@@@22222")
+          console.log(jsonOptionList.selectOptionList)
+          setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+        }  
+        
+      }else{
+        setSelectedModalImgTwo(getSelectedModalImgOne);
+        setSelectedModalRankNameTwo(getSelectedModalRankNameOne);
+        setRankUnderOptionListTwo(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength));
+      }
+    };
     const rankIndex = (modalSet,index)=>{
       setModalVisible(modalSet);
       setModalIndex(index);
       setModalChangeIndex(0);
+      if(index == 0){
+        serverGetOptionList();
+        setSelectedModalImgOne("");
+        setSelectedModalImgTwo("");
+        setSelectedModalRankNameOne("");
+        setSelectedModalRankNameTwo("");
+        setRankUnderOptionListOne([]);
+        setRankUnderOptionListTwo([]);
+        setUnderRankIndexOne("");
+        setUnderRankIndexTwo("");
+      }
     };
-    const rankUnderIndex = (index)=>{
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-      console.log(index)
-      if(getModalIndex ==0){
+    const rankUnderIndex = (index,modalIndex)=>{
+      if(modalIndex ==0){
         setUnderRankIndexOne(index);
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+        console.log(index)
+        console.log(getRankUnderOptionListTwo)
+        serverGetRankUnderOptionListForSelectFirst(getoptionList[getModalChangeIndex].cdDtlId,index)
+
       }else{
         setUnderRankIndexTwo(index);
       }
@@ -341,7 +364,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                           </View>
                           )  : (
                             getRankUnderOptionListOne.map( (info, index) =>    
-                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1)} >
+                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1,0)} >
                                 <Image resizeMode='contain' style={styles.champImg} source={{
                                                     uri: `${info.url}`,
                                                   }}/>
@@ -357,7 +380,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                           </View>
                           )  : (
                             getRankUnderOptionListTwo.map( (info, index) =>    
-                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1)} >
+                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1,1)} >
                                  <Image resizeMode='contain' style={styles.champImg} source={{
                                                     uri: `${info.url}`,
                                                   }}/>    

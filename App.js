@@ -24,6 +24,7 @@ import OptionSelectFour from './OptionSelectFour';
 import OptionSelectFourDetail from './OptionSelectFourDetail';
 import SetNickNameScreen from './SetNickNameScreen';
 import TextChat from './TextChat';
+import AlarmScreen from './AlarmScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -84,6 +85,9 @@ export default function App() {
         }}/>
         <Stack.Screen name="TextChat" component={TextChat} options={{
           headerShown:false  
+        }}/>
+        <Stack.Screen name="AlarmScreen" component={AlarmScreen} options={{
+          headerShown:true  
         }}/>
       </Stack.Navigator>
     </NavigationContainer>

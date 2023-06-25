@@ -57,10 +57,9 @@ export default function OptionSelect ({route,navigation}) {
     };
 
     const optionSubmit = () => {
-
       let indexNumber = Math.floor((ok+1)/4);
       let userNumber = getNumberList[indexNumber].optionName;
-      if(route.params.gameTypePlus == ""){
+      if(route.params.gameTypePlus == "" && route.params.gameType == "격전"){
         navigation.navigate('OptionSelect',{gameType: route.params.gameType
                                             ,gameTypePlus:userNumber
                                             ,gameTypePlusIndex:indexNumber
