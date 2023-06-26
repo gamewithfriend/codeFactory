@@ -4,23 +4,27 @@ import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 
-export default function MatchingHistoryScreen ({navigation}) {
+export default function MatchingHistoryScreen ({navigation, route}) {
     const [isVisible, setIsVisible] = useState(false);
     const setVisible = () => {
         setIsVisible(!isVisible);
     };
 
+    const myID = route.params.myID;
+
     const [getStateHistoryList, setStateHistoryList] = useState([]);
-    const [getStateHistoryDate, setStateHistoryDate] = useState("");
+    const [getStateDisplayDate, setStateDisplayDate] = useState("");
+    const [getSelectType, setSelectType] = useState("");
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+myID);
 
     const getHistoryList = async() =>{
-        let myID ="jonghwi";
-        const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}`);
+        const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}`);
         const json = await response.json();
         console.log(json.historyList);
-        console.log(json.historyDate);
+        console.log(json.displayDate);
         setStateHistoryList(json.historyList);
-        //setStateHistoryDate(json.historyDate);
+        setStateDisplayDate(json.displayDate);
       };
       useEffect(() => {
         getHistoryList();
@@ -34,7 +38,7 @@ export default function MatchingHistoryScreen ({navigation}) {
             <View style={styles.contentsView}>
                 <View style={styles.dailyMatching}> 
                     <View style={styles.dailyDay}>
-                        <Text>2023-06-24</Text>
+                        <Text>{getStateDisplayDate}</Text>
                     </View>
                     <View style={styles.dailyProfile}>
                         <ScrollView pagingEnabled ={false} showsHorizontalScrollIndicator = {false}>

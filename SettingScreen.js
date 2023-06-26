@@ -3,7 +3,7 @@ import { View, Text, Button,StyleSheet,TextInput,Image } from 'react-native';
 
 export default function SettingScreen ({navigation}) {
   const optionSubmit = () => {
-    navigation.navigate('MatchingHistoryScreen',"jonghwi", "latest");
+    navigation.navigate('MatchingHistoryScreen', {myID : 'jonghwi', selectType : 'latest'});
   };
   
     return (
