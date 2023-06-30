@@ -10,7 +10,6 @@ import MainScreen from './MainScreen';
 import DetailScreen from './DetailScreen';
 import First from './First';
 import Login from './LoginScreen';
-import ChatScreen from './ChatScreen';
 import FriendScreen from './FriendScreen';
 import GameMatching from './GameMatchingScreen';
 import SettingScreen from './SettingScreen';
