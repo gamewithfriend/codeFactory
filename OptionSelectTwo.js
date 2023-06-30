@@ -7,37 +7,32 @@ export default function OptionSelectTwo ({ route,navigation }) {
     const optionTrigger = false;
     const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
-    let selectGameOtion = [   
-                                {optionName:"rank",
-                                optionUrl: require("./assets/images/emblem-challenger.png"),
-                                optionIndex : 0}
-                                ,
-                                {optionName:"champion",
-                                optionUrl: require("./assets/images/chmapion/Irelia_0.jpg"),
-                                optionIndex : 1}
-                                ,
-                                 {optionName:"position",
-                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png"),
-                                optionIndex : 2}
-                                , 
-                                {optionName:"time",
-                                optionUrl: require("./assets/images/chmapion/Zilean_0.jpg"),
-                                optionIndex : 3}
-                                , 
-                                {optionName:"선택하지 않음",
-                                optionUrl: require("./assets/images/not_option.png"),
-                                optionIndex : 4}
-                            ]; 
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
+    const [getOptionList, setOptionList] = useState([]);
                             
-    const setSelectGameOtionTwo = ()=>{
-      for(let i =0; i<selectGameOtion.length; i++ ){
-        if(selectGameOtion[i].optionName == route.params.optionOne ){
-          selectGameOtion.splice(i, 1);
+    const setSelectGameOtionTwo = (tempOptionList)=>{
+      for(let i =0; i<tempOptionList.length; i++ ){
+        if(tempOptionList[i].cdDtlName == route.params.optionOne ){
+          tempOptionList.splice(i, 1);
         }
       }
-      optionValueTwo(selectGameOtion);
+      optionValueTwo(tempOptionList);
     };
+
+    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
+    const serverGetOptionList = async() =>{
+      const gameType= route.params.gameType.cdDtlName;  
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      setOptionList(jsonOptionList.selectOptionList);
+      let tempOptionList = jsonOptionList.selectOptionList;
+      setSelectGameOtionTwo(tempOptionList);
+   };
+
     
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
@@ -53,9 +48,8 @@ export default function OptionSelectTwo ({ route,navigation }) {
     }; 
 
      const optionSubmit = () => {
-
       let indexNumber = Math.floor((ok+1)/4);
-      let tempOptionValueTwo = changeOptionValueTwo[indexNumber].optionName;
+      let tempOptionValueTwo = changeOptionValueTwo[indexNumber].cdDtlName;
       if(tempOptionValueTwo == "선택하지 않음"){
         alert("게임 매칭 시작");
         navigation.navigate('GameMatching',{  0: route.params.optionOne
@@ -71,9 +65,11 @@ export default function OptionSelectTwo ({ route,navigation }) {
         console.log("조건2")
         console.log(tempOptionValueTwo)
         console.log("----------OptionSelectTwo.js-------------Finsh------------------")
+        console.log(changeOptionValueTwo[indexNumber])
         navigation.navigate('OptionSelectTwoDetail',{  optionOne: route.params.optionOne
                                                       ,optionOneDetail: route.params.optionOneDetail
                                                       ,optionTwo:tempOptionValueTwo
+                                                      ,optionTwoArr:changeOptionValueTwo[indexNumber]
                                                       ,optionValueBox: changeOptionValueTwo
                                                     },{navigation});
       }
@@ -81,7 +77,7 @@ export default function OptionSelectTwo ({ route,navigation }) {
     };
 
      useEffect(() => {
-      setSelectGameOtionTwo();
+      serverGetOptionList();   
     },[]);                        
     return (
         <View style={styles.container} >
@@ -105,8 +101,10 @@ export default function OptionSelectTwo ({ route,navigation }) {
                             changeOptionValueTwo.map( (info, index) =>    
                                 <View key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
-                                        <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                        <Image style={styles.backImg} source={info.optionUrl}/>       
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                        <Image style={styles.backImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>             
                                     </View>  
                                 </View>
                             )
@@ -230,7 +228,7 @@ const styles = StyleSheet.create({
       
   },
   centerContainer:{       
-    flex:6,
+    flex:8,
     alignItems:"center",
     borderColor:"black",
     borderStyle:"solid",
@@ -250,12 +248,12 @@ const styles = StyleSheet.create({
     borderStyle:"solid",
   },
   bottomOptionContainer:{
-    flex:5,
+    flex:3,
     borderColor:"black",
     borderStyle:"solid",
   },
   bottomOptionContainerTextBox:{
-    flex:11,
+    flex:6,
     borderColor:"black",
     borderStyle:"solid",
     paddingLeft:"7%",
@@ -267,7 +265,7 @@ const styles = StyleSheet.create({
     flexDirection:"row",
   },
   bottomOptionContainerTitleBox:{
-    flex:5,
+    flex:6,
     borderColor:"black",
     alignItems:"center",
     borderStyle:"solid",
@@ -336,21 +334,19 @@ const styles = StyleSheet.create({
       color:"red",
   },
   backImg:{
-        flex:2,
-        width:'90%',
+        width:'100%',
         height:'100%',
   },
   itemBox:{
-        width:"70%",
-        height:"70%",
+        width:"50%",
+        height:"50%",
         alignItems:"center",
   },
   centerBottomContainer:{       
-        flex:6,
+        flex:8,
         alignItems:"center",
-        borderColor:"red",
-        borderStyle:"solid",
         width:"100%",
+
   },
   itemBoxTitle:{
     marginBottom : '5%',

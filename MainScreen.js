@@ -27,9 +27,9 @@ export default function MainScreen ({navigation}) {
     const onChangepassWord = (payload)=>setpassWord(payload);
     let reChampionList = [];
     let youserLikeCheck ="";
-
+    let sessions = "";
     sessionSave = async ()=>{
-        let sessions = await Session.sessionGet("sessionInfo");
+        sessions= await Session.sessionGet("sessionInfo");
         console.log("sessionSaving")
         let myId= sessions.uIntgId;
         //let myId= "TEST15";         
@@ -57,7 +57,8 @@ export default function MainScreen ({navigation}) {
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
-      const sessionId =getSessionId;
+      sessions= await Session.sessionGet("sessionInfo");
+      const sessionId = sessions.uIntgId;
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         //////좋아요 확인////////
         let youId = jsonUserList.selectLikeTop5List[i].ylYouId;
@@ -127,7 +128,8 @@ export default function MainScreen ({navigation}) {
 
     ////serverGetFindMyAlramList----로그인 유저 알람리스트 서버에서 가져오기 함수/////// 
     const serverGetFindMyAlramList = async() =>{
-      const sessionId = getSessionId;
+      sessions= await Session.sessionGet("sessionInfo");
+      const sessionId = sessions.uIntgId;
       const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
       const jsonAlramList = await response.json();
       let alramCount =jsonAlramList.findMyAlramList.length;

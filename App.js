@@ -25,6 +25,8 @@ import OptionSelectFourDetail from './OptionSelectFourDetail';
 import SetNickNameScreen from './SetNickNameScreen';
 import TextChat from './TextChat';
 import MatchingHistoryScreen from './MatchingHistoryScreen';
+import AlarmScreen from './AlarmScreen';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -32,14 +34,14 @@ function HomeTab(){
   return (
        <Tab.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>
         <Tab.Screen name='MainScreen' component={MainScreen}/>
-        <Tab.Screen name='Home' component={First} options={{tabBarStyle: {display: 'none'}}} />
-        <Tab.Screen name='DetailScreen' component={DetailScreen}/>
-        <Tab.Screen name='Login' component={Login}/>
-        <Tab.Screen name='ChatScreen' component={ChatScreen}/>
-        <Tab.Screen name='FriendScreen' component={FriendScreen}/>
-        <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/>
-        <Tab.Screen name='Setting' component={SettingScreen}/>
+        {/* <Tab.Screen name='Home' component={First} options={{tabBarStyle: {display: 'none'}}} /> */}
+        {/* <Tab.Screen name='DetailScreen' component={DetailScreen}/> */}
+        {/* <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/> */}
+        {/* <Tab.Screen name='ChatScreen' component={ChatScreen}/> */}
+        <Tab.Screen name='FriendScreen' component={FriendScreen}/>       
         <Tab.Screen name='TextChat' component={TextChat}/>
+        <Tab.Screen name='Setting' component={SettingScreen}/>
+        <Tab.Screen name='Login' component={Login}/>     
       </Tab.Navigator>
   
   );
@@ -59,10 +61,10 @@ export default function App() {
           headerShown:true  
         }}/>
         <Stack.Screen name="OptionSelectTwo" component={OptionSelectTwo} options={{
-          headerShown:false  
+          headerShown:true  
         }}/>
         <Stack.Screen name="OptionSelectTwoDetail" component={OptionSelectTwoDetail} options={{
-          headerShown:false  
+          headerShown:true  
         }}/>
         <Stack.Screen name="OptionSelectThree" component={OptionSelectThree} options={{
           headerShown:false  
@@ -86,6 +88,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="MatchingHistoryScreen" component={MatchingHistoryScreen} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="AlarmScreen" component={AlarmScreen} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>

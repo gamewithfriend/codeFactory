@@ -42,7 +42,9 @@ export default function OtionSelectDetail ({ route,navigation }) {
     };
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionList = async() =>{
-        const matchingOptionCode= route.params.optionOneArr.cdDtlName;   
+        const matchingOptionCode= route.params.optionOneArr.cdDtlName;
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@OptionSelectDetail@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+        console.log(route.params)   
         const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingGameOption.do?matchingOptionCode=${matchingOptionCode}`)
         const jsonOptionList = await response.json();
         for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
@@ -128,7 +130,46 @@ export default function OtionSelectDetail ({ route,navigation }) {
       // tempList[indexNumber].optionName 은 option2
       let tempOptionOneDetail =getChampionSelect; 
       if(route.params.optionOne == "rank"){
-        tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
+        let rankOneNameCheck = true;
+        switch (getSelectedModalRankNameOne) {
+          case "UNRANK":
+            rankOneNameCheck = false;
+            break;
+          case "MASTER":
+            rankOneNameCheck = false;
+            break;
+          case "GRANDMASTER":
+            rankOneNameCheck = false;
+            break;
+          case "CHALLENGER":
+            rankOneNameCheck = false;
+            break;
+        }
+        if(rankOneNameCheck !=false && getUnderRankIndexOne ==""){
+          alert("시작 랭크에 세부랭크를 설정해주세요!")
+          return;
+        }
+        let rankTwoNameCheck = true;
+        switch (getSelectedModalRankNameTwo) {
+          case "UNRANK":
+            rankTwoNameCheck = false;
+            break;
+          case "MASTER":
+            rankTwoNameCheck = false;
+            break;
+          case "GRANDMASTER":
+            rankTwoNameCheck = false;
+            break;
+          case "CHALLENGER":
+            rankTwoNameCheck = false;
+            break;
+        }
+        if(rankTwoNameCheck !=false && getUnderRankIndexTwo ==""){
+          alert("끝 랭크에 세부랭크를 설정해주세요!")
+          return;
+        }
+        const choiceRank = getSelectedModalRankNameOne+getUnderRankIndexOne+"~"+getSelectedModalRankNameTwo+getUnderRankIndexTwo;
+        tempOptionOneDetail = choiceRank;
       }else if(route.params.optionOne == "position"){
         tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
       }else if(route.params.optionOne == "time"){
@@ -140,7 +181,8 @@ export default function OtionSelectDetail ({ route,navigation }) {
       console.log(tempOptionOneDetail)
       console.log("----------OptionSelectDetail.js-----Finsh--------------------------")
       navigation.navigate('OptionSelectTwo',{optionOne: route.params.optionOne,
-                                              optionOneDetail: tempOptionOneDetail
+                                              optionOneDetail: tempOptionOneDetail,
+                                              gameType:route.params.gameType
                                               },{navigation});
     };
     const rankSubmit = ()=>{
@@ -155,7 +197,6 @@ export default function OtionSelectDetail ({ route,navigation }) {
          
       serverGetRankUnderOptionList(forRankUnderOptionListCode);
       setModalVisible(false);
-      console.log(getModalIndex)
       if(getModalIndex !=0){
         serverGetOptionList();
         setUnderRankIndexTwo("");
@@ -180,28 +221,30 @@ export default function OtionSelectDetail ({ route,navigation }) {
       }      
     };
     const serverGetRankUnderOptionListForSelectFirst = async(forRankUnderOptionListCode,underRankIndexOne) =>{
-      const matchingOptionCode=forRankUnderOptionListCode;   
+      const matchingOptionCode=forRankUnderOptionListCode; 
       const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
       const jsonOptionList = await response.json();
       for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
         let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
         jsonOptionList.selectOptionList[i].url = tempUrl;
       }
-      console.log("test@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@3")
-      console.log(underRankIndexOne)
-      console.log(jsonOptionList.selectOptionList.length)
       const tempTwoArrLength =  jsonOptionList.selectOptionList.length;
-      console.log(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength))
       if(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength).length == 0){
-        console.log("이거 쉬운게 아니였구나")
-        console.log(getoptionList[0].cdDtlName)
-        console.log(getSelectedModalRankNameOne)
         if(getoptionList[0].cdDtlName == getSelectedModalRankNameOne){
           setOptionList(getoptionList.slice(1,getoptionList.length));
           setSelectedModalImgTwo(getoptionList[1].url);
           setSelectedModalRankNameTwo(getoptionList[1].cdDtlName);
-          console.log("@@@@@@@@@@@@@@@jsonOptionList.selectOptionList@@@@@@@@@@@@@@@@@@@@@22222")
-          console.log(jsonOptionList.selectOptionList)
+          setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+        }else{
+          setSelectedModalImgTwo(getoptionList[0].url);
+          setSelectedModalRankNameTwo(getoptionList[0].cdDtlName);
+          const matchingOptionCode=getoptionList[0].cdDtlId;   
+          const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+          const jsonOptionList = await response.json();
+          for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+            let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+            jsonOptionList.selectOptionList[i].url = tempUrl;
+          }
           setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
         }  
         
@@ -212,6 +255,28 @@ export default function OtionSelectDetail ({ route,navigation }) {
       }
     };
     const rankIndex = (modalSet,index)=>{
+      let rankOneNameCheck = true;
+      if(index !=0){
+        switch (getSelectedModalRankNameOne) {
+          case "UNRANK":
+            rankOneNameCheck = false;
+            break;
+          case "MASTER":
+            rankOneNameCheck = false;
+            break;
+          case "GRANDMASTER":
+            rankOneNameCheck = false;
+            break;
+          case "CHALLENGER":
+            rankOneNameCheck = false;
+            break;
+        }
+        if(rankOneNameCheck !=false && getUnderRankIndexOne ==""){
+          alert("시작 랭크에 세부랭크를 설정해주세요!")
+          return;
+        }
+      }
+      
       setModalVisible(modalSet);
       setModalIndex(index);
       setModalChangeIndex(0);
@@ -230,12 +295,23 @@ export default function OtionSelectDetail ({ route,navigation }) {
     const rankUnderIndex = (index,modalIndex)=>{
       if(modalIndex ==0){
         setUnderRankIndexOne(index);
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-        console.log(index)
-        console.log(getRankUnderOptionListTwo)
         serverGetRankUnderOptionListForSelectFirst(getoptionList[getModalChangeIndex].cdDtlId,index)
 
       }else{
+        switch (getRankUnderOptionListTwo.length) {
+          case 1:
+            index = index +3
+            break;
+          case 2:
+            index = index +2
+            break;
+          case 3:
+            index = index +1
+            break;
+          case 4:
+            index = index
+            break;
+        }
         setUnderRankIndexTwo(index);
       }
       
