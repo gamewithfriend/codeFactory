@@ -26,6 +26,7 @@ import SetNickNameScreen from './SetNickNameScreen';
 import TextChat from './TextChat';
 import MatchingHistoryScreen from './MatchingHistoryScreen';
 import AlarmScreen from './AlarmScreen';
+import ChatListScreen from './ChatListScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,7 +38,7 @@ function HomeTab(){
         {/* <Tab.Screen name='Home' component={First} options={{tabBarStyle: {display: 'none'}}} /> */}
         {/* <Tab.Screen name='DetailScreen' component={DetailScreen}/> */}
         {/* <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/> */}
-        {/* <Tab.Screen name='ChatScreen' component={ChatScreen}/> */}
+        <Tab.Screen name='ChatListScreen' component={ChatListScreen}/>
         <Tab.Screen name='FriendScreen' component={FriendScreen}/>       
         <Tab.Screen name='TextChat' component={TextChat}/>
         <Tab.Screen name='Setting' component={SettingScreen}/>
