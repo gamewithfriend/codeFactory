@@ -35,8 +35,6 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
         jsonOptionList.selectOptionList[i].url = tempUrl;
       }
       setOptionList(jsonOptionList.selectOptionList);
-      console.log("OptionSelectTwoDetail@@@@@@@@@@@@@@@@@@@@@@@@#@##############3")
-      console.log(jsonOptionList.selectOptionList)          
   };                     
     // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
@@ -89,8 +87,6 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       getSearchChampionList(text);   
     };
     const backOption = (index)=>{
-      console.log(index)
-      console.log(route.params)
       let deleteProperty = [
         route.params.optionOne,
         route.params.optionOneDetail,
@@ -186,12 +182,18 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       console.log("조건1")
       console.log(route.params.optionOne)
       console.log("조건1-1")
+      console.log(route.params.optionOneDetail)
+      console.log("조건2")
+      console.log(route.params.optionTwo)
+      console.log("조건2-2")
+      console.log(tempOptionTwoDetail)
       console.log("----------OptionSelectTwoDetail.js-----Finsh--------------------------")
       navigation.navigate('OptionSelectThree',{optionOne: route.params.optionOne,
                                               optionOneDetail: route.params.optionOneDetail,
                                               optionTwo: route.params.optionTwo,
                                               optionTwoDetail: tempOptionTwoDetail,
-                                              gameType:route.params.gameType
+                                              gameType:route.params.gameType,
+                                              getOptionList:route.params.getOptionList
                                               },{navigation});
     };
     const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
@@ -757,8 +759,8 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                         ) : (
                           getoptionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
-                                <View style={styles.itemBox}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
+                                <View style={styles.itemBoxImg}>
+                                    <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
                                     <Image resizeMode='contain' style={styles.backImg} source={{
                                                     uri: `${info.url}`,
                                                   }}/>       
@@ -881,8 +883,8 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
                         ) : (
                           getoptionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
-                                <View style={styles.itemBox}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
+                                <View style={styles.itemBoxImg}>
+                                    <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
                                     <Image resizeMode='contain' style={styles.backImg} source={{
                                                     uri: `${info.url}`,
                                                   }}/>     
@@ -1239,6 +1241,11 @@ const styles = StyleSheet.create({
   contentBottomRank:{
     width:SCREEN_WIDTH,
     height:"100%",
+  },
+  itemBoxImg:{
+    width:"50%",
+    height:"60%",
+    margin: "3%",
   },
   itemBoxImgRank:{
     width:"70%",

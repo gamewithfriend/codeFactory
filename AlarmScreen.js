@@ -15,9 +15,9 @@ export default function AlarmScreen ({navigation}) {
     const sessionId = session.uIntgId;
     const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
     const jsonAlramList = await response.json();
-    setAlramList(jsonAlramList.findMyAlramList);
+    console.log("alramList$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     console.log(jsonAlramList.findMyAlramList)
-    
+    setAlramList(jsonAlramList.findMyAlramList);
   };
   const alarmDelet = async(seq) =>{
     const alSeq = seq;
@@ -27,7 +27,6 @@ export default function AlarmScreen ({navigation}) {
   };
 
   const alarmDeletTrigger = (seq)=>{
-    console.log(seq)
     alarmDelet(seq);
   };
 
@@ -86,9 +85,15 @@ const styles = StyleSheet.create({
     flex:1,
   },
   containerPercent:{
-    height:SCREEN_HEIGHT,
+    height:"80%",
+    width:"90%",
+    marginTop:"10%",
+    marginBottom:"10%",
+    marginLeft:"5%",
+    marginRight:"5%",
   },
   content:{
+    flex:1,
     marginTop:"5%",
     height:"5%",
   },

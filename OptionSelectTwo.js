@@ -10,7 +10,8 @@ export default function OptionSelectTwo ({ route,navigation }) {
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
     const [getOptionList, setOptionList] = useState([]);
                             
-    const setSelectGameOtionTwo = (tempOptionList)=>{
+    const setSelectGameOtionTwo = ()=>{
+      let tempOptionList = route.params.getOptionList;
       for(let i =0; i<tempOptionList.length; i++ ){
         if(tempOptionList[i].cdDtlName == route.params.optionOne ){
           tempOptionList.splice(i, 1);
@@ -19,21 +20,6 @@ export default function OptionSelectTwo ({ route,navigation }) {
       optionValueTwo(tempOptionList);
     };
 
-    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
-    const serverGetOptionList = async() =>{
-      const gameType= route.params.gameType.cdDtlName;  
-      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}`)
-      const jsonOptionList = await response.json();
-      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
-        jsonOptionList.selectOptionList[i].url = tempUrl;
-      }
-      setOptionList(jsonOptionList.selectOptionList);
-      let tempOptionList = jsonOptionList.selectOptionList;
-      setSelectGameOtionTwo(tempOptionList);
-   };
-
-    
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
     };
@@ -65,19 +51,20 @@ export default function OptionSelectTwo ({ route,navigation }) {
         console.log("조건2")
         console.log(tempOptionValueTwo)
         console.log("----------OptionSelectTwo.js-------------Finsh------------------")
-        console.log(changeOptionValueTwo[indexNumber])
         navigation.navigate('OptionSelectTwoDetail',{  optionOne: route.params.optionOne
                                                       ,optionOneDetail: route.params.optionOneDetail
                                                       ,optionTwo:tempOptionValueTwo
                                                       ,optionTwoArr:changeOptionValueTwo[indexNumber]
                                                       ,optionValueBox: changeOptionValueTwo
+                                                      ,gameType:route.params.gameType
+                                                      ,getOptionList:changeOptionValueTwo
                                                     },{navigation});
       }
       
     };
 
      useEffect(() => {
-      serverGetOptionList();   
+      setSelectGameOtionTwo();
     },[]);                        
     return (
         <View style={styles.container} >

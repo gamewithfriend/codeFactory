@@ -67,10 +67,10 @@ export default function App() {
           headerShown:true  
         }}/>
         <Stack.Screen name="OptionSelectThree" component={OptionSelectThree} options={{
-          headerShown:false  
+          headerShown:true  
         }}/>
         <Stack.Screen name="OptionSelectThreeDetail" component={OptionSelectThreeDetail} options={{
-          headerShown:false  
+          headerShown:true  
         }}/>
          <Stack.Screen name="OptionSelectFour" component={OptionSelectFour} options={{
           headerShown:false  

@@ -71,6 +71,7 @@ export default function OptionSelect ({route,navigation}) {
                                                     ,gameTypePlus:indexNumber
                                                     ,optionOne: optionOne
                                                     ,optionOneArr:getOptionList[indexNumber]
+                                                    ,getOptionList:getOptionList
                                                 },{navigation});
       }
       

@@ -42,9 +42,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
     };
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionList = async() =>{
-        const matchingOptionCode= route.params.optionOneArr.cdDtlName;
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@OptionSelectDetail@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-        console.log(route.params)   
+        const matchingOptionCode= route.params.optionOneArr.cdDtlName;  
         const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingGameOption.do?matchingOptionCode=${matchingOptionCode}`)
         const jsonOptionList = await response.json();
         for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
@@ -182,7 +180,8 @@ export default function OtionSelectDetail ({ route,navigation }) {
       console.log("----------OptionSelectDetail.js-----Finsh--------------------------")
       navigation.navigate('OptionSelectTwo',{optionOne: route.params.optionOne,
                                               optionOneDetail: tempOptionOneDetail,
-                                              gameType:route.params.gameType
+                                              gameType:route.params.gameType,
+                                              getOptionList:route.params.getOptionList
                                               },{navigation});
     };
     const rankSubmit = ()=>{
@@ -1008,7 +1007,7 @@ const styles = StyleSheet.create({
     marginTop:"3%",  
   },
   centerContainer:{       
-    flex:5,
+    flex:6,
     alignItems:"center",
     borderColor:"black",
     borderStyle:"solid",  
@@ -1216,10 +1215,8 @@ const styles = StyleSheet.create({
       color:"red",
   },
   backImg:{
-    flex:1,
     width:'100%',
     height:"100%",
-    opacity:1
   },
   modalRankImg:{
     flex:1,
