@@ -1,34 +1,50 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 
-export default function MatchingHistoryScreen ({navigation, route}) {
-    const [isVisible, setIsVisible] = useState(false);
-    const setVisible = () => {
-        setIsVisible(!isVisible);
-    };
-
-    const myID = route.params.myID;
+export default function MatchingHistoryScreen ({navigation}) {
 
     const [getStateHistoryList, setStateHistoryList] = useState([]);
     const [getStateDisplayDate, setStateDisplayDate] = useState("");
-    const [getSelectType, setSelectType] = useState("");
+    const [getPreviousDate, setPreviousDate] = useState("");
+    const [getLaterDate, setLaterDate] = useState("");
 
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+myID);
+    const prevoiusButtonClick = () => {
+        getHistoryList("previous", getStateDisplayDate);   
+    };
 
-    const getHistoryList = async() =>{
-        const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}`);
+    const laterButtonClick = () => {
+        getHistoryList("later", getStateDisplayDate);   
+    };
+
+    const getHistoryList = async(type, date) => {
+        const myID = 'jonghwi';
+
+        let selectType = "";
+        let baseDate = "";
+
+        (type === null && type === '' && type === undefined) ? selectType = "latest" : selectType = type;
+        (date === null && date === '' && date === undefined) ? baseDate = "" : baseDate = date;
+
+        //const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
+        const response = await fetch (`http://3.37.211.126:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
         const json = await response.json();
-        console.log(json.historyList);
-        console.log(json.displayDate);
         setStateHistoryList(json.historyList);
         setStateDisplayDate(json.displayDate);
+        setPreviousDate(json.previousDate);
+        setLaterDate(json.LaterDate);
+    };
+
+    const addFriendTrigger = (targetId) => {
+        const myID = 'jonghwi';
+        const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
       };
-      useEffect(() => {
+    
+    useEffect(() => {
         getHistoryList();
-      },[]);
+    },[]);
 
     return (
         <View>
@@ -37,8 +53,28 @@ export default function MatchingHistoryScreen ({navigation, route}) {
             </View>
             <View style={styles.contentsView}>
                 <View style={styles.dailyMatching}> 
-                    <View style={styles.dailyDay}>
-                        <Text>{getStateDisplayDate}</Text>
+                    <View style={styles.dayView}>
+                        {(getPreviousDate === "" || getPreviousDate === "isNull") ? (
+                            <View style={styles.previousButtonView}></View>
+                            ) : (
+                            <View style={styles.previousButtonView} onStartShouldSetResponder={() => prevoiusButtonClick()}>
+                                <Text>이전</Text>
+                            </View>
+                            )
+                        }
+                        
+                        <View style={styles.displayDate}><Text>{getStateDisplayDate}</Text></View>
+
+                        {(getLaterDate === "" || getLaterDate === "isNull") ? (
+                            <View style={styles.laterButtonView}></View>
+                            ) : (
+                            <View style={styles.laterButtonView} onStartShouldSetResponder={() => laterButtonClick()}>
+                                <Text>이후</Text>
+                            </View>
+                            )
+                        }
+                        
+                        
                     </View>
                     <View style={styles.dailyProfile}>
                         <ScrollView pagingEnabled ={false} showsHorizontalScrollIndicator = {false}>
@@ -100,7 +136,7 @@ export default function MatchingHistoryScreen ({navigation, route}) {
                                                 </View>
                                             </View>
                                             <View style={styles.profileButtonView}>
-                                                <View style={styles.addFriendArea}>
+                                                <View style={styles.addFriendArea} onStartShouldSetResponder={() => addFriendTrigger(info.mUserID)}>
                                                     <Text>친구추가</Text>
                                                 </View>
                                                 <View style={styles.reportArea}>
@@ -147,12 +183,29 @@ const styles = StyleSheet.create({
                 height: "98%",
                 margin:"1%",
             },     
-                dailyDay: {
+                dayView: {
                     height:"5%",
-                    alignItems:"center",
-                    justifyContent: "center",
-                    
+                    //borderWidth: 1,
+                    flexDirection:"row"
                 },
+                    previousButtonView: {
+                        width:"15%",
+                        alignItems:"center",
+                        justifyContent: "center",
+                        //borderWidth: 1,
+                    },
+                    displayDate: {
+                        width:"70%",
+                        alignItems:"center",
+                        justifyContent: "center",
+                        //borderWidth: 1,
+                    },
+                    laterButtonView: {
+                        width:"15%",
+                        alignItems:"center",
+                        justifyContent: "center",
+                        //borderWidth: 1,
+                    },
                 dailyProfile: {
                     height:"95%",
                     flex:1,
@@ -292,6 +345,4 @@ const styles = StyleSheet.create({
                                 alignItems:"center",
                                 justifyContent: "center"
                             }
-
-
 });
