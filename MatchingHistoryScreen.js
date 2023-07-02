@@ -39,7 +39,8 @@ export default function MatchingHistoryScreen ({navigation}) {
 
     const addFriendTrigger = (targetId) => {
         const myID = 'jonghwi';
-        const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
+        //const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
+        const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
       };
     
     useEffect(() => {
