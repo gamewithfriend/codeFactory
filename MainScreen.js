@@ -132,8 +132,14 @@ export default function MainScreen ({navigation}) {
       const sessionId = sessions.uIntgId;
       const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
       const jsonAlramList = await response.json();
-      let alramCount =jsonAlramList.findMyAlramList.length;
-      let alramRecentOneMsg = jsonAlramList.findMyAlramList[0].sendNickName + " "+ jsonAlramList.findMyAlramList[0].cdDtlDesc;
+      let alramCount =0;
+      let alramRecentOneMsg  ="";
+      if(jsonAlramList != null){
+        alramCount =jsonAlramList.findMyAlramList.length;
+        alramRecentOneMsg = jsonAlramList.findMyAlramList[0].sendNickName + " "+ jsonAlramList.findMyAlramList[0].cdDtlDesc;
+      }else{
+        alramRecentOneMsg = "알람이 없습니다";
+      }
       setAlramRecentOneMsg(alramRecentOneMsg);
       setAlramCount(alramCount);
     };

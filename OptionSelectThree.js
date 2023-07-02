@@ -8,22 +8,36 @@ export default function OptionSelectThree ({ route,navigation }) {
     const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
-    let tempOptionValueBox = [];                         
-    const setSelectGameOtionTwo = ()=>{
-      tempOptionValueBox = route.params.optionValueBox;
-      for(let i =0; i<route.params.optionValueBox.length; i++ ){
-        if(route.params.optionValueBox[i].optionName == route.params.optionTwo ){
-           tempOptionValueBox.splice(i, 1);
+    const [getOptionList, setOptionList] = useState([]);
+
+    const setSelectGameOtionTwo = (tempOptionList)=>{
+      for(let i =0; i<tempOptionList.length; i++ ){
+        if(tempOptionList[i].cdDtlName == route.params.optionOne ){
+          tempOptionList.splice(i, 1);
         }
       }
-      optionValueTwo(tempOptionValueBox);
+      optionValueTwo(tempOptionList);
     };
-    
+
+    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
+    const serverGetOptionList = async() =>{
+      const gameType= route.params.gameType.cdDtlName;  
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      setOptionList(jsonOptionList.selectOptionList);
+      let tempOptionList = jsonOptionList.selectOptionList;
+      setSelectGameOtionTwo(tempOptionList);
+   };
+
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))
     };
 
-     const optionSubmit = () => {
+    const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let tempOptionValueThree = changeOptionValueTwo[indexNumber].optionName;
       if(tempOptionValueThree == "선택하지 않음"){
@@ -59,7 +73,7 @@ export default function OptionSelectThree ({ route,navigation }) {
     };
 
      useEffect(() => {
-      setSelectGameOtionTwo();
+      serverGetOptionList();
     },[]);                        
     return (
         <View style={styles.container} >

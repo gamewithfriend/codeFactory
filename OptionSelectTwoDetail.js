@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity ,Modal } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity ,Modal,Pressable,Alert } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
@@ -19,6 +19,8 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     const [getSelectedModalImgTwo, setSelectedModalImgTwo] = useState("http://3.37.211.126:8080/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
     const [getSelectedModalRankNameOne, setSelectedModalRankNameOne] = useState("");
     const [getSelectedModalRankNameTwo, setSelectedModalRankNameTwo] = useState("");
+    const [getRankUnderOptionListOne, setRankUnderOptionListOne] = useState([]);
+    const [getRankUnderOptionListTwo, setRankUnderOptionListTwo] = useState([]);
     const [getUnderRankIndexOne, setUnderRankIndexOne] = useState("");
     const [getUnderRankIndexTwo, setUnderRankIndexTwo] = useState("");
     let reChampionList = [];
@@ -119,6 +121,14 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     const optionChange = (index)=>{
       setOptionName(Math.floor(index/100))     
     };
+    const modalRankChange = (index)=>{
+      let changeIndex =Math.floor(index/100);
+      let indexNumber =0;
+      if(changeIndex != 0){
+        indexNumber = Math.ceil((changeIndex+1)/4);
+      }
+      setModalChangeIndex(indexNumber);      
+    };
     // 선택하기 감지 함수
     const optionSubmit = ()=>{
 
@@ -126,7 +136,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       let tempList = [];
       let indexNumber = Math.floor((ok+1)/4);
       // tempList[indexNumber].optionName 은 option2
-      let tempOptionOneDetail =getChampionSelect; 
+      let tempOptionTwoDetail =getChampionSelect; 
       if(route.params.optionTwo == "rank"){
         let rankOneNameCheck = true;
         switch (getSelectedModalRankNameOne) {
@@ -167,21 +177,70 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
           return;
         }
         const choiceRank = getSelectedModalRankNameOne+getUnderRankIndexOne+"~"+getSelectedModalRankNameTwo+getUnderRankIndexTwo;
-        tempOptionOneDetail = choiceRank;
+        tempOptionTwoDetail = choiceRank;
       }else if(route.params.optionTwo == "position"){
-        tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
+        tempOptionTwoDetail = getoptionList[indexNumber].cdDtlName;
       }else if(route.params.optionTwo == "time"){
-        tempOptionOneDetail = getoptionList[indexNumber].cdDtlName;
+        tempOptionTwoDetail = getoptionList[indexNumber].cdDtlName;
       }
       console.log("조건1")
       console.log(route.params.optionOne)
       console.log("조건1-1")
-      console.log(tempOptionOneDetail)
       console.log("----------OptionSelectTwoDetail.js-----Finsh--------------------------")
-      navigation.navigate('OptionSelectTwo',{optionOne: route.params.optionOne,
-                                              optionOneDetail: tempOptionOneDetail,
+      navigation.navigate('OptionSelectThree',{optionOne: route.params.optionOne,
+                                              optionOneDetail: route.params.optionOneDetail,
+                                              optionTwo: route.params.optionTwo,
+                                              optionTwoDetail: tempOptionTwoDetail,
                                               gameType:route.params.gameType
                                               },{navigation});
+    };
+    const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
+      const matchingOptionCode=forRankUnderOptionListCode;   
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      if(getModalIndex ==0){
+        setRankUnderOptionListOne(jsonOptionList.selectOptionList);
+      }else{
+        setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+      }      
+    };
+    const serverGetRankUnderOptionListForSelectFirst = async(forRankUnderOptionListCode,underRankIndexOne) =>{
+      const matchingOptionCode=forRankUnderOptionListCode; 
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      const tempTwoArrLength =  jsonOptionList.selectOptionList.length;
+      if(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength).length == 0){
+        if(getoptionList[0].cdDtlName == getSelectedModalRankNameOne){
+          setOptionList(getoptionList.slice(1,getoptionList.length));
+          setSelectedModalImgTwo(getoptionList[1].url);
+          setSelectedModalRankNameTwo(getoptionList[1].cdDtlName);
+          setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+        }else{
+          setSelectedModalImgTwo(getoptionList[0].url);
+          setSelectedModalRankNameTwo(getoptionList[0].cdDtlName);
+          const matchingOptionCode=getoptionList[0].cdDtlId;   
+          const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+          const jsonOptionList = await response.json();
+          for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+            let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+            jsonOptionList.selectOptionList[i].url = tempUrl;
+          }
+          setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+        }  
+        
+      }else{
+        setSelectedModalImgTwo(getSelectedModalImgOne);
+        setSelectedModalRankNameTwo(getSelectedModalRankNameOne);
+        setRankUnderOptionListTwo(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength));
+      }
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
@@ -263,10 +322,59 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
         setUnderRankIndexTwo("");
       }
     };
+    const rankUnderIndex = (index,modalIndex)=>{
+      if(modalIndex ==0){
+        setUnderRankIndexOne(index);
+        serverGetRankUnderOptionListForSelectFirst(getoptionList[getModalChangeIndex].cdDtlId,index)
+
+      }else{
+        switch (getRankUnderOptionListTwo.length) {
+          case 1:
+            index = index +3
+            break;
+          case 2:
+            index = index +2
+            break;
+          case 3:
+            index = index +1
+            break;
+          case 4:
+            index = index
+            break;
+        }
+        setUnderRankIndexTwo(index);
+      }
+      
+    };
+    const rankSubmit = ()=>{
+      if(getModalIndex ==0){
+        setSelectedModalImgOne(getoptionList[getModalChangeIndex].url);
+        setSelectedModalRankNameOne(getoptionList[getModalChangeIndex].cdDtlName);
+      }else{
+        setSelectedModalImgTwo(getoptionList[getModalChangeIndex].url);
+        setSelectedModalRankNameTwo(getoptionList[getModalChangeIndex].cdDtlName);
+      }
+      const forRankUnderOptionListCode = getoptionList[getModalChangeIndex].cdDtlId;
+         
+      serverGetRankUnderOptionList(forRankUnderOptionListCode);
+      setModalVisible(false);
+      if(getModalIndex !=0){
+        serverGetOptionList();
+        setUnderRankIndexTwo("");
+      }else{
+        setUnderRankIndexOne("");
+        setOptionListTriger();
+      }
+      
+    };
+    const setOptionListTriger = ()=>{  
+      setOptionList(getoptionList.slice(getModalChangeIndex,getoptionList.length));
+    };
     useEffect(() => {
       getChampionList();
+      serverGetOptionList();
     },[]);
-    if(route.params.optionOne ==="rank"){
+    if(route.params.optionTwo ==="rank"){
       return (
         <View style={styles.container}>
             <View style={styles.topContainerRank}>
@@ -1102,5 +1210,50 @@ const styles = StyleSheet.create({
   sectionViewButtonImgBox:{
     width:"25%",
     flexDirection:"row"
+  },
+  centeredView: {
+    flex: 1,
+    marginTop: "5%",
+  },
+  modalView: {
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position:'absolute',
+    top:-200,
+    bottom:100,
+    left:0,
+    right:0,
+  },
+  modalSelectView: {
+    width:"100%",
+    marginTop:"10%",
+    marginLeft:"12%",
+  },
+  contentBottomRank:{
+    width:SCREEN_WIDTH,
+    height:"100%",
+  },
+  itemBoxImgRank:{
+    width:"70%",
+    height:"70%",
+    margin: "3%",
+  },
+  itemBoxTitle:{
+    marginBottom : '5%',
+    textAlign: 'center',
+  },
+  bottomContainerRank:{
+    flex:1,
+    marginTop:"10%",
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
   },
 });

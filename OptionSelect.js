@@ -31,7 +31,7 @@ export default function OptionSelect ({route,navigation}) {
     
     ////setRecommendUserList----격전 인원수 조정함수 함수///////
     const setRecommendUserList = async() =>{ 
-
+       let gameTypePlusIndex = 0;
        let  ueserNum= gameTypePlusIndex+1;
        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$44")
        console.log(ueserNum)
