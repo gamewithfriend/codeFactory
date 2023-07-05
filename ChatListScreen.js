@@ -21,7 +21,7 @@ export default function ChatListScreen ({navigation}) {
             
             if (session != null && session != undefined) {
                 // 세션정보를 기반으로 채팅방 목록을 호출
-                getChatList(testUrl2, session);
+                getChatList(realUrl, session);
             }
         } catch (error) {
             console.error(error);
