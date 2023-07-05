@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, TouchableOpacity, Modal, Pressable, SafeAreaView } from 'react-native';
+import Checkbox from 'expo-checkbox';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
@@ -11,6 +12,13 @@ export default function MatchingHistoryScreen ({navigation}) {
     const [getPreviousDate, setPreviousDate] = useState("");
     const [getLaterDate, setLaterDate] = useState("");
 
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const [text, onChangeText] = useState('');
+    const [number, onChangeNumber] = useState('');
+
+    const [isSelected, setSelection] = useState(false);
+
     const prevoiusButtonClick = () => {
         getHistoryList("previous", getStateDisplayDate);   
     };
@@ -19,8 +27,12 @@ export default function MatchingHistoryScreen ({navigation}) {
         getHistoryList("later", getStateDisplayDate);   
     };
 
+    const reportButtonClick = () => {
+        setModalVisible(true);
+    }
+
     const getHistoryList = async(type, date) => {
-        const myID = 'jonghwi';
+        const myID = '112664865495468363793';
 
         let selectType = "";
         let baseDate = "";
@@ -28,8 +40,8 @@ export default function MatchingHistoryScreen ({navigation}) {
         (type === null && type === '' && type === undefined) ? selectType = "latest" : selectType = type;
         (date === null && date === '' && date === undefined) ? baseDate = "" : baseDate = date;
 
-        //const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
-        const response = await fetch (`http://3.37.211.126:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
+        const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
+        //const response = await fetch (`http://3.37.211.126:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
         const json = await response.json();
         setStateHistoryList(json.historyList);
         setStateDisplayDate(json.displayDate);
@@ -39,9 +51,9 @@ export default function MatchingHistoryScreen ({navigation}) {
 
     const addFriendTrigger = (targetId) => {
         const myID = 'jonghwi';
-        //const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
-        const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
-      };
+        const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
+        //const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
+    };
     
     useEffect(() => {
         getHistoryList();
@@ -53,6 +65,51 @@ export default function MatchingHistoryScreen ({navigation}) {
                    <Text>Matching History</Text>
             </View>
             <View style={styles.contentsView}>
+                
+                <View style={styles.centeredView}>
+                    <Modal animationType="fade"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert('Modal has been closed.');
+                            setModalVisible(!modalVisible);
+                        }}>
+                        <Pressable style={{flex:1, backgroundColor:'transparent'}} onPress={()=>setModalVisible(false)} />
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                
+                                <Checkbox
+                                    value={isSelected}
+                                    onValueChange={setSelection}
+                                    style={styles.checkbox}
+                                    />
+                                <Text style={styles.label}>Do you like React Native?</Text>
+
+
+                                <SafeAreaView>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={onChangeText}
+                                        value={text}
+                                    />
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={onChangeNumber}
+                                        value={number}
+                                        placeholder="text."
+                                        keyboardType="default"
+                                    />
+                                </SafeAreaView>
+
+                                <View onStartShouldSetResponder={() => setModalVisible(false)}>
+                                    <Text>닫기</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+
+
                 <View style={styles.dailyMatching}> 
                     <View style={styles.dayView}>
                         {(getPreviousDate === "" || getPreviousDate === "isNull") ? (
@@ -103,7 +160,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                                     </View>
                                                     <View style={styles.userArea}>
                                                         <View style={styles.userName}>
-                                                            <Text>{info.mUserID}</Text>
+                                                            <Text>{info.mUserNickname}</Text>
                                                         </View>
                                                         <View style={styles.userLike}>
                                                             <View style={styles.likeCount}>
@@ -140,7 +197,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                                 <View style={styles.addFriendArea} onStartShouldSetResponder={() => addFriendTrigger(info.mUserID)}>
                                                     <Text>친구추가</Text>
                                                 </View>
-                                                <View style={styles.reportArea}>
+                                                <View style={styles.reportArea} onStartShouldSetResponder={() => reportButtonClick()}>
                                                     <Text>신고</Text>
                                                 </View> 
                                             </View>
@@ -345,5 +402,33 @@ const styles = StyleSheet.create({
                                 height:"50%",
                                 alignItems:"center",
                                 justifyContent: "center"
-                            }
+                            },
+                            centeredView: {
+                                flex: 1,
+                                //marginTop: "5%",
+                              },
+                            modalView: {
+                                margin: 5,
+                                backgroundColor: 'white',
+                                padding: "5%",
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                  width: 0,
+                                  height: 0,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5,
+                                position:'absolute',
+                                top:-290,
+                                bottom:70,
+                                left:0,
+                                right:0,
+                              },
+                              input: {
+                                height: 40,
+                                margin: 12,
+                                borderWidth: 1,
+                                padding: 10,
+                              },
 });
