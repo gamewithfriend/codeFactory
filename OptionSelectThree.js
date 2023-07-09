@@ -27,7 +27,7 @@ export default function OptionSelectThree ({ route,navigation }) {
 
     const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
-      let tempOptionValueThree = changeOptionValueTwo[indexNumber].optionName;
+      let tempOptionValueThree = changeOptionValueTwo[indexNumber].cdDtlName;
       if(tempOptionValueThree == "선택하지 않음"){
         alert("게임 매칭 시작");
         navigation.navigate('GameMatching',{  0: route.params.optionOne
@@ -49,6 +49,7 @@ export default function OptionSelectThree ({ route,navigation }) {
         console.log("조건3")
         console.log(tempOptionValueThree)
         console.log("----------OptionSelectThree.js---------Finsh----------------------")
+        console.log(route.params.optionValueBox)
         navigation.navigate('OptionSelectThreeDetail',{  optionOne: route.params.optionOne
                                                       ,optionOneDetail: route.params.optionOneDetail
                                                       ,optionTwo:route.params.optionTwo

@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity  } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image, ImageBackground ,TouchableOpacity,Modal,Pressable,Alert   } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
@@ -9,64 +9,32 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
     
     const [ok, setOptionName] = useState(1);
     const [championList, setChampionList] = useState([]);
-    const [optionList, setOptionList] = useState([]);
+    const [getoptionList, setOptionList] = useState([]);
     const [getChampionSelect, setChampionSelect] = useState("");
-    const [text, onChangeText] = React.useState('Useless Text');
+    const [text, onChangeText] = React.useState('Useless Text');    
+    const [modalVisible, setModalVisible] = useState(false);
+    const [getModalIndex, setModalIndex] = useState(0);
+    const [getModalChangeIndex, setModalChangeIndex] = useState(0);
+    const [getSelectedModalImgOne, setSelectedModalImgOne] = useState("http://3.37.211.126:8080/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
+    const [getSelectedModalImgTwo, setSelectedModalImgTwo] = useState("http://3.37.211.126:8080/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
+    const [getSelectedModalRankNameOne, setSelectedModalRankNameOne] = useState("");
+    const [getSelectedModalRankNameTwo, setSelectedModalRankNameTwo] = useState("");
+    const [getRankUnderOptionListOne, setRankUnderOptionListOne] = useState([]);
+    const [getRankUnderOptionListTwo, setRankUnderOptionListTwo] = useState([]);
+    const [getUnderRankIndexOne, setUnderRankIndexOne] = useState("");
+    const [getUnderRankIndexTwo, setUnderRankIndexTwo] = useState("");
     let reChampionList = [];
-    let rankList = [   
-                                {optionName:"unRank",
-                                optionUrl: require("./assets/images/emblem-challenger.png")}
-                                ,
-                                {optionName:"BRONZE",
-                                optionUrl: require("./assets/images/rank/emblem-bronze.png")}
-                                ,
-                                {optionName:"SILVER",
-                                optionUrl: require("./assets/images/rank/emblem-silver.png")}
-                                ,
-                                {optionName:"GOLD",
-                                optionUrl: require("./assets/images/rank/emblem-gold.png")}
-                                ,
-                                {optionName:"PLATINUM",
-                                optionUrl: require("./assets/images/rank/emblem-platinum.png")}
-                                ,
-                                {optionName:"DIAMOND",
-                                optionUrl: require("./assets/images/rank/emblem-diamond.png")}
-                                ,
-                                {optionName:"MASTER",
-                                optionUrl: require("./assets/images/rank/emblem-master.png")}
-                                ,
-                                {optionName:"GRANDMASTER",
-                                optionUrl: require("./assets/images/rank/emblem-grandmaster.png")}
-                                ,
-                                {optionName:"CHALLENGER",
-                                optionUrl: require("./assets/images/rank/emblem-challenger.png")}
-                            ];
-    let positionList = [   
-                                {optionName:"TOP",
-                                optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
-                                ,
-                                {optionName:"JUNGGLE",
-                                optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
-                                ,
-                                {optionName:"MIDDLE",
-                                optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}
-                                ,
-                                 {optionName:"CARRY",
-                                optionUrl: require("./assets/images/position/ADC-CHALLENGER.png")}
-                                ,
-                                {optionName:"SUPPORT",
-                                optionUrl: require("./assets/images/position/SUP-CHALLENGER.png")}       
-                        ];
-    let timeList = [   
-                                {optionName:"평일",
-                                optionUrl: require("./assets/images/position/TOP-CHALLENGER.png")}
-                                ,
-                                {optionName:"주말",
-                                optionUrl: require("./assets/images/position/JG-CHALLENGER.png")}
-                                ,
-                                {optionName:"평일주말",
-                                optionUrl: require("./assets/images/position/MID-CHALLENGER.png")}            
-                        ]; 
+    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
+    const serverGetOptionList = async() =>{
+      const matchingOptionCode= route.params.optionFourArr.cdDtlName;   
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingGameOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      setOptionList(jsonOptionList.selectOptionList);
+    };                      
     // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
       setChampionSelect(index)
@@ -122,6 +90,14 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
 
       setOptionName(Math.floor(index/100))     
     };
+    const modalRankChange = (index)=>{
+      let changeIndex =Math.floor(index/100);
+      let indexNumber =0;
+      if(changeIndex != 0){
+        indexNumber = Math.ceil((changeIndex+1)/4);
+      }
+      setModalChangeIndex(indexNumber);      
+    };
     // 선택하기 감지 함수
     const optionSubmit = ()=>{
        // route.params.optionOne 는 option1
@@ -130,14 +106,50 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
       // tempList[indexNumber].optionName 은 option2
       let tempOptionFourDetail = getChampionSelect; 
       if(route.params.optionFour == "rank"){
-        tempList = rankList;
-        tempOptionFourDetail = tempList[indexNumber].optionName;
+        let rankOneNameCheck = true;
+        switch (getSelectedModalRankNameOne) {
+          case "UNRANK":
+            rankOneNameCheck = false;
+            break;
+          case "MASTER":
+            rankOneNameCheck = false;
+            break;
+          case "GRANDMASTER":
+            rankOneNameCheck = false;
+            break;
+          case "CHALLENGER":
+            rankOneNameCheck = false;
+            break;
+        }
+        if(rankOneNameCheck !=false && getUnderRankIndexOne ==""){
+          alert("시작 랭크에 세부랭크를 설정해주세요!")
+          return;
+        }
+        let rankTwoNameCheck = true;
+        switch (getSelectedModalRankNameTwo) {
+          case "UNRANK":
+            rankTwoNameCheck = false;
+            break;
+          case "MASTER":
+            rankTwoNameCheck = false;
+            break;
+          case "GRANDMASTER":
+            rankTwoNameCheck = false;
+            break;
+          case "CHALLENGER":
+            rankTwoNameCheck = false;
+            break;
+        }
+        if(rankTwoNameCheck !=false && getUnderRankIndexTwo ==""){
+          alert("끝 랭크에 세부랭크를 설정해주세요!")
+          return;
+        }
+        const choiceRank = getSelectedModalRankNameOne+getUnderRankIndexOne+"~"+getSelectedModalRankNameTwo+getUnderRankIndexTwo;
+        tempOptionFourDetail = choiceRank;
       }else if(route.params.optionFour == "position"){
-        tempList = positionList;
-        tempOptionFourDetail = tempList[indexNumber].optionName;
+        tempOptionFourDetail = getoptionList[indexNumber].cdDtlName;
       }else if(route.params.optionFour == "time"){
-        tempList = timeList;
-        tempOptionFourDetail = tempList[indexNumber].optionName;
+        tempOptionFourDetail = getoptionList[indexNumber].cdDtlName;
       }
       console.log("조건1")
       console.log(route.params.optionOne)
@@ -156,6 +168,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
       console.log("조건4-1")
       console.log(tempOptionFourDetail)
       console.log("----------OptionSelectFourDetail.js--------Finsh-----------------------")
+      console.log(route.params.optionValueBox)
       alert("게임매칭 시작!")
       navigation.navigate('GameMatching',{  0: route.params.optionOne
                                                     ,1: route.params.optionOneDetail
@@ -167,6 +180,54 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                                                     ,7:tempOptionFourDetail
                                                     ,optionValueBox: route.params.optionValueBox
                                                   },{navigation});
+    };
+    const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
+      const matchingOptionCode=forRankUnderOptionListCode;   
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      if(getModalIndex ==0){
+        setRankUnderOptionListOne(jsonOptionList.selectOptionList);
+      }else{
+        setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+      }      
+    };
+    const serverGetRankUnderOptionListForSelectFirst = async(forRankUnderOptionListCode,underRankIndexOne) =>{
+      const matchingOptionCode=forRankUnderOptionListCode; 
+      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const jsonOptionList = await response.json();
+      for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        jsonOptionList.selectOptionList[i].url = tempUrl;
+      }
+      const tempTwoArrLength =  jsonOptionList.selectOptionList.length;
+      if(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength).length == 0){
+        if(getoptionList[0].cdDtlName == getSelectedModalRankNameOne){
+          setOptionList(getoptionList.slice(1,getoptionList.length));
+          setSelectedModalImgTwo(getoptionList[1].url);
+          setSelectedModalRankNameTwo(getoptionList[1].cdDtlName);
+          setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+        }else{
+          setSelectedModalImgTwo(getoptionList[0].url);
+          setSelectedModalRankNameTwo(getoptionList[0].cdDtlName);
+          const matchingOptionCode=getoptionList[0].cdDtlId;   
+          const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+          const jsonOptionList = await response.json();
+          for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+            let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+            jsonOptionList.selectOptionList[i].url = tempUrl;
+          }
+          setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+        }  
+        
+      }else{
+        setSelectedModalImgTwo(getSelectedModalImgOne);
+        setSelectedModalRankNameTwo(getSelectedModalRankNameOne);
+        setRankUnderOptionListTwo(jsonOptionList.selectOptionList.slice(underRankIndexOne,tempTwoArrLength));
+      }
     };
     const getChampionList = async() =>{
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
@@ -211,40 +272,210 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
       // console.log(reChampionList)
       setChampionList(reChampionList)
     };
+    const rankIndex = (modalSet,index)=>{
+      let rankOneNameCheck = true;
+      if(index !=0){
+        switch (getSelectedModalRankNameOne) {
+          case "UNRANK":
+            rankOneNameCheck = false;
+            break;
+          case "MASTER":
+            rankOneNameCheck = false;
+            break;
+          case "GRANDMASTER":
+            rankOneNameCheck = false;
+            break;
+          case "CHALLENGER":
+            rankOneNameCheck = false;
+            break;
+        }
+        if(rankOneNameCheck !=false && getUnderRankIndexOne ==""){
+          alert("시작 랭크에 세부랭크를 설정해주세요!")
+          return;
+        }
+      }
+      
+      setModalVisible(modalSet);
+      setModalIndex(index);
+      setModalChangeIndex(0);
+      if(index == 0){
+        serverGetOptionList();
+        setSelectedModalImgOne("");
+        setSelectedModalImgTwo("");
+        setSelectedModalRankNameOne("");
+        setSelectedModalRankNameTwo("");
+        setRankUnderOptionListOne([]);
+        setRankUnderOptionListTwo([]);
+        setUnderRankIndexOne("");
+        setUnderRankIndexTwo("");
+      }
+    };
+    const rankUnderIndex = (index,modalIndex)=>{
+      if(modalIndex ==0){
+        setUnderRankIndexOne(index);
+        serverGetRankUnderOptionListForSelectFirst(getoptionList[getModalChangeIndex].cdDtlId,index)
+
+      }else{
+        switch (getRankUnderOptionListTwo.length) {
+          case 1:
+            index = index +3
+            break;
+          case 2:
+            index = index +2
+            break;
+          case 3:
+            index = index +1
+            break;
+          case 4:
+            index = index
+            break;
+        }
+        setUnderRankIndexTwo(index);
+      }
+      
+    };
+    
+    const rankSubmit = ()=>{
+      if(getModalIndex ==0){
+        setSelectedModalImgOne(getoptionList[getModalChangeIndex].url);
+        setSelectedModalRankNameOne(getoptionList[getModalChangeIndex].cdDtlName);
+      }else{
+        setSelectedModalImgTwo(getoptionList[getModalChangeIndex].url);
+        setSelectedModalRankNameTwo(getoptionList[getModalChangeIndex].cdDtlName);
+      }
+      const forRankUnderOptionListCode = getoptionList[getModalChangeIndex].cdDtlId;
+         
+      serverGetRankUnderOptionList(forRankUnderOptionListCode);
+      setModalVisible(false);
+      if(getModalIndex !=0){
+        serverGetOptionList();
+        setUnderRankIndexTwo("");
+      }else{
+        setUnderRankIndexOne("");
+        setOptionListTriger();
+      }
+      
+    };
+    const setOptionListTriger = ()=>{  
+      setOptionList(getoptionList.slice(getModalChangeIndex,getoptionList.length));
+    };
     useEffect(() => {
       getChampionList();
+      serverGetOptionList();
     },[]);
     if(route.params.optionFour ==="rank"){
       return (
         <View style={styles.container}>
-            <View style={styles.topContainer}>
+            <View style={styles.topContainerRank}>
                    <Text style={styles.topContainerTitle}>{route.params.optionFour}</Text>
             </View>
-            <View style={styles.centerContainer} >
-              <View style={styles.centerTopContainer}>
-                <ScrollView pagingEnabled 
-                            horizontal
-                            onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
-                            showsHorizontalScrollIndicator = {false}>
-                    {rankList.length === 0? (
-                        <View >
-                            <ActivityIndicator color="black" size="large"/>
-                        </View>
-                        ) : (
-                        rankList.map( (info, index) =>    
-                            <View key={index} style={styles.contentBottom}>
-                                <View style={styles.itemBox}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
-                                </View>  
-                            </View>
-                        )
-                        )
-                    }         
-                </ScrollView>
+            <View style={styles.centerContainerRank} >
+              <View style={styles.centerTopContainerRank}>
+                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>rankIndex(true,0)}>
+                  <Image resizeMode='cover' style={styles.itemBoxImgRank} 
+                  source={{
+                    uri: `${getSelectedModalImgOne}`,
+                  }}/>       
+                </View>
+                <View style={styles.centerTopContainerRankUnder} onStartShouldSetResponder={() =>rankIndex(true,1)}>
+                  <Image resizeMode='cover' style={styles.itemBoxImgRank} 
+                  source={{
+                    uri: `${getSelectedModalImgTwo}`,
+                  }}/>       
+                </View>            
               </View>
             </View>
-            <View style={styles.bottomContainer} >
+              <Modal
+              animationType="fade"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+              }}>
+              <Pressable style={{
+              flex:1,
+              backgroundColor:'transparent',
+              }}
+              onPress={()=>setModalVisible(false)}
+              />
+              <View style={styles.centeredView} >
+                <View style={styles.modalView}>
+                  <View style={styles.modalSelectView}>
+                    <ScrollView pagingEnabled
+                                horizontal
+                                onMomentumScrollEnd={(event) => {modalRankChange(event.nativeEvent.contentOffset.x)}} 
+                                  showsHorizontalScrollIndicator = {false}>      
+                        {getoptionList.length === 0? (
+                            <View >
+                                <ActivityIndicator color="black" size="large"/>
+                            </View>
+                            ) : (
+                              getoptionList.map( (info, index) =>    
+                                <View key={index} style={styles.contentBottomRank}>
+                                    <View style={styles.itemBoxImgRank} >
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                        <Image resizeMode='contain' style={styles.backImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>       
+                                    </View>  
+                                </View>
+                            )
+                            )
+                        }         
+                    </ScrollView>
+                    <View style={styles.modalBottomContainer} >
+                      <Button color={"black"} onPress={rankSubmit} title='선택하기'></Button>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              </Modal>
+              <View style={styles.sectionView}>
+                      <View style={styles.sectionViewTop}>
+                        <View style={styles.sectionViewButtonBox}>
+                        {getRankUnderOptionListOne.length === 0? (
+                          <View  style={styles.sectionViewButtonImgBox}>
+                          </View>
+                          )  : (
+                            getRankUnderOptionListOne.map( (info, index) =>    
+                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1,0)} >
+                                <Image resizeMode='contain' style={styles.champImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>
+                                <Text></Text>                      
+                              </View>
+                            )
+                            )
+                        }      
+                        </View>
+                        <View style={styles.sectionViewButtonBox}>
+                        {getRankUnderOptionListTwo.length === 0? (
+                          <View style={styles.sectionViewButtonImgBox}>
+                          </View>
+                          )  : (
+                            getRankUnderOptionListTwo.map( (info, index) =>    
+                              <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1,1)} >
+                                 <Image resizeMode='contain' style={styles.champImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>    
+                              </View>
+                            )
+                            )
+                        }      
+                        </View> 
+                      </View>
+                      <View style={styles.sectionViewCenter}>
+                        <View style={styles.sectionViewBoxFix}><Text>시작 랭크</Text></View>
+                        <View style={styles.sectionViewBoxFix}><Text>~</Text></View>
+                        <View style={styles.sectionViewBoxFix}><Text>끝 랭크</Text></View>  
+                      </View>
+                      <View style={styles.sectionViewBottom}>
+                        <View style={styles.sectionViewBox}><Text>{getSelectedModalRankNameOne} {getUnderRankIndexOne}</Text></View>
+                        <View style={styles.sectionViewBox}><Text>{getSelectedModalRankNameTwo} {getUnderRankIndexTwo}</Text></View> 
+                      </View>  
+              </View>
+            <View style={styles.bottomContainerRank} >
               <Button color={"black"} onPress={optionSubmit} title='선택하기'></Button>
             </View>
             <View style={styles.bottomOptionContainer} >
@@ -258,13 +489,13 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                       ):(
                         <View>
                           <View style={styles.bottomOptionContainerTextInnerBox} >
-                            <View style={styles.indexText}>
+                            <View  style={styles.indexText}>
                               <Text style={styles.bottomOptionInnerText}>1</Text>
                             </View>
-                            <View style={styles.leftText}>
+                            <View onStartShouldSetResponder={() =>backOption(1)} style={styles.leftText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOne}:</Text>
                             </View>
-                            <View style={styles.centerText}>
+                            <View  style={styles.centerText}>
                               <Text style={styles.bottomOptionInnerCenterText}>{route.params.optionOneDetail}</Text>
                             </View> 
                           </View>
@@ -333,7 +564,7 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                         )
                      }
                   </View>
-                </View>            
+                </View>                  
         </View>
       );
     }else if(route.params.optionFour ==="champion"){
@@ -508,12 +739,12 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                             horizontal
                             onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
                             showsHorizontalScrollIndicator = {false}>
-                    {timeList.length === 0? (
+                    {getoptionList.length === 0? (
                         <View >
                             <ActivityIndicator color="black" size="large"/>
                         </View>
                         ) : (
-                        positionList.map( (info, index) =>    
+                          getoptionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                 <View style={styles.itemBox}>
                                     <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
@@ -630,16 +861,18 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                             horizontal
                             onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
                             showsHorizontalScrollIndicator = {false}>
-                    {positionList.length === 0? (
+                    {getoptionList.length === 0? (
                         <View >
                             <ActivityIndicator color="black" size="large"/>
                         </View>
                         ) : (
-                        positionList.map( (info, index) =>    
+                          getoptionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                 <View style={styles.itemBox}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                    <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                    <Image resizeMode='contain' style={styles.backImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>       
                                 </View>  
                             </View>
                         )
@@ -752,16 +985,18 @@ export default function OptionSelectFourDetail ({ route,navigation }) {
                             horizontal
                             onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}} 
                             showsHorizontalScrollIndicator = {false}>
-                    {timeList.length === 0? (
+                    {getoptionList.length === 0? (
                         <View >
                             <ActivityIndicator color="black" size="large"/>
                         </View>
                         ) : (
-                        timeList.map( (info, index) =>    
+                          getoptionList.map( (info, index) =>    
                             <View onTouchMove={text => optionChange(index)}  key={index} style={styles.contentBottom}>
                                 <View style={styles.itemBox}>
-                                    <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                    <Image  style={styles.backImg} source={info.optionUrl}/>       
+                                    <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                    <Image resizeMode='contain' style={styles.backImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>       
                                 </View>  
                             </View>
                         )
@@ -893,6 +1128,8 @@ const styles = StyleSheet.create({
     marginTop: "3%",
     opacity:0.3,
   },
+  centerText:{
+  },
   centerContainer:{       
     flex:6,
     alignItems:"center",
@@ -1012,6 +1249,127 @@ const styles = StyleSheet.create({
     width:"100%",
     height:"90%",
   },
-  centerText:{
+  contentBottom:{
+    width:SCREEN_WIDTH,
+    alignItems:"center",
+    justifyContent:"center",
+    height:"100%",
+  },
+  centerTopContainerRankUnder:{       
+    height:"100%",
+    width:"50%",
+    alignItems:"center",
+  },
+  topContainerRank:{       
+    flex:2,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+    marginTop:"3%",  
+  },
+  centerContainerRank:{       
+    flex:3,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",  
+  },
+  centerTopContainerRank:{       
+    flex:1,
+    borderColor:"black",
+    borderStyle:"solid",
+    flexDirection:"row",
+    width:"100%",
+  },
+  modalBottomContainer:{
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+    marginRight:"23%",
+  },
+  sectionView:{
+    flex:2,
+    width:"100%",
+  },
+  sectionViewTop:{
+    height:"40%",
+    width:"100%",
+    flexDirection:"row",
+  },
+  sectionViewCenter:{
+    marginTop:"5%",
+    width:"100%",
+    flexDirection:"row"
+  },
+  sectionViewBottom:{
+    marginTop:"5%",
+    width:"100%",
+    flexDirection:"row"
+  },
+  sectionViewBox:{
+    width:"50%",
+    alignItems:"center",
+  },
+  sectionViewBoxFix:{
+    width:"33%",
+    alignItems:"center",
+  },
+  sectionViewButtonBox:{
+    width:"50%",
+    flexDirection:"row"
+  },
+  sectionViewButtonImgBox:{
+    width:"25%",
+    flexDirection:"row"
+  },
+  centeredView: {
+    flex: 1,
+    marginTop: "5%",
+  },
+  modalView: {
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position:'absolute',
+    top:-200,
+    bottom:100,
+    left:0,
+    right:0,
+  },
+  modalSelectView: {
+    width:"100%",
+    marginTop:"10%",
+    marginLeft:"12%",
+  },
+  contentBottomRank:{
+    width:SCREEN_WIDTH,
+    height:"100%",
+  },
+  itemBoxImg:{
+    width:"50%",
+    height:"60%",
+    margin: "3%",
+  },
+  itemBoxImgRank:{
+    width:"70%",
+    height:"70%",
+    margin: "3%",
+  },
+  itemBoxTitle:{
+    marginBottom : '5%',
+    textAlign: 'center',
+  },
+  bottomContainerRank:{
+    flex:1,
+    marginTop:"10%",
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
   },
 });

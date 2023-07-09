@@ -35,7 +35,8 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
         jsonOptionList.selectOptionList[i].url = tempUrl;
       }
       setOptionList(jsonOptionList.selectOptionList);
-  };                     
+    };      
+
     // 챔피언 선택함수                                                                
     const selectChampion = (index)=>{
       setChampionSelect(index)
@@ -188,6 +189,7 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       console.log("조건2-2")
       console.log(tempOptionTwoDetail)
       console.log("----------OptionSelectTwoDetail.js-----Finsh--------------------------")
+      console.log(route.params.optionValueBox)
       navigation.navigate('OptionSelectThree',{optionOne: route.params.optionOne,
                                               optionOneDetail: route.params.optionOneDetail,
                                               optionTwo: route.params.optionTwo,
