@@ -14,7 +14,7 @@ export default function FriendScreen ({navigation}) {
     const [getStateFriendList, setStateFriendList] = useState([]);
     const [selectedImage, setSelectedImage] = useState({
         uri: '',
-        name : ''
+        ext : ''
     });
     const [userInfo, setUserInfo] = useState([]);
 
@@ -23,13 +23,21 @@ export default function FriendScreen ({navigation}) {
       const sessionId = userInfo.uIntgId;
       setUserInfo(userInfo)
       setMyNick(sessionId);
-      // const response = await fetch (`http://192.168.0.187:8080/friend/findFriendList.do?myNick=${getMyNick}`)
       const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}`)
       const json = await response.json();
-      // console.log(json.friendList)
-      // console.log(json.friendNum)
       setStateFriendList(json.friendList)
       setFriendNum(json.friendNum)
+    };
+
+    const getMyInfo = async() =>{
+      let userInfo= await Session.sessionGet("sessionInfo");
+      const sessionId = userInfo.uIntgId;
+      const response = await fetch (`http://3.37.211.126:8080/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
+      const json = await response.json();
+      console.log(json);
+      if(json != ''){
+        setUserInfo(json.user[0]);
+      }
     };
 
     const openImagePickerAsync = async () => {
@@ -40,40 +48,52 @@ export default function FriendScreen ({navigation}) {
       }
 
       const pickerResult = await ImagePicker.launchImageLibraryAsync();
-      console.log(pickerResult);
+      console.log(pickerResult.assets[0].uri);
       if (!pickerResult.cancelled) {
+        const lastDotIndex = pickerResult.assets[0].uri.lastIndexOf('.');
+        let fileExtension = "";
+        if (lastDotIndex !== -1) {
+          fileExtension = pickerResult.assets[0].uri.slice(lastDotIndex + 1);
+        } else {
+          fileExtension = "파일 업로드 시 확장자 없음";
+        }
         setSelectedImage((prevState) => {
-          return {...prevState, name : pickerResult.name, uri : pickerResult.uri }
+          return {...prevState, ext : fileExtension, uri : pickerResult.assets[0].uri }
         });
       }
     };
     
     const uploadImageAsync = async () => {
-      const apiUrl = 'http://192.168.0.187:8080/mypage/changeMyImage.do';
+      const apiUrl = 'http://3.37.211.126:8080/mypage/changeMyImage.do';
       const formData = new FormData();
       
       formData.append('image', {
         uri: selectedImage.uri,
-        name: 'temp',
+        name: 'temp.'+selectedImage.ext,
         type: 'image/*'
       });
-      formData.append('data', new Blob([getMyNick]), 'test' );
 
-      console.log(selectedImage);
-      console.log(getMyNick);
-      
-      const response = await fetch (apiUrl, {
-        method : "POST",
-        body : formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        }
-      })
-      const json = await response.json();
+      formData.append('data',JSON.stringify(getMyNick));
+      try{
+        
+        const response = await axios.post (apiUrl,formData,{
+            headers: {"Content-Type" : 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'},
+        })
+  
+        setSelectedImage((prevState) => {
+          return {...prevState, ext : '', uri : '' }
+        });
+        const json = response.data;
+        alert("프로필파일 업로드에 성공했습니다!");
+        getMyInfo();
+      } catch(error) {
+        alert("프로필파일 업로드 실패.."+error);
+      }
     };
 
     useEffect(() => {
       getFriendList();
+      getMyInfo();
     },[]);
     
     return (
@@ -83,13 +103,31 @@ export default function FriendScreen ({navigation}) {
             </View>   
             <View style={styles.profileView}>
               <View style={styles.profileImgView}>
-                <TouchableOpacity onPress={openImagePickerAsync}>
-                    {selectedImage.uri ? (
-                      <><Image source={{ uri: selectedImage.uri }} style={styles.profileImg} resizeMode='contain' onPress={openImagePickerAsync} /><Button title="이미지 업로드" onPress={uploadImageAsync}></Button></>
-                    ) : ( 
-                      <Image resizeMode='contain' style={styles.profileImg} source={require("./assets/images/emptyProfile.jpg")}/>                
-                    )}
-                </TouchableOpacity>
+              <TouchableOpacity onPress={openImagePickerAsync}>
+                {selectedImage.uri !== '' ? (
+                  <Image source={{ uri: selectedImage.uri }} style={styles.profileImg} resizeMode='contain' />
+                  ) : (
+                    userInfo.profileImgUrl !== '' ? (
+                    <Image
+                      source={{ uri: `http://3.37.211.126:8080/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
+                      style={styles.profileImg}
+                      resizeMode='contain'
+                      onPress={openImagePickerAsync}
+                    />
+                  ) : (
+                    <Image resizeMode='contain' style={styles.profileImg} source={require("./assets/images/emptyProfile.jpg")}/>
+                  )
+                )}
+              </TouchableOpacity>
+                { selectedImage.uri !== '' ? (
+                    <View style={styles.profileBtnView}>
+                      <Button title="upload" onPress={uploadImageAsync}></Button>
+                    </View>
+                  ) : (
+                    <View style={styles.profileBtnView}>
+                    </View>
+                  )
+                }
               </View>
               <View style={styles.profileMesaageView}>
                 <Text style={styles.statusMessageFont}>{userInfo.uNickname}</Text>       
@@ -165,7 +203,11 @@ const styles = StyleSheet.create({
       },
       profileImgView: {
         width:"20%",
-        height:"100%",
+        height:"70%",
+      },
+      profileBtnView: {
+        width:"100%",
+        height:"80%",
       },
       profileMesaageView: {
         width:"75%",
