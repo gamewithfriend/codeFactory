@@ -10,13 +10,13 @@ export default function OptionSelectFour ({ route,navigation }) {
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
     let tempOptionValueBox = [];                         
     const setSelectGameOtionTwo = ()=>{
-      tempOptionValueBox = route.params.optionValueBox;
-      for(let i =0; i<route.params.optionValueBox.length; i++ ){
-        if(route.params.optionValueBox[i].optionName == route.params.optionThree ){
-           tempOptionValueBox.splice(i, 1);
+      let tempOptionList = route.params.getOptionList;
+      for(let i =0; i<tempOptionList.length; i++ ){
+        if(tempOptionList[i].cdDtlName == route.params.optionThree ){
+          tempOptionList.splice(i, 1);
         }
       }
-      optionValueTwo(tempOptionValueBox);
+      optionValueTwo(tempOptionList);
     };
     
     const optionChange = (index)=>{
@@ -25,7 +25,7 @@ export default function OptionSelectFour ({ route,navigation }) {
 
      const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
-      let tempOptionValueFour = changeOptionValueTwo[indexNumber].optionName;
+      let tempOptionValueFour = changeOptionValueTwo[indexNumber].cdDtlName;
       if(tempOptionValueFour == "선택하지 않음"){
         alert("게임 매칭 시작");
         navigation.navigate('GameMatching',{  0: route.params.optionOne
@@ -53,6 +53,7 @@ export default function OptionSelectFour ({ route,navigation }) {
         console.log("조건4")
         console.log(tempOptionValueFour)
         console.log("----------OptionSelectFour.js---------Finsh----------------------")
+        console.log(route.params.optionValueBox)
         navigation.navigate('OptionSelectFourDetail',{  optionOne: route.params.optionOne
                                                       ,optionOneDetail: route.params.optionOneDetail
                                                       ,optionTwo:route.params.optionTwo
@@ -60,6 +61,7 @@ export default function OptionSelectFour ({ route,navigation }) {
                                                       ,optionThree:route.params.optionThree
                                                       ,optionThreeDetail:route.params.optionThreeDetail
                                                       ,optionFour:tempOptionValueFour
+                                                      ,optionFourArr:changeOptionValueTwo[indexNumber]
                                                       ,optionValueBox: route.params.optionValueBox
                                                     },{navigation});
       }
@@ -91,8 +93,10 @@ export default function OptionSelectFour ({ route,navigation }) {
                             changeOptionValueTwo.map( (info, index) =>    
                                 <View key={index} style={styles.contentBottom}>
                                     <View style={styles.itemBox}>
-                                        <Text style={styles.itemBoxTitle} >{info.optionName}</Text>
-                                        <Image style={styles.backImg} source={info.optionUrl}/>       
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                        <Image style={styles.backImg} source={{
+                                                uri: `${info.url}`,
+                                              }}/>       
                                     </View>  
                                 </View>
                             )

@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
 import * as Session from './utils/session.js';
 import { useIsFocused } from '@react-navigation/native';
+import * as Notifications from 'expo-notifications';
 
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
@@ -28,13 +29,29 @@ export default function MainScreen ({navigation}) {
     let reChampionList = [];
     let youserLikeCheck ="";
     let sessions = "";
-    sessionSave = async ()=>{
-        sessions= await Session.sessionGet("sessionInfo");
-        console.log("sessionSaving")
-        let myId= sessions.uIntgId;
-        //let myId= "TEST15";         
-        setSessionId(myId);
-    };
+
+    // sessionGet 메서드의 비동기적 처리를해결하기 위한 조치
+    const loginCheck = async () => {
+      let session = await Session.sessionGet("sessionInfo");
+      // await sessionClear();
+
+      console.log(session);
+
+      // 세션값이 확인이 되지 않으면 구글로그인 연동 -> 구글 로그인 안에서 session setting 컨트롤
+      if (session == null || session == undefined || session == "") {
+          try {
+              promptAsync();
+              if (response?.type === 'success') { 
+                  token = response.authentication.accessToken;
+                  getUserInfo();
+              }
+          } catch (error) {
+              console.error(error);
+          }
+      } else {    // 세션값 확인되면 로그인 정보 최신화 후 닉네임 체크 로직 
+          checkLoginUserInfo(realUrl, session);
+      }
+  }
 
     ////targetLike----좋아요 기능함수///////
     const targetLike = async(targetId) =>{
@@ -197,11 +214,23 @@ export default function MainScreen ({navigation}) {
 
     };
 
+    // ✅ 알림 전송
+  const sendNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: '알림 제목 테스트',
+        body: '알림 내용 테스트',
+      },
+      trigger: null, // 즉시 보내려면 'trigger'에 'null'을 설정
+    });
+  };
+
     useEffect(() => {
-        sessionSave();
+        loginCheck();
         serverGetUserLikeTop5List();
         serverGetFindMyAlramList();
         serverGetOptionList();
+        // sendNotification();
     },[isFocused]);
     return (
         <View style={styles.mainContainer}>

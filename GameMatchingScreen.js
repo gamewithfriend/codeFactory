@@ -1,6 +1,7 @@
 import React, { Component, useState ,useEffect} from 'react';
 import { View, Text, Button,StyleSheet,TextInput,Dimensions,ActivityIndicator,Image } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import * as Session from './utils/session.js';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 
@@ -8,24 +9,18 @@ const {width:SCREEN_WIDTH} = Dimensions.get('window');
 export default function GameMatchingScreen ({route,navigation}) {
     const [userInfos, setUserInfo] = useState([]);
     const [changeOptionValueTwo, optionValueTwo] = useState([]);
+    let sessions = "";
     let resultUser = [];
     const addFriend = (userNick)=>{
       let yourNick = userNick;
-      let myNick ="TEST15";
+      sessions= Session.sessionGet("sessionInfo");
+      let myNick =sessions.uIntgId;
       const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myNick}&yourNick=${yourNick}`);
-      console.log(responseAddFriend)
     };
     const getUserData = async() =>{
-        console.log(route.params)
-        tempOptionValueBox = route.params.optionValueBox;
-        for(let i =0; i<route.params.optionValueBox.length; i++ ){
-          if(route.params.optionValueBox[i].optionName == route.params.optionFour ){
-            tempOptionValueBox.splice(i, 1);
-          }
-        }
-        optionValueTwo(tempOptionValueBox);
-        console.log(5-tempOptionValueBox.length)
-        await fetch (`http://3.37.211.126:8080/gameMatching/selectGameMatchingUserTop3.do`,{
+        sessions= Session.sessionGet("sessionInfo");
+        let myId =sessions.uIntgId;
+        await fetch (`http://192.168.1.3:80/hexa/gameMatching/selectGameMatchingUserTop3.do?myId=${myId}`,{
           method : 'POST',//형식
           body : JSON.stringify(route.params), //자바스크립트 객체 -> JSON객체
           headers: {

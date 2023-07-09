@@ -1,5 +1,6 @@
 
 import * as Location from 'expo-location';
+import * as Notifications from 'expo-notifications';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator,StackNavigationProp } from '@react-navigation/stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -47,7 +48,22 @@ function HomeTab(){
   );
 }
 
-export default function App() {  
+export default function App() { 
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+  useEffect(() => {
+    (async () => {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') {
+        alert('알림 권한이 거부되었습니다!');
+      }
+    })();
+},[]); 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>            
