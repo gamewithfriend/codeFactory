@@ -25,22 +25,19 @@ export default function FriendScreen ({navigation}) {
       setMyNick(sessionId);
       const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}`)
       const json = await response.json();
-      // console.log(json.friendList)
-      // console.log(json.friendNum)
       setStateFriendList(json.friendList)
       setFriendNum(json.friendNum)
     };
 
     const getMyInfo = async() =>{
-      const response = await fetch (`http://3.37.211.126:8080/mypage/selectUserInfo.do?uIntgId=${getMyNick}`)
+      let userInfo= await Session.sessionGet("sessionInfo");
+      const sessionId = userInfo.uIntgId;
+      const response = await fetch (`http://3.37.211.126:8080/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
       const json = await response.json();
+      console.log(json);
       if(json != ''){
         setUserInfo(json.user[0]);
       }
-      console.log("userInfo")
-      console.log(userInfo.profileImgUrl)
-      // setStateFriendList(json.friendList)
-      // setFriendNum(json.friendNum)
     };
 
     const openImagePickerAsync = async () => {
@@ -51,23 +48,22 @@ export default function FriendScreen ({navigation}) {
       }
 
       const pickerResult = await ImagePicker.launchImageLibraryAsync();
-      console.log(pickerResult);
+      console.log(pickerResult.assets[0].uri);
       if (!pickerResult.cancelled) {
-        const lastDotIndex = pickerResult.uri.lastIndexOf('.');
+        const lastDotIndex = pickerResult.assets[0].uri.lastIndexOf('.');
         let fileExtension = "";
         if (lastDotIndex !== -1) {
-          fileExtension = pickerResult.uri.slice(lastDotIndex + 1);
+          fileExtension = pickerResult.assets[0].uri.slice(lastDotIndex + 1);
         } else {
           fileExtension = "파일 업로드 시 확장자 없음";
         }
         setSelectedImage((prevState) => {
-          return {...prevState, ext : fileExtension, uri : pickerResult.uri }
+          return {...prevState, ext : fileExtension, uri : pickerResult.assets[0].uri }
         });
       }
     };
     
     const uploadImageAsync = async () => {
-      // const apiUrl = 'http://192.168.0.187:8080/mypage/changeMyImage.do';
       const apiUrl = 'http://3.37.211.126:8080/mypage/changeMyImage.do';
       const formData = new FormData();
       
@@ -76,9 +72,6 @@ export default function FriendScreen ({navigation}) {
         name: 'temp.'+selectedImage.ext,
         type: 'image/*'
       });
-
-      console.log(formData);
-      console.log(selectedImage);
 
       formData.append('data',JSON.stringify(getMyNick));
       try{
