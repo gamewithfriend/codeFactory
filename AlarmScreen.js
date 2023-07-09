@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Image , Dimensions } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Image , Dimensions ,Modal,Pressable,Alert} from 'react-native';
 import * as Session from './utils/session.js';
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -8,7 +8,10 @@ const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 export default function AlarmScreen ({navigation}) {
   const [getAlramList, setAlramList] = useState([]);
   const [getSessionId, setSessionId] = useState("");
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [getAlramTemplete, setAlramTemplete] = useState("");
+  const [getSendId, setSendId] = useState("");
+  const [getCdDtlDesc, setCdDtlDesc] = useState("");
 
   const serverGetFindMyAlramList = async() =>{
     const session = await Session.sessionGet("sessionInfo");
@@ -30,16 +33,60 @@ export default function AlarmScreen ({navigation}) {
     alarmDelet(seq);
   };
 
+  const alramModalTrigger = (alSeq,cdDtlId,sendNickName,cdDtlDesc)=>{
+    
+    if(cdDtlId == "10801"){
+      setAlramTemplete("친구");
+      setModalVisible(true);
+      setSendId(sendNickName);
+      setCdDtlDesc(cdDtlDesc);
+    }
+  }
+
+  
+
   useEffect(() => {     
     serverGetFindMyAlramList();
   },[]);
     return (
         <View style={styles.container}>
           <View style={styles.containerPercent}>
+            <View style={styles.centeredView}>
+                <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert('Modal has been closed.');
+                  setModalVisible(!modalVisible);
+                }}>
+                <Pressable style={{
+                flex:1,
+                backgroundColor:'transparent',
+                }}
+                onPress={()=>setModalVisible(false)}
+                />
+                <View style={styles.centeredView} >
+                  <View style={styles.modalView}>
+                    <View >
+                      {getAlramTemplete === "친구"? (
+                                                      <Text>{getSendId}님이 친구신청을 보내셨습니다 수락하시겠습니까?</Text>  
+                                                   
+                                                  ) : (
+                                                        <Text>좋아요</Text>
+                                                        )
+                        
+                      }
+                    </View>
+                  </View>
+                </View>
+                </Modal>
+            </View>
            <ScrollView        pagingEnabled
                               showsHorizontalScrollIndicator = {false}>
               {getAlramList.length === 0? (
                                             <View >
+                                              <Text>알람이 없습니다.</Text>
                                             </View>
                               ) : (
                                     getAlramList.map( (info, index) =>    
@@ -49,7 +96,7 @@ export default function AlarmScreen ({navigation}) {
                                                             <Image resizeMode='contain' style={styles.statusImg} 
                                                               source={require("./assets/images/bell.png")}/>
                                                           </View>
-                                                          <View style={styles.alramViewCenter}>
+                                                          <View style={styles.alramViewCenter} onStartShouldSetResponder={() =>alramModalTrigger(info.alSeq,info.cdDtlId,info.sendNickName,info.cdDtlDesc)}>
                                                             <Text>{index +1}.</Text>
                                                             <Text style={styles.alramMsg}>{info.sendNickName}{info.cdDtlDesc}</Text>
                                                           </View>
@@ -120,5 +167,23 @@ const styles = StyleSheet.create({
   alramViewRight: {
     height:"100%",
     width:"10%",    
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    padding: "5%",
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position:'absolute',
+    top:-500,
+    bottom:350,
+    left:50,
+    right:40,
   },
 });

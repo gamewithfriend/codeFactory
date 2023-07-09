@@ -23,7 +23,7 @@ export default function GameMatchingScreen ({route,navigation}) {
         console.log("GameMatchingScreenTest@@@@@@@@@@@@@@@@@@@@@@@@@@2")
         console.log(route.params)
         
-        await fetch (`http://3.37.211.126:8080/hexa/gameMatching/selectGameMatchingUserTop3.do?myId=${myId}`,{
+        await fetch (`http://3.37.211.126:8080/gameMatching/selectGameMatchingUserTop3.do?myId=${myId}`,{
           method : 'POST',//형식
           body : JSON.stringify(route.params), //자바스크립트 객체 -> JSON객체
           headers: {
