@@ -292,7 +292,7 @@ export default function MainScreen ({navigation}) {
       console.log("sesisonInfo : ",sessionInfo);
       if (sessionInfo.uNickname != null) {
           console.log("There's is NickName!!");
-          navigation.navigate('MainScreen');
+          // navigation.navigate('MainScreen');
       
       // 닉네임 설정이 되어 있지 않으면 닉네임 설정화면으로 이동
       } else {    
