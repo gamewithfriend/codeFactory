@@ -9,7 +9,7 @@ import axios from 'axios';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function FriendScreen ({navigation}) {
-    const [getMyNick, setMyNick] = useState("");
+    let getMyNick;
     const [getFriendNum, setFriendNum] = useState(1);
     const [getStateFriendList, setStateFriendList] = useState([]);
     const [selectedImage, setSelectedImage] = useState({
@@ -20,13 +20,14 @@ export default function FriendScreen ({navigation}) {
 
     const getFriendList = async() =>{
       let userInfo= await Session.sessionGet("sessionInfo");
-      const sessionId = userInfo.uIntgId;
-      setUserInfo(userInfo)
-      setMyNick(sessionId);
+      // const sessionId = userInfo.uIntgId;
+      // setUserInfo(userInfo);
+      // setMyNick(sessionId);
+      getMyNick = userInfo.uIntgId;
       const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}`)
       const json = await response.json();
       setStateFriendList(json.friendList)
-      setFriendNum(json.friendNum)
+      setFriendNum(json.friendNum);
     };
 
     const getMyInfo = async() =>{
