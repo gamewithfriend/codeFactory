@@ -40,8 +40,8 @@ export default function MatchingHistoryScreen ({navigation}) {
         (type === null && type === '' && type === undefined) ? selectType = "latest" : selectType = type;
         (date === null && date === '' && date === undefined) ? baseDate = "" : baseDate = date;
 
-        const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
-        //const response = await fetch (`http://3.37.211.126:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
+        //const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
+        const response = await fetch (`http://3.37.211.126:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
         const json = await response.json();
         setStateHistoryList(json.historyList);
         setStateDisplayDate(json.displayDate);
@@ -51,8 +51,8 @@ export default function MatchingHistoryScreen ({navigation}) {
 
     const addFriendTrigger = (targetId) => {
         const myID = 'jonghwi';
-        const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
-        //const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
+        //const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
+        const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
     };
     
     useEffect(() => {

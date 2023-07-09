@@ -18,9 +18,12 @@ export default function GameMatchingScreen ({route,navigation}) {
       const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myNick}&yourNick=${yourNick}`);
     };
     const getUserData = async() =>{
-        sessions= Session.sessionGet("sessionInfo");
-        let myId =sessions.uIntgId;
-        await fetch (`http://192.168.1.3:80/hexa/gameMatching/selectGameMatchingUserTop3.do?myId=${myId}`,{
+        sessions= await Session.sessionGet("sessionInfo");       
+        let myId =sessions.uIntgId;      
+        console.log("GameMatchingScreenTest@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+        console.log(route.params)
+        
+        await fetch (`http://3.37.211.126:8080/hexa/gameMatching/selectGameMatchingUserTop3.do?myId=${myId}`,{
           method : 'POST',//형식
           body : JSON.stringify(route.params), //자바스크립트 객체 -> JSON객체
           headers: {
