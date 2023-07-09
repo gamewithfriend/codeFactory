@@ -5,8 +5,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ScrollView} from 'react-native-gesture-handler';
 import * as Session from './utils/session.js';
 import { useIsFocused } from '@react-navigation/native';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+import *  as Device from 'expo-device';
+import * as Network from 'expo-network';
 
+WebBrowser.maybeCompleteAuthSession();
+const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.googleusercontent.com';
+const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleusercontent.com';
+const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
 
+const realUrl = "3.37.211.126";
+const testUrl = "192.168.105.27";
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function MainScreen ({navigation}) {
@@ -28,7 +38,7 @@ export default function MainScreen ({navigation}) {
     let reChampionList = [];
     let youserLikeCheck ="";
     let sessions = "";
-    sessionSave = async ()=>{
+    const sessionSave = async ()=>{
         sessions= await Session.sessionGet("sessionInfo");
         console.log("sessionSaving")
         let myId= sessions.uIntgId;
@@ -57,7 +67,7 @@ export default function MainScreen ({navigation}) {
     const serverGetUserLikeTop5List = async() =>{
       const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
       const jsonUserList = await response.json();
-      sessions= await Session.sessionGet("sessionInfo");
+      sessions = await Session.sessionGet("sessionInfo");
       const sessionId = sessions.uIntgId;
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         //////좋아요 확인////////
@@ -75,6 +85,7 @@ export default function MainScreen ({navigation}) {
         //////친구 확인////////
         const responseTwo = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
         const jsonUserFriendState = await responseTwo.json();
+
         if(jsonUserFriendState.selectUserFriendState == null){
           jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus.png');
         }else{
@@ -196,13 +207,113 @@ export default function MainScreen ({navigation}) {
       
 
     };
+    let token;
+    let userInfo = {};
+
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        expoClientId: expoClientId,
+        iosClientId : iosClientId,
+        androidClientId: androidClientId
+    });
+
+    // sessionGet 메서드의 비동기적 처리를해결하기 위한 조치
+    const loginCheck = async () => {
+      let session = await Session.sessionGet("sessionInfo");
+      // await sessionClear();
+
+      console.log(session);
+
+      // 세션값이 확인이 되지 않으면 구글로그인 연동 -> 구글 로그인 안에서 session setting 컨트롤
+      if (session == null || session == undefined || session == "") {
+          try {
+              promptAsync();
+              if (response?.type === 'success') { 
+                  token = response.authentication.accessToken;
+                  getUserInfo();
+              }
+          } catch (error) {
+              console.error(error);
+          }
+      } else {    // 세션값 확인되면 로그인 정보 최신화 후 닉네임 체크 로직 
+          checkLoginUserInfo(realUrl, session);
+      }
+  }
+
+  const getUserInfo = async () => {
+  try {
+      const response = await fetch(
+      "https://www.googleapis.com/userinfo/v2/me",
+      {
+          headers: { Authorization: `Bearer ${token}` }
+      }
+      );
+      const user = await response.json();
+      console.log(user);
+      if (user != null && user != undefined && user.verified_email ==true) {
+          userInfo.uIntgId = user.id;
+      }
+      
+      let ipAddress = await Network.getIpAddressAsync();
+      let modelName = Device.modelName;
+      
+      userInfo.uLastLoginIp = ipAddress;
+      userInfo.uLastTerminalKind = modelName;
+      
+      if (userInfo != null) {
+          checkLoginUserInfo(realUrl, userInfo);
+      }
+
+  } catch (error) {
+      console.log(error);
+      Alert.alert("Error!");
+  }
+  };
+  
+  const checkLoginUserInfo = async (url, data) => {
+      await fetch("http://" + url + ":8080/login/loginCheck.do", {
+                                  method : "POST",
+                                  headers : {
+                                      'Content-Type': 'application/json; charset=utf-8',
+                                  },
+                                  body : JSON.stringify(data)
+                                }).then(response => response.json()
+                                 ).then(async (result) => {
+                                      // 최초로그인 및 로그인 확인이 끝났으면 session 값을 set 및 get 해준다
+                                      if (result.sessionInfo.uIntgId != null && result.sessionInfo.uIntgId != undefined && result.sessionInfo.uIntgId != "") {
+                                          let tmpSessionData = JSON.stringify(result.sessionInfo);
+  
+                                          await Session.sessionSave("sessionInfo", tmpSessionData);
+                                          let session = await Session.sessionGet("sessionInfo");
+
+                                          checkNickName(session);
+                                      }
+                                 }).catch( error => {
+                                      console.error(error);
+                                 }) ;
+  };
+
+  // session 정보의 nickName 설정여부를 체크하고 화면을 리턴
+  const checkNickName = (sessionInfo) => {
+      // 닉네임 설정이 되어있으면 메인 화면으로 이동
+      console.log("sesisonInfo : ",sessionInfo);
+      if (sessionInfo.uNickname != null) {
+          console.log("There's is NickName!!");
+          navigation.navigate('MainScreen');
+      
+      // 닉네임 설정이 되어 있지 않으면 닉네임 설정화면으로 이동
+      } else {    
+          console.log("There's no NickName!!");
+          navigation.navigate('SetNickNameScreen');
+      }
+  };
 
     useEffect(() => {
-        sessionSave();
+        // sessionSave();
+        loginCheck();
         serverGetUserLikeTop5List();
         serverGetFindMyAlramList();
         serverGetOptionList();
-    },[isFocused]);
+    },[isFocused, response]);
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
