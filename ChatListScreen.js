@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, StatusBar, SafeAreaView, Dimensions,Modal,Pressable,Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, StatusBar, SafeAreaView, Dimensions,Modal,Pressable,Alert,Button,TextInput } from 'react-native';
 import * as Session from './utils/session';
+
 
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.105.27";
@@ -12,6 +13,7 @@ export default function ChatListScreen ({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [getFriendNum, setFriendNum] = useState(0);
     const [getStateFriendList, setStateFriendList] = useState([]);
+    const [text, onChangeText] = React.useState('Useless Text');
 
     // 세션정보를 담기위한 변수 선언
     let session = "";
@@ -77,17 +79,31 @@ export default function ChatListScreen ({navigation}) {
         setModalVisible(true);
     };
 
-    const getFriendList = async() =>{
+    const addFriendForChat = () => {
+        alert("여기다가 붙이면됨");
+    };
+
+    const onChange = (text)=>{
+        onChangeText(text);
+        getFriendList(text);   
+      };
+
+    const getFriendList = async(text) =>{
+        let keyWord = "";
+        if(text != undefined){
+            keyWord = text;
+        }
         let userInfo= await Session.sessionGet("sessionInfo");
         console.log("userInfo : ", userInfo);
         // const sessionId = userInfo.uIntgId;
         // setUserInfo(userInfo);
         // setMyNick(sessionId);
         getMyNick = userInfo.uIntgId;
-        const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}`)
+        const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}&keyWord=${keyWord}`)
         const json = await response.json();
         
         setStateFriendList(json.friendList)
+        console.log(json.friendList)
         setFriendNum(json.friendNum);
       };
     
@@ -102,6 +118,7 @@ export default function ChatListScreen ({navigation}) {
             <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
             <View style={styles.header}>
+                
                 <TouchableOpacity onPress={addFriendChat}>
                     <Image
                         source={require('./assets/images/addFriendChat.png')}
@@ -156,7 +173,13 @@ export default function ChatListScreen ({navigation}) {
               onPress={()=>setModalVisible(false)}
               />
               <View style={styles.centeredView} >
+                
                 <View style={styles.modalView}>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={text => onChange(text)}
+                        value={text}
+                    />
                     {getStateFriendList.length === 0 ? (
                         <Text>친구가 없습니다.</Text>
                     ) : (
@@ -165,19 +188,25 @@ export default function ChatListScreen ({navigation}) {
                         keyExtractor={item => item.id}
                         renderItem={({ item }) => (
                         <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]}>
-                            <View style={styles.itemBoxPhoto}>
-                            <Image resizeMode='contain' style={styles.profileImg}
-                                    source={require("./assets/images/emptyProfile.jpg")}/>
+                            <View style={styles.itemBoxView}>
+                                <View style={styles.itemBoxPhoto}>
+                                <Image resizeMode='contain' style={styles.profileImg}
+                                        source={require("./assets/images/emptyProfile.jpg")}/>
+                                </View>
+                                <View style={styles.listName}>
+                                    <Text>{item.fYouId}</Text>
+                                </View>
                             </View>
-                            <View>
-                                <Text>{item.fYouId}</Text>
-                            </View>
+                            
                             
                         </View>
                         )}
                         getItemLayout={getItemLayout}
                     />
                     )}
+                    <View style={styles.modalBottomContainer} >
+                      <Button color={"black"} onPress={addFriendForChat} title='선택하기'></Button>
+                    </View>
                 </View>
               </View>
               </Modal>
@@ -203,14 +232,18 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc',
-        flexDirection:"row",
+        
       },
+      flexDirection:"row",
       image: {
         width: 30, height: 30
       },
       centeredView: {
         flex: 1,
         marginTop: "5%",
+      },
+      itemBoxView: {
+        flexDirection:"row"
       },
       modalView: {
         margin: 20,
@@ -230,12 +263,22 @@ const styles = StyleSheet.create({
         left:20,
         right:20,
       },
-      profileImg: {
+    profileImg: {
         width:"100%",
         height:"100%",
-      },
-      itemBoxPhoto:{
+    },
+    itemBoxPhoto:{
         width:"20%",
         height:"100%",
-      },
+    },
+    modalBottomContainer:{
+        alignItems:"flex-end",
+        marginRight:"5%",
+    },
+    listName:{
+        marginLeft:"3%",
+    },
+    input:{
+        marginBottom:"4%",
+    },
 });
