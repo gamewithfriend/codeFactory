@@ -42,7 +42,9 @@ export default function MainScreen ({navigation}) {
 
     ////targetLike----좋아요 기능함수///////
     const targetLike = async(targetId) =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
+      sessions = await Session.sessionGet("sessionInfo");
+      const sessionId = sessions.uIntgId;
+      const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${sessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
       serverGetFindMyAlramList();
     };
 
@@ -99,7 +101,9 @@ export default function MainScreen ({navigation}) {
 
     ////serverGetTargetUserLikeYn----로그인 유저 상대 유저 좋아요 상태값 서버에서 가져오기 함수/////// 
     const serverGetTargetUserLikeYn = async(youId,indexNumber) =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${getSessionId}&targetId=${youId}`)
+      sessions = await Session.sessionGet("sessionInfo");
+      const sessionId = sessions.uIntgId;
+      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
       const jsonMsg = await response.json();
       setLikeYn(jsonMsg.msg);
       youserLikeCheck = jsonMsg.msg;
@@ -114,7 +118,9 @@ export default function MainScreen ({navigation}) {
 
     ////serverGetTargetUserFriendState----로그인 유저 상대 유저 친구 상태값 서버에서 가져오기 함수/////// 
     const serverGetTargetUserFriendState = async(youId,indexNumber) =>{
-      const response = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${getSessionId}&youId=${youId}`)
+      sessions = await Session.sessionGet("sessionInfo");
+      const sessionId = sessions.uIntgId;
+      const response = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
       const jsonUserFriendState = await response.json();
       if(jsonUserFriendState.selectUserFriendState == null){
         getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
@@ -140,12 +146,12 @@ export default function MainScreen ({navigation}) {
       let alramCount =0;
       let alramRecentOneMsg  ="";
       if(jsonAlramList != null){
-        alramCount =jsonAlramList.findMyAlramList.length;
         alramRecentOneMsg = jsonAlramList.findMyAlramList[0].sendNickName + " "+ jsonAlramList.findMyAlramList[0].cdDtlDesc;
       }else{
         alramRecentOneMsg = "알람이 없습니다";
       }
       setAlramRecentOneMsg(alramRecentOneMsg);
+      alramCount = jsonAlramList.findMyAlramListUnReadCount;
       setAlramCount(alramCount);
     };
 
@@ -167,7 +173,9 @@ export default function MainScreen ({navigation}) {
 
     ////addFriendTrigger----친구신청 함수/////// 
     const addFriendTrigger = (targetId)=>{
-      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${getSessionId}&yourNick=${targetId}`);
+      sessions=  Session.sessionGet("sessionInfo");
+      const sessionId = sessions.uIntgId;
+      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionId}&yourNick=${targetId}`);
     };
 
     ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 

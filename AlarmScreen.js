@@ -11,8 +11,11 @@ export default function AlarmScreen ({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [getAlramTemplete, setAlramTemplete] = useState("");
   const [getSendId, setSendId] = useState("");
+  const [getSendNickName, setSendNickName] = useState("");
   const [getCdDtlDesc, setCdDtlDesc] = useState("");
-
+  const [getFriendCheck, setFriendCheck] = useState("");
+  let param1 = "";
+  let param2 = "";
   const serverGetFindMyAlramList = async() =>{
     const session = await Session.sessionGet("sessionInfo");
     const sessionId = session.uIntgId;
@@ -33,15 +36,51 @@ export default function AlarmScreen ({navigation}) {
     alarmDelet(seq);
   };
 
-  const alramModalTrigger = (alSeq,cdDtlId,sendNickName,cdDtlDesc)=>{
+  const alramModalTrigger = (alSeq,cdDtlId,alSendId,cdDtlDesc,sendNickName,alReadYn)=>{
     
     if(cdDtlId == "10801"){
-      setAlramTemplete("친구");
       setModalVisible(true);
-      setSendId(sendNickName);
+      setSendId(alSendId);
+      setSendNickName(sendNickName);
       setCdDtlDesc(cdDtlDesc);
+      checkFriend(alSendId);
+      if(alReadYn == "N"){
+        updateReadYn(alSeq);
+      }
+    }else{
+      if(alReadYn == "N"){
+        updateReadYn(alSeq);
+      }
     }
+
   }
+
+  const addFriendAcceptTrigger = () =>{
+    addFriendAccept();
+    setModalVisible(false);
+  };
+
+  const checkFriend = async(alSendId) =>{
+    const session = await Session.sessionGet("sessionInfo");
+    const sessionId = session.uIntgId;
+    const response = await fetch (`http://3.37.211.126:8080/friend/friendCheck.do?myId=${sessionId}&targetId=${alSendId}`)
+    const friendState = await response.json();
+    console.log(friendState.vo.fStateCd)
+    setFriendCheck(friendState.vo.fStateCd);
+  };
+
+  const updateReadYn = async(seq) =>{
+    const alSeq = seq;
+    const response = await fetch (`http://3.37.211.126:8080/alram/alramRead.do?alSeq=${alSeq}`)
+    serverGetFindMyAlramList();
+  };
+
+  const addFriendAccept = async() =>{
+    const session = await Session.sessionGet("sessionInfo");
+    const sessionId = session.uIntgId;
+    const response = await fetch (`http://3.37.211.126:8080/friend/addFriendAccept.do?myId=${sessionId}&targetId=${getSendId}`)
+    alert("sssss")
+  };
 
   
 
@@ -69,11 +108,25 @@ export default function AlarmScreen ({navigation}) {
                 <View style={styles.centeredView} >
                   <View style={styles.modalView}>
                     <View >
-                      {getAlramTemplete === "친구"? (
-                                                      <Text>{getSendId}님이 친구신청을 보내셨습니다 수락하시겠습니까?</Text>  
-                                                   
+                      {getFriendCheck === "10501"? (
+                                                    <View >
+                                                      <View>
+                                                        <Text>{getSendNickName}님이 친구신청을 보내셨습니다</Text>  
+                                                      </View>
+                                                      
+                                                    
+                                                    </View >                                                 
                                                   ) : (
-                                                        <Text>좋아요</Text>
+                                                    <View >
+                                                    <View>
+                                                      <Text>{getSendNickName}님이 친구신청을 보내셨습니다 수락하시겠습니까?</Text>  
+                                                    </View>
+                                                    <View  onStartShouldSetResponder={() =>addFriendAcceptTrigger()}>
+                                                      <Text >yes</Text>  
+                                                    </View>
+                                                    
+                                                  
+                                                  </View >      
                                                         )
                         
                       }
@@ -96,8 +149,8 @@ export default function AlarmScreen ({navigation}) {
                                                             <Image resizeMode='contain' style={styles.statusImg} 
                                                               source={require("./assets/images/bell.png")}/>
                                                           </View>
-                                                          <View style={styles.alramViewCenter} onStartShouldSetResponder={() =>alramModalTrigger(info.alSeq,info.cdDtlId,info.sendNickName,info.cdDtlDesc)}>
-                                                            <Text>{index +1}.</Text>
+                                                          <View style={info.alReadYn =="Y" ? styles.alramViewCenter : styles.alramViewCenterN} onStartShouldSetResponder={() =>alramModalTrigger(info.alSeq,info.cdDtlId,info.alSendId,info.cdDtlDesc,info.sendNickName,info.alReadYn)}>
+                                                            <Text >{index +1}.</Text>
                                                             <Text style={styles.alramMsg}>{info.sendNickName}{info.cdDtlDesc}</Text>
                                                           </View>
                                                           <View style={styles.alramViewRight}  onStartShouldSetResponder={() =>alarmDeletTrigger(info.alSeq)}>
@@ -162,7 +215,13 @@ const styles = StyleSheet.create({
   alramViewCenter: {
     height:"100%",
     width:"80%",
-    flexDirection:"row",    
+    flexDirection:"row", 
+    opacity:"0.3",   
+  },
+  alramViewCenterN: {
+    height:"100%",
+    width:"80%",
+    flexDirection:"row", 
   },
   alramViewRight: {
     height:"100%",
