@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, StatusBar, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, StatusBar, SafeAreaView, Dimensions,Modal,Pressable,Alert } from 'react-native';
 import * as Session from './utils/session';
 
 const realUrl = "3.37.211.126";
@@ -9,6 +9,7 @@ const testUrl2 = "192.168.219.142";
 export default function ChatListScreen ({navigation}) {
     const [chatList, setChatList] = useState([]);
     const itemHeightRatio = 0.1;    // 아이템 높이를 화면 높이의 %로 설정
+    const [modalVisible, setModalVisible] = useState(false);
 
     // 세션정보를 담기위한 변수 선언
     let session = "";
@@ -68,6 +69,12 @@ export default function ChatListScreen ({navigation}) {
     const handleAdd = () => {
         console.log("임시");
     };
+
+    // buttonClickEvent
+    const addFriendChat = () => {
+        setModalVisible(true);
+    };
+    
     
     useEffect(()=> {
         initChatList();
@@ -78,9 +85,9 @@ export default function ChatListScreen ({navigation}) {
             <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
             <View style={styles.header}>
-                <TouchableOpacity onPress={handleAdd}>
+                <TouchableOpacity onPress={addFriendChat}>
                     <Image
-                        source={require('./assets/images/addFriend.png')}
+                        source={require('./assets/images/addFriendChat.png')}
                         style={styles.image}
                         resizeMode="contain"
                     />
@@ -116,6 +123,28 @@ export default function ChatListScreen ({navigation}) {
                 />
                 )}
             </View>
+            <View style={styles.centeredView}>
+              <Modal
+              animationType="fade"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+              }}>
+              <Pressable style={{
+              flex:1,
+              backgroundColor:'transparent',
+              }}
+              onPress={()=>setModalVisible(false)}
+              />
+              <View style={styles.centeredView} >
+                <View style={styles.modalView}>
+                    <Text>dddddd</Text>
+                </View>
+              </View>
+              </Modal>
+            </View>
       </SafeAreaView>
       
     );
@@ -140,5 +169,27 @@ const styles = StyleSheet.create({
       },
       image: {
         width: 30, height: 30
-      }
+      },
+      centeredView: {
+        flex: 1,
+        marginTop: "5%",
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        padding: "5%",
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        position:'absolute',
+        top:-270,
+        bottom:500,
+        left:120,
+        right:40,
+      },
 });
