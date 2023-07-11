@@ -33,7 +33,7 @@ export default function MatchingHistoryScreen ({navigation}) {
 
     const getHistoryList = async(type, date) => {
         const myID = '112664865495468363793';
-
+        
         let selectType = "";
         let baseDate = "";
 
