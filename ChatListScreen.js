@@ -10,6 +10,8 @@ export default function ChatListScreen ({navigation}) {
     const [chatList, setChatList] = useState([]);
     const itemHeightRatio = 0.1;    // 아이템 높이를 화면 높이의 %로 설정
     const [modalVisible, setModalVisible] = useState(false);
+    const [getFriendNum, setFriendNum] = useState(0);
+    const [getStateFriendList, setStateFriendList] = useState([]);
 
     // 세션정보를 담기위한 변수 선언
     let session = "";
@@ -74,10 +76,25 @@ export default function ChatListScreen ({navigation}) {
     const addFriendChat = () => {
         setModalVisible(true);
     };
+
+    const getFriendList = async() =>{
+        let userInfo= await Session.sessionGet("sessionInfo");
+        console.log("userInfo : ", userInfo);
+        // const sessionId = userInfo.uIntgId;
+        // setUserInfo(userInfo);
+        // setMyNick(sessionId);
+        getMyNick = userInfo.uIntgId;
+        const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}`)
+        const json = await response.json();
+        
+        setStateFriendList(json.friendList)
+        setFriendNum(json.friendNum);
+      };
     
     
     useEffect(()=> {
         initChatList();
+        getFriendList();
     }, []);
     
     return (
@@ -140,7 +157,27 @@ export default function ChatListScreen ({navigation}) {
               />
               <View style={styles.centeredView} >
                 <View style={styles.modalView}>
-                    <Text>dddddd</Text>
+                    {getStateFriendList.length === 0 ? (
+                        <Text>친구가 없습니다.</Text>
+                    ) : (
+                    <FlatList
+                        data={getStateFriendList}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => (
+                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]}>
+                            <View style={styles.itemBoxPhoto}>
+                            <Image resizeMode='contain' style={styles.profileImg}
+                                    source={require("./assets/images/emptyProfile.jpg")}/>
+                            </View>
+                            <View>
+                                <Text>{item.fYouId}</Text>
+                            </View>
+                            
+                        </View>
+                        )}
+                        getItemLayout={getItemLayout}
+                    />
+                    )}
                 </View>
               </View>
               </Modal>
@@ -166,6 +203,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc',
+        flexDirection:"row",
       },
       image: {
         width: 30, height: 30
@@ -188,8 +226,16 @@ const styles = StyleSheet.create({
         elevation: 5,
         position:'absolute',
         top:-270,
-        bottom:500,
-        left:120,
-        right:40,
+        bottom:100,
+        left:20,
+        right:20,
+      },
+      profileImg: {
+        width:"100%",
+        height:"100%",
+      },
+      itemBoxPhoto:{
+        width:"20%",
+        height:"100%",
       },
 });
