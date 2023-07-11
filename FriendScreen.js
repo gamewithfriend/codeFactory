@@ -5,7 +5,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Session from './utils/session.js';
 import axios from 'axios';
 
-
+const realUrl = "3.37.211.126";
+const testUrl = "192.168.219.104";
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function FriendScreen ({navigation}) {
@@ -20,12 +21,14 @@ export default function FriendScreen ({navigation}) {
 
     const getFriendList = async() =>{
       let userInfo= await Session.sessionGet("sessionInfo");
+      console.log("userInfo : ", userInfo);
       // const sessionId = userInfo.uIntgId;
       // setUserInfo(userInfo);
       // setMyNick(sessionId);
       getMyNick = userInfo.uIntgId;
       const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}`)
       const json = await response.json();
+      
       setStateFriendList(json.friendList)
       setFriendNum(json.friendNum);
     };
@@ -92,6 +95,24 @@ export default function FriendScreen ({navigation}) {
       }
     };
 
+    const openChat = async (sessionInfo) => {
+      sessionInfo.sender = userInfo.uintgId;
+      sessionInfo.receiver = sessionInfo.fYouId;
+      
+      await fetch("http://" + testUrl + ":8080/chat/openChatRoom.do", {
+                                    method : "POST",
+                                    headers : {
+                                        'Content-Type': 'application/json; charset=utf-8',
+                                    },
+                                    body : JSON.stringify(sessionInfo)
+                                  }).then(response => response.json()
+                                   ).then((result) => {
+                                        console.log(result);
+                                   }).catch( error => {
+                                        console.error(error);
+                                   }) ;
+    };
+
     useEffect(() => {
       getFriendList();
       getMyInfo();
@@ -154,7 +175,7 @@ export default function FriendScreen ({navigation}) {
                             </View>
                             ) : (
                             getStateFriendList.map( (info, index) =>    
-                              <View key={index} style={styles.centerBottomContainer}>               
+                              <View key={index} style={styles.centerBottomContainer} data={info.fYouId} onStartShouldSetResponder={()=>openChat(info)}>               
                                 <View style={styles.itemBox}>
                                   <View style={styles.itemBoxPhoto}>
                                     <Image resizeMode='contain' style={styles.profileImg}
