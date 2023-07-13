@@ -214,6 +214,15 @@ export default function MainScreen ({navigation}) {
       
 
     };
+
+    const goMatchingHistory = () => {
+        navigation.navigate('MatchingHistoryScreen',{navigation});
+     
+      
+
+    };
+
+
     let token;
     let userInfo = {};
 
@@ -336,6 +345,10 @@ export default function MainScreen ({navigation}) {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
+              <View style={styles.mainSatusItemViewLeft} onStartShouldSetResponder={() =>goMatchingHistory()} >                
+                <Image resizeMode='contain' style={styles.statusImg} 
+                source={require("./assets/images/goHistory.png")}/>     
+              </View>
               <View style={styles.mainSatusItemView} onStartShouldSetResponder={() =>setModalVisible(true)} >                
                 <Image resizeMode='contain' style={styles.statusImg} 
                 source={require("./assets/images/bell.png")}/>
@@ -386,7 +399,9 @@ export default function MainScreen ({navigation}) {
                               ) : (
                                 getOptionList.map( (info, index) =>    
                                   <View key={index} style={styles.contentBottom}>
-                                      <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                      <View>
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                      </View>
                                       <View style={styles.itemBox}>
                                               <Image resizeMode='contain' style={styles.frendAdd} 
                                               source={{
@@ -477,6 +492,13 @@ const styles = StyleSheet.create({
       height:"100%",
       marginRight:"3%",
       flexDirection:"row",
+    },
+    mainSatusItemViewLeft: {
+      width:"10%",
+      height:"100%",
+      marginRight:"63%",
+      flexDirection:"row",
+
     },
     mainSatusCountFont: {
       position:'absolute',

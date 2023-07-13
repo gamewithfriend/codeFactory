@@ -1,9 +1,11 @@
 import React, { Component, useState, useEffect } from 'react';
 import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, TouchableOpacity, Modal, Pressable, SafeAreaView } from 'react-native';
 import Checkbox from 'expo-checkbox';
+import * as Session from './utils/session.js';
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
+
 
 export default function MatchingHistoryScreen ({navigation}) {
 
@@ -19,6 +21,8 @@ export default function MatchingHistoryScreen ({navigation}) {
 
     const [isSelected, setSelection] = useState(false);
 
+    let sessions = "";
+
     const prevoiusButtonClick = () => {
         getHistoryList("previous", getStateDisplayDate);   
     };
@@ -32,7 +36,8 @@ export default function MatchingHistoryScreen ({navigation}) {
     }
 
     const getHistoryList = async(type, date) => {
-        const myID = '112664865495468363793';
+        sessions = await Session.sessionGet("sessionInfo");
+        const myID = sessions.uIntgId;
         
         let selectType = "";
         let baseDate = "";
