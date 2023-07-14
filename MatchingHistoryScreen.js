@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, TouchableOpacity, Modal, Pressable, SafeAreaView } from 'react-native';
+import { View, Text, Button,StyleSheet,TextInput,Image, Dimensions, ScrollView, Alert, Modal, Pressable, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import Checkbox from 'expo-checkbox';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
@@ -14,31 +15,55 @@ export default function MatchingHistoryScreen ({navigation}) {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    const [text, onChangeText] = useState('');
-    const [number, onChangeNumber] = useState('');
+    const [reportDetails, onChangeReportDetails] = useState('');
 
     const [isSelected, setSelection] = useState(false);
 
+    const [reportNicname, setReportNicname] = useState('');
+    const [reportUserID, setReportUserID] = useState('');
+
+    // 이전 버튼 클릭시
     const prevoiusButtonClick = () => {
         getHistoryList("previous", getStateDisplayDate);   
     };
 
+    // 이후 버튼 클릭시
     const laterButtonClick = () => {
         getHistoryList("later", getStateDisplayDate);   
     };
 
-    const reportButtonClick = () => {
+    //let reportUserID = "";
+    // 신고 버튼 클릭시
+    const reportButtonClick = (userNickname, userID) => {
+        setReportUserID(userID);
+        setReportNicname(userNickname);
         setModalVisible(true);
+    }
+
+    // 신고 모달 닫기 버튼 클릭시
+    const reportModalCancelClick = () => {
+        //onChangeReportDetails("");
+        setModalVisible(false);
+    }
+
+    // 신고 모달 옵션 체크시
+    let reportOptions = new Array();
+    const reportOptionCheck = (reportOption) => { 
+        if(reportOptions.indexOf(reportOption) == -1) {
+            reportOptions.push(reportOption);
+        } else {
+            reportOptions.splice(reportOptions.indexOf(reportOption), 1);
+        }
     }
 
     const getHistoryList = async(type, date) => {
         const myID = '112664865495468363793';
-        
+
         let selectType = "";
         let baseDate = "";
 
-        (type === null && type === '' && type === undefined) ? selectType = "latest" : selectType = type;
-        (date === null && date === '' && date === undefined) ? baseDate = "" : baseDate = date;
+        (type == null || type == '' || type == undefined) ? selectType = "latest" : selectType = type;
+        (date == null || date == '' || date == undefined) ? baseDate = "" : baseDate = date;
 
         //const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
         const response = await fetch (`http://3.37.211.126:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
@@ -49,11 +74,68 @@ export default function MatchingHistoryScreen ({navigation}) {
         setLaterDate(json.LaterDate);
     };
 
+    // 친구 추가 버튼 클릭시
     const addFriendTrigger = (targetId) => {
-        const myID = 'jonghwi';
+        const myID = '112664865495468363793';
         //const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
         const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
     };
+
+    // 신고 버튼 클릭시
+    const submitReport = async () => {
+        if(reportOptions.length > 0) {
+            const myID = '112664865495468363793';
+                
+            try {
+                //const responseSubmitReport = await fetch('http://192.168.45.20:8080/report/submitReport.do',
+                const responseSubmitReport = await fetch('http://3.37.211.126:8080/report/submitReport.do', 
+                {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        myID: myID,
+                        reportUserID: reportUserID,
+                        reportOptions: reportOptions.toString(),
+                        reportDetails: reportDetails
+                    })
+                });
+                
+                const json = await responseSubmitReport.json();
+
+                if(json.result) {
+                    Alert.alert("신고가 완료되었습니다.");
+                } else {
+                    Alert.alert("신고 실패.");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+          
+            // Alert.alert(
+            //     "해당 유저를 신고하시겠습니까?",
+            //     [
+            //         {
+            //             text: "아니요", 
+            //             style: "cancel"
+            //         },
+            //         {
+            //             text: "네",
+            //             onPress: () => {
+            //                 Alert.alert("신고가 완료되었습니다.");
+            //             }
+            //         }
+            //     ],
+            //     { cancelable: false }
+            //     "신고가 완료되었습니다."
+            // );
+            setModalVisible(false);
+        } else {
+            Alert.alert("신고 사유를 1개 이상 선택해주세요.");
+        }
+    }
     
     useEffect(() => {
         getHistoryList();
@@ -64,50 +146,125 @@ export default function MatchingHistoryScreen ({navigation}) {
             <View style={styles.titleView}>
                    <Text>Matching History</Text>
             </View>
+
+
+            
+
+
             <View style={styles.contentsView}>
-                
+                {/*신고 모달 화면 */}
                 <View style={styles.centeredView}>
-                    <Modal animationType="fade"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            Alert.alert('Modal has been closed.');
-                            setModalVisible(!modalVisible);
-                        }}>
+                    <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={() => {setModalVisible(!modalVisible);}}>
                         <Pressable style={{flex:1, backgroundColor:'transparent'}} onPress={()=>setModalVisible(false)} />
                         <View style={styles.centeredView}>
                             <View style={styles.modalView}>
-                                
-                                <Checkbox
-                                    value={isSelected}
-                                    onValueChange={setSelection}
-                                    style={styles.checkbox}
-                                    />
-                                <Text style={styles.label}>Do you like React Native?</Text>
-
-
-                                <SafeAreaView>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={onChangeText}
-                                        value={text}
-                                    />
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={onChangeNumber}
-                                        value={number}
-                                        placeholder="text."
-                                        keyboardType="default"
-                                    />
-                                </SafeAreaView>
-
-                                <View onStartShouldSetResponder={() => setModalVisible(false)}>
-                                    <Text>닫기</Text>
+                                <View style={styles.reportTitleArea}>
+                                    <View style={styles.reportTitle_profileImg}>
+                                        <Image resizeMode='stretch' style={styles.profileImg} 
+                                               source={require("./assets/images/emptyProfile.jpg")}/>
+                                    </View>
+                                    
+                                    <View style={styles.reportTitle_info}>
+                                        <Text style={styles.reportTitle_text}>{reportNicname} 유저 신고하기</Text>
+                                    </View>
                                 </View>
+                                <View style={styles.reportCheckboxArea}>
+                                    <Text style={{fontSize: 15, fontWeight: 'bold'}}>신고 사유를 선택해주세요. (복수 선택 가능)</Text>
+                                    <BouncyCheckbox
+                                        style={styles.reportCheckbox}
+                                        size={25}
+                                        fillColor="red"
+                                        unfillColor="#FFFFFF"
+                                        text="고의 트롤 행위"
+                                        iconStyle={{ borderColor: "red" }}
+                                        textStyle={{ textDecorationLine: "none" }}
+                                        onPress={(isChecked: boolean) => {reportOptionCheck("11401")}}
+                                    />
+                                    <BouncyCheckbox
+                                        style={styles.reportCheckbox}
+                                        size={25}
+                                        fillColor="red"
+                                        unfillColor="#FFFFFF"
+                                        text="게임 내 공격적인 언어 사용"
+                                        iconStyle={{ borderColor: "red" }}
+                                        textStyle={{ textDecorationLine: "none" }}
+                                        onPress={(isChecked: boolean) => {reportOptionCheck("11402")}}
+                                    />
+                                    <BouncyCheckbox
+                                        style={styles.reportCheckbox}
+                                        size={25}
+                                        fillColor="red"
+                                        unfillColor="#FFFFFF"
+                                        text="탈주 행위 또는 자리비움"
+                                        iconStyle={{ borderColor: "red" }}
+                                        textStyle={{ textDecorationLine: "none" }}
+                                        onPress={(isChecked: boolean) => {reportOptionCheck("11403")}}
+                                    />
+                                    <BouncyCheckbox
+                                        style={styles.reportCheckbox}
+                                        size={25}
+                                        fillColor="red"
+                                        unfillColor="#FFFFFF"
+                                        text="티어에 맞지 않는 플레이 (대리 의심)"
+                                        iconStyle={{ borderColor: "red" }}
+                                        textStyle={{ textDecorationLine: "none" }}
+                                        onPress={(isChecked: boolean) => {reportOptionCheck("11404")}}
+                                    />
+                                    <BouncyCheckbox
+                                        style={styles.reportCheckbox}
+                                        size={25}
+                                        fillColor="red"
+                                        unfillColor="#FFFFFF"
+                                        text="불법 프로그램 사용"
+                                        iconStyle={{ borderColor: "red" }}
+                                        textStyle={{ textDecorationLine: "none" }}
+                                        onPress={(isChecked: boolean) => {reportOptionCheck("11405")}}
+                                    />
+                                    <BouncyCheckbox
+                                        style={styles.reportCheckbox}
+                                        size={25}
+                                        fillColor="red"
+                                        unfillColor="#FFFFFF"
+                                        text="기타"
+                                        iconStyle={{ borderColor: "red" }}
+                                        textStyle={{ textDecorationLine: "none" }}
+                                        onPress={(isChecked: boolean) => {reportOptionCheck("11406")}}
+                                    />
+                                </View>
+                                <View style={styles.reportTextInputArea}>
+                                    <Text style={{fontSize: 15, fontWeight: 'bold'}}>신고 내용을 작성해주세요.</Text>
+                                    <SafeAreaView>
+                                        <KeyboardAvoidingView
+                                            // behavior={Platform.select({ios: 'padding', android: 'padding'})}
+                                            behavior={'padding'}
+                                            style={styles.avoid}>
+                                            <TextInput
+                                                style={styles.input}
+                                                onChangeText={onChangeReportDetails}
+                                                value={reportDetails}
+                                                placeholder="신고 내용을 자세히 적어주시면 해당 유저를 제재하는데 많은 도움이 됩니다."
+                                                keyboardType="default"
+                                                multiline ={true}
+                                            />
+                                        </KeyboardAvoidingView>
+                                    </SafeAreaView>
+                                </View>
+                                {/* <View style={styles.lineDesign}></View> */}
+                                
+                                <View style={styles.reportButtonArea}>
+                                    <View style={styles.reportSubmitButton} onStartShouldSetResponder={() => submitReport()}>
+                                        <Text style={{fontSize: 20, color: "#FFFFFF"}}>신고</Text>
+                                    </View>
+                                    <View style={styles.reportCancelButton} onStartShouldSetResponder={() => reportModalCancelClick()}>
+                                        <Text style={{fontSize: 20, color: "#FFFFFF"}}>닫기</Text>
+                                    </View>
+                                </View>
+
                             </View>
                         </View>
                     </Modal>
                 </View>
+                
 
 
                 <View style={styles.dailyMatching}> 
@@ -197,7 +354,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                                 <View style={styles.addFriendArea} onStartShouldSetResponder={() => addFriendTrigger(info.mUserID)}>
                                                     <Text>친구추가</Text>
                                                 </View>
-                                                <View style={styles.reportArea} onStartShouldSetResponder={() => reportButtonClick()}>
+                                                <View style={styles.reportArea} onStartShouldSetResponder={() => reportButtonClick(info.mUserNickname, info.mUserID)}>
                                                     <Text>신고</Text>
                                                 </View> 
                                             </View>
@@ -217,8 +374,8 @@ const styles = StyleSheet.create({
   lineDesign:{
     height: 1, 
     backgroundColor: "black", 
-    marginBottom: "3%",
-    marginTop: "3%",
+    marginBottom: "1%",
+    marginTop: "1%",
     opacity:0.3,
   },
   container:{
@@ -405,12 +562,13 @@ const styles = StyleSheet.create({
                             },
                             centeredView: {
                                 flex: 1,
+                                //borderWidth: 1
                                 //marginTop: "5%",
                               },
                             modalView: {
-                                margin: 5,
+                                margin: 0,
                                 backgroundColor: 'white',
-                                padding: "5%",
+                                padding: "1%",
                                 shadowColor: '#000',
                                 shadowOffset: {
                                   width: 0,
@@ -424,11 +582,78 @@ const styles = StyleSheet.create({
                                 bottom:70,
                                 left:0,
                                 right:0,
+                                //borderWidth: 1
+                            },
+                                reportTitleArea: {
+                                    flexDirection: "row",
+                                    height:"13%",
+                                    marginTop: "2%",
+                                    padding: "1%",
+                                    //borderWidth: 1
+                                },
+                                    reportTitle_profileImg: {
+                                        width: "20%"
+                                    },
+                                    reportTitle_info: {
+                                        width: "80%",
+                                        marginLeft: "5%",
+                                        justifyContent: "center"
+                                    },
+                                    reportTitle_text: {
+                                        fontSize: 20,
+                                        fontWeight: 'bold',
+                                    },
+                                reportCheckboxArea: {
+                                    height:"50%",
+                                    padding: "3%",
+                                    marginTop: "3%",
+                                    //borderWidth: 1
+                                },
+                                reportTextInputArea: {
+                                    flex: 1,
+                                    flexShrink:1,
+                                    height:"20%",
+                                    padding: "3%",
+                                    //borderWidth: 1
+                                },
+                                reportButtonArea: {
+                                    height:"10%",
+                                    flexDirection: "row",
+                                    alignItems:"center",
+                                    justifyContent: "center",
+                                    //borderWidth: 1
+                                },
+                                    reportSubmitButton: {
+                                        //borderWidth: 1,
+                                        height: "70%",
+                                        width: "20%",
+                                        alignItems:"center",
+                                        justifyContent: "center",
+                                        borderRadius : 8,
+                                        backgroundColor: "#F44336"
+                                    },
+                                    reportCancelButton: {
+                                        //borderWidth: 1,
+                                        marginLeft: "10%",
+                                        height: "70%",
+                                        width: "20%",
+                                        alignItems:"center",
+                                        justifyContent: "center",
+                                        borderRadius : 7,
+                                        backgroundColor: "#7F7F7F"
+                                    },
+                              reportCheckbox: {
+                                height: "10%",
+                                marginTop: "3%", 
                               },
                               input: {
-                                height: 40,
-                                margin: 12,
+                                height: 80,
+                                marginTop: "3%", 
                                 borderWidth: 1,
                                 padding: 10,
+                              },
+                              avoid: {
+                                flex: 1,
+                                backgroundColor: "#ffffff"
                               },
 });

@@ -1,5 +1,6 @@
 import React, { Component, useState } from 'react';
 import { View, Text, Button,StyleSheet,TextInput,Image } from 'react-native';
+// import { RTCPeerConnection, RTCView } from 'react-native-webrtc';
 
 export default function SettingScreen ({navigation}) {
   const optionSubmit = () => {

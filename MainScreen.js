@@ -11,10 +11,13 @@ import * as Google from 'expo-auth-session/providers/google';
 import *  as Device from 'expo-device';
 import * as Network from 'expo-network';
 
+
 WebBrowser.maybeCompleteAuthSession();
 const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.googleusercontent.com';
 const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleusercontent.com';
 const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
+
+
 
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.105.27";
@@ -39,6 +42,8 @@ export default function MainScreen ({navigation}) {
     let reChampionList = [];
     let youserLikeCheck ="";
     let sessions = "";
+
+
 
     ////targetLike----좋아요 기능함수///////
     const targetLike = async(targetId) =>{
@@ -209,6 +214,15 @@ export default function MainScreen ({navigation}) {
       
 
     };
+
+    const goMatchingHistory = () => {
+        navigation.navigate('MatchingHistoryScreen',{navigation});
+     
+      
+
+    };
+
+
     let token;
     let userInfo = {};
 
@@ -331,6 +345,10 @@ export default function MainScreen ({navigation}) {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainSatusView}>
+              <View style={styles.mainSatusItemViewLeft} onStartShouldSetResponder={() =>goMatchingHistory()} >                
+                <Image resizeMode='contain' style={styles.statusImg} 
+                source={require("./assets/images/goHistory.png")}/>     
+              </View>
               <View style={styles.mainSatusItemView} onStartShouldSetResponder={() =>setModalVisible(true)} >                
                 <Image resizeMode='contain' style={styles.statusImg} 
                 source={require("./assets/images/bell.png")}/>
@@ -381,7 +399,9 @@ export default function MainScreen ({navigation}) {
                               ) : (
                                 getOptionList.map( (info, index) =>    
                                   <View key={index} style={styles.contentBottom}>
-                                      <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                      <View>
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                      </View>
                                       <View style={styles.itemBox}>
                                               <Image resizeMode='contain' style={styles.frendAdd} 
                                               source={{
@@ -472,6 +492,13 @@ const styles = StyleSheet.create({
       height:"100%",
       marginRight:"3%",
       flexDirection:"row",
+    },
+    mainSatusItemViewLeft: {
+      width:"10%",
+      height:"100%",
+      marginRight:"63%",
+      flexDirection:"row",
+
     },
     mainSatusCountFont: {
       position:'absolute',
