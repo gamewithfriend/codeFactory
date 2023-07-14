@@ -45,7 +45,7 @@ export default function TextChat({route,navigator}) {
       // 현재 로그인 한 사람의 세션 정보 받기
       getSession();
       // 웹소켓 open
-      client = new WebSocketClient("ws://" + testUrl + ":8080/chat/" + chatRoomId);
+      client = new WebSocketClient("ws://" + realUrl + ":8080/chat/" + chatRoomId);
 
       return () => client.close();
     }, []);
@@ -93,7 +93,7 @@ export default function TextChat({route,navigator}) {
     const setChatter = async (chatRoomId) => {
       let tmpData = {"chatRoomId" : chatRoomId};
 
-      const response = await fetch("http://" + testUrl + ":8080/chat/selectChatter.do", {
+      const response = await fetch("http://" + realUrl + ":8080/chat/selectChatter.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',

@@ -6,7 +6,7 @@ import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
 
 const realUrl = "3.37.211.126";
-const testUrl = "192.168.219.104";
+const testUrl = "192.168.219.142";
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function FriendScreen ({navigation}) {
@@ -53,6 +53,7 @@ export default function FriendScreen ({navigation}) {
                                   }).then(response => response.json()
                                    ).then((result) => {
                                         console.log(result);
+                                        navigation.navigate('TextChat', {chatRoomId : result.resultMap.chatRoomId});
                                    }).catch( error => {
                                         console.error(error);
                                    }) ;

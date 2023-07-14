@@ -24,7 +24,7 @@ import OptionSelectFour from './OptionSelectFour';
 import OptionSelectFourDetail from './OptionSelectFourDetail';
 import SetNickNameScreen from './SetNickNameScreen';
 import TextChat from './TextChat';
-import MatchingHistoryScreen from './MatchingHistoryScreen';
+// import MatchingHistoryScreen from './MatchingHistoryScreen';
 import AlarmScreen from './AlarmScreen';
 import ChatListScreen from './ChatListScreen';
 
@@ -103,9 +103,9 @@ export default function App() {
         <Stack.Screen name="TextChat" component={TextChat} options={{
           headerShown:false  
         }}/>
-        <Stack.Screen name="MatchingHistoryScreen" component={MatchingHistoryScreen} options={{
+        {/* <Stack.Screen name="MatchingHistoryScreen" component={MatchingHistoryScreen} options={{
           headerShown:false  
-        }}/>
+        }}/> */}
         <Stack.Screen name="AlarmScreen" component={AlarmScreen} options={{
           headerShown:false  
         }}/>
