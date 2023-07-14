@@ -11,10 +11,8 @@ export default class WebSocketClient {
   
     send(message) {
       
-      if (this.client && this.client.readyState === this.client.OPEN) {
+      if (this.client && this.client.readyState === this.client.OPEN)
         this.client.send(JSON.stringify(message));
-        console.log("asdf",message);
-      }
       else console.log('Could not send message: ', message);
     }
   

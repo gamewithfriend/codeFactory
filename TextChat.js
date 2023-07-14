@@ -7,6 +7,12 @@ import * as Session from './utils/session.js';
 // 최상위 변수 선언
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.219.142";
+// 세션정보를 받기위한 변수 선언
+let session = "";
+// 웹소켓 정보를 위한 변수 선언
+let client;
+// 메세지 발송 유저 유지를 위한 변수 선언
+let user;
 
 const MOCK_MESSAGES = [
     {
@@ -22,11 +28,10 @@ const MOCK_MESSAGES = [
   ];
 
 export default function TextChat({route,navigator}) {
-    // 세션정보를 받기위한 변수 선언
-    let session = "";
-    let user = {};
-    const client = new WebSocketClient("ws://" + testUrl + ":8080/chat/" + chatRoomId);
     
+    // let session = "";
+    // let user = {};
+    // console.log("session : ", session);
     // 채팅방 아이디
     const chatRoomId = route.params.chatRoomId;
     
@@ -34,32 +39,25 @@ export default function TextChat({route,navigator}) {
     
     const [name, setName] = useState('');
     const [isEnter, setIsEnter] = useState(false);
-    const [messages, setMessages] = useState(null);
+    const [messages, setMessages] = useState([]);
 
     useEffect(() =>{
       // 현재 로그인 한 사람의 세션 정보 받기
       getSession();
       // 웹소켓 open
-      
-      console.log("오픈을 두번하진 않겠지");
-      // setChatter(route.params.chatRoomId);
-      // return () => WebSocketClient.close();
+      client = new WebSocketClient("ws://" + testUrl + ":8080/chat/" + chatRoomId);
+
       return () => client.close();
     }, []);
 
     useEffect(() => {
-        // WebSocketClient.onReceiveMessage = (newMessage) => {
-        //     setMessages(GiftedChat.append(messages, newMessage));
-        // }
         client.onReceiveMessage = (newMessage) => {
-            console.log("댐따",newMessage);
             setMessages(GiftedChat.append(messages, newMessage));
         }
-        // console.log(messages);
+        
     }, [messages]);
 
     const onSend = (newMessages) => {
-        // WebSocketClient.send(newMessages[0]);
         client.send(newMessages[0]);
     };
 
@@ -78,17 +76,17 @@ export default function TextChat({route,navigator}) {
     // 세션을 받아오는 함수
     const getSession = async () => {
       session = await Session.sessionGet("sessionInfo");
-      console.log("session: ", session);
+      
       user = { 
         _id : session.uIntgId, 
-        createdAt: new Date(),
         user: {
           _id: session.uIntgId, 
           name: session.uNickName, 
           avatar: 'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375__340.png'
         },
       };
-      console.log(user);
+      // 최초 유저 정보를 저장 -> 화면엔 노출 X
+      setMessages([user]);
     };
     
     // 채팅참여자들을 세팅하는 함수
@@ -107,32 +105,6 @@ export default function TextChat({route,navigator}) {
       
       console.log("resultList", resultList);
     }
-
-  //   if (!isEnter) {
-
-
-  //     return (
-  //     <View style={styles.container}>
-  //         <TextInput
-  //         style={styles.textInput}
-  //         textAlign="center"
-  //         value={name}
-  //         placeholder="Name"
-  //         onChangeText={text => setName(text)}
-  //         />
-  //         <Button title="Enter" onPress={() => setIsEnter(true)} />
-  //     </View>
-  //     );
-  // } else {
-    // const user = { 
-    //   _id : session.uIntgId, 
-    //   createdAt: new Date(),
-    //   user: {
-    //     _id: session.uIntgId, 
-    //     name: session.uNickName, 
-    //     avatar: 'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375__340.png'
-    //   },
-    // };
 
     const renderImages = () => {
       return (
@@ -155,16 +127,8 @@ export default function TextChat({route,navigator}) {
       );
     };
 
-    // const renderBubble = (props) => {
-    //   return (
-    //     <View style={styles.bubbleContainer}>
-    //       <Bubble {...props} />
-    //     </View>           
-    //   );
-    // };
-
     const renderMessageText = (props) => {
-      // if (props.currentMessage.user._id !== user._id) {
+      if (props.currentMessage.user._id !== user._id) {
         return (
           // <View style={{ flexDirection: 'column' }}>
             <View style={{ flexDirection: 'row' }}>
@@ -177,20 +141,16 @@ export default function TextChat({route,navigator}) {
             </View>
           // </View>
         );
-      // } else {
-      //   return (
-      //     <View style={{ flexDirection: 'row' }}>
-      //       <View >
-      //         <MessageText {...props} />
-      //       </View>
-      //     </View>
-      //   );
-      // }
+      } else {
+        return (
+          <View style={{ flexDirection: 'row' }}>
+            <View >
+              <MessageText {...props} />
+            </View>
+          </View>
+        );
+      }
     };
-
-
-
-      
 
       return (
         <View style={{ flex: 1 }}>
