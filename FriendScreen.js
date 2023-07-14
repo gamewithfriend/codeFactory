@@ -44,7 +44,7 @@ export default function FriendScreen ({navigation}) {
       sessionInfo.sender = userInfo.uintgId;
       sessionInfo.receiver = sessionInfo.fYouId;
       
-      await fetch("http://" + testUrl + ":8080/chat/openChatRoom.do", {
+      await fetch("http://" + realUrl + ":8080/chat/openChatRoom.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',
@@ -52,7 +52,6 @@ export default function FriendScreen ({navigation}) {
                                     body : JSON.stringify(sessionInfo)
                                   }).then(response => response.json()
                                    ).then((result) => {
-                                        console.log(result);
                                         navigation.navigate('TextChat', {chatRoomId : result.resultMap.chatRoomId});
                                    }).catch( error => {
                                         console.error(error);
