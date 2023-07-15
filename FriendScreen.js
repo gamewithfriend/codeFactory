@@ -11,6 +11,10 @@ const {width:SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function FriendScreen ({navigation}) {
     let getMyNick;
+
+    // 채팅 대화 상대를 담기위한 변수 선언
+    let receivers = [];
+    
     const [getFriendNum, setFriendNum] = useState(1);
     const [getStateFriendList, setStateFriendList] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
@@ -42,9 +46,12 @@ export default function FriendScreen ({navigation}) {
 
     const openChat = async (sessionInfo) => {
       sessionInfo.sender = userInfo.uintgId;
-      sessionInfo.receiver = sessionInfo.fYouId;
+      if (sessionInfo.fYouId != null) {
+        receivers.push(sessionInfo.fYouId);
+      }
+      sessionInfo.receivers = receivers;
       
-      await fetch("http://" + realUrl + ":8080/chat/openChatRoom.do", {
+      await fetch("http://" + testUrl + ":8080/chat/openChatRoom.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',

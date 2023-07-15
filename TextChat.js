@@ -45,10 +45,10 @@ export default function TextChat({route,navigator}) {
       // 현재 로그인 한 사람의 세션 정보 받기
       getSession();
       // 웹소켓 open
-      client = new WebSocketClient("ws://" + realUrl + ":8080/chat/" + chatRoomId);
+      client = new WebSocketClient("ws://" + testUrl + ":8080/chat/" + chatRoomId);
 
       return () => client.close();
-    }, []);
+    }, [chatRoomId]);
 
     useEffect(() => {
         client.onReceiveMessage = (newMessage) => {
@@ -76,7 +76,7 @@ export default function TextChat({route,navigator}) {
     // 세션을 받아오는 함수
     const getSession = async () => {
       session = await Session.sessionGet("sessionInfo");
-      
+      console.log(session);
       user = { 
         _id : session.uIntgId, 
         user: {

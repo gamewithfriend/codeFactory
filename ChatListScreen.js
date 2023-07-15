@@ -4,8 +4,10 @@ import * as Session from './utils/session';
 
 
 const realUrl = "3.37.211.126";
-const testUrl = "192.168.105.27";
-const testUrl2 = "192.168.219.142";
+const testUrl = "192.168.219.142";
+
+// 세션정보를 담기위한 변수 선언
+let session = "";
 
 export default function ChatListScreen ({navigation}) {
     const [chatList, setChatList] = useState([]);
@@ -15,9 +17,10 @@ export default function ChatListScreen ({navigation}) {
     const [getStateFriendList, setStateFriendList] = useState([]);
     const [text, onChangeText] = React.useState('Useless Text');
 
-    // 세션정보를 담기위한 변수 선언
-    let session = "";
-    
+
+    // 채팅 대화 상대를 담기위한 변수 선언
+    let receivers = [];
+
     const initChatList = async() => {
         try {
             // 세션정보를 먼저 받아온다
@@ -80,8 +83,25 @@ export default function ChatListScreen ({navigation}) {
     };
 
     const addFriendForChat = () => {
-        alert("여기다가 붙이면됨");
+        // alert("여기다가 붙이면됨");
+        // 선택된 사용자가 없으면 alert
+        if (receivers.length < 1) {
+            Alert.alert("선택된 친구가 없습니다.");
+        } else {
+            openChat();
+        }
     };
+    // 친구목록을 클릭할 때 배열에 추가하는 메서드
+    const addReciever = (fYouId) => {
+        if (fYouId != null && fYouId != "" && fYouId != undefined) {
+            if (receivers.includes(fYouId)) {
+                receivers.splice(receivers.indexOf(fYouId), 1);
+            } else {
+                receivers.push(fYouId);
+            }
+            console.log(receivers);
+        }
+    }
 
     const onChange = (text)=>{
         onChangeText(text);
@@ -106,7 +126,35 @@ export default function ChatListScreen ({navigation}) {
         console.log(json.friendList)
         setFriendNum(json.friendNum);
       };
-    
+
+    // 채팅방을 만드는 메서드
+    const openChat = async () => {
+        setModalVisible(false);
+        
+        let param = {};
+        param.sender = session.uIntgId;
+        if (receivers != null && receivers != undefined && receivers.length > 0) {
+            param.receivers = receivers;
+        }
+        console.log("파라미터 : ", param);
+        await fetch("http://" + testUrl + ":8080/chat/openChatRoom.do", {
+                                        method : "POST",
+                                        headers : {
+                                            'Content-Type': 'application/json; charset=utf-8',
+                                        },
+                                        body : JSON.stringify(param)
+                                    }).then(response => response.json()
+                                        ).then((result) => {
+                                            navigation.navigate('TextChat', {chatRoomId : result.resultMap.chatRoomId});
+                                        }).catch( error => {
+                                            console.error(error);
+                                        }) ;
+    };
+
+    // 채팅방으로 이동하는 메서드
+    const moveToChatRoom = (chatRoomId) => {
+        navigation.navigate('TextChat', {chatRoomId : chatRoomId});
+    };
     
     useEffect(()=> {
         initChatList();
@@ -149,7 +197,7 @@ export default function ChatListScreen ({navigation}) {
                     data={chatList}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                    <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]}>
+                    <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={()=>moveToChatRoom(item.id)}>
                         <Text>{item.name}</Text>
                     </View>
                     )}
@@ -187,13 +235,13 @@ export default function ChatListScreen ({navigation}) {
                         data={getStateFriendList}
                         keyExtractor={item => item.id}
                         renderItem={({ item }) => (
-                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]}>
+                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={()=>addReciever(item.fYouId)}>
                             <View style={styles.itemBoxView}>
                                 <View style={styles.itemBoxPhoto}>
                                 <Image resizeMode='contain' style={styles.profileImg}
                                         source={require("./assets/images/emptyProfile.jpg")}/>
                                 </View>
-                                <View style={styles.listName}>
+                                <View style={styles.listName} >
                                     <Text>{item.fYouId}</Text>
                                 </View>
                             </View>
