@@ -175,7 +175,7 @@ export default function FriendScreen ({navigation}) {
                                     </View>
                                     <View style={styles.itemBoxMessage}>
                                       <View style={styles.itemBoxMessageName}>
-                                        <Text>{info.uNickname}</Text>
+                                        <Text>{info.appNick}</Text>
                                       </View>
                                       <View style={styles.itemBoxMessageStatus}>
                                         <Text>{info.glSummoner}</Text>

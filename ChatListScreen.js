@@ -242,7 +242,7 @@ export default function ChatListScreen ({navigation}) {
                                         source={require("./assets/images/emptyProfile.jpg")}/>
                                 </View>
                                 <View style={styles.listName} >
-                                    <Text>{item.fYouId}</Text>
+                                    <Text>{item.appNick}</Text>
                                 </View>
                             </View>
                             

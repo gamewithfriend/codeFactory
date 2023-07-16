@@ -74,7 +74,7 @@ export default function GameMatchingScreen ({route,navigation}) {
                             <View style={styles.itemBox}>
                                 <View onStartShouldSetResponder={() =>addFriend(id.glNick)} style={styles.frendBox}>
                                   <Text style={styles.frendName}>
-                                     닉네임:{id.glNick}
+                                     닉네임:{id.appNick}
                                   </Text>
                                   <Image resizeMode='contain' style={styles.frendAdd} source={require('./assets/images/plus.jpg')}/>
                                 </View>
