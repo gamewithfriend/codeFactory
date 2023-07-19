@@ -222,6 +222,10 @@ export default function MainScreen ({navigation}) {
 
     };
 
+    const checkRiotId = async() => {
+      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionId}&yourNick=${targetId}`);
+    };
+
 
     let token;
     let userInfo = {};
