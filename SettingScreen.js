@@ -6,6 +6,10 @@ export default function SettingScreen ({navigation}) {
   const optionSubmit = () => {
     navigation.navigate('MatchingHistoryScreen');
   };
+
+  const goAccountScreen = () => {
+    navigation.navigate('AccountScreen');
+  };
   
     return (
         <View style={styles.container}>
@@ -13,32 +17,32 @@ export default function SettingScreen ({navigation}) {
               <View style={styles.rowView} onPress={optionSubmit}>
                    <Image resizeMode='contain' style={styles.statusImg} 
                     source={require("./assets/images/bell.png")}/>     
-                   <Text>LogOut</Text>
-                   <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                   <Text>Setting</Text>
+                   {/* <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button> */}
               </View>
               <View style={styles.lineDesign} />
-              <View style={styles.rowView}>
+              <View style={styles.rowView} onStartShouldSetResponder={() =>goAccountScreen()} >
                    <Image resizeMode='contain' style={styles.statusImg} 
                     source={require("./assets/images/bell.png")}/>     
-                   <Text>LogOut</Text>
+                   <Text>account</Text>
               </View>
               <View style={styles.lineDesign} /> 
               <View style={styles.rowView}>
                    <Image resizeMode='contain' style={styles.statusImg} 
                     source={require("./assets/images/bell.png")}/>     
-                   <Text>LogOut</Text>
+                   <Text>Setting</Text>
               </View>
               <View style={styles.lineDesign} /> 
               <View style={styles.rowView}>
                    <Image resizeMode='contain' style={styles.statusImg} 
                     source={require("./assets/images/bell.png")}/>     
-                   <Text>LogOut</Text>
+                   <Text>Setting</Text>
               </View>
               <View style={styles.lineDesign} /> 
               <View style={styles.rowView}>
                    <Image resizeMode='contain' style={styles.statusImg} 
                     source={require("./assets/images/bell.png")}/>     
-                   <Text>LogOut</Text>
+                   <Text>Setting</Text>
               </View>
               <View style={styles.lineDesign} />   
             </View>

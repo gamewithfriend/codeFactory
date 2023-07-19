@@ -27,6 +27,7 @@ import TextChat from './TextChat';
 import MatchingHistoryScreen from './MatchingHistoryScreen';
 import AlarmScreen from './AlarmScreen';
 import ChatListScreen from './ChatListScreen';
+import AccountScreen from './AccountScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -107,6 +108,9 @@ export default function App() {
           headerShown:false  
         }}/>
         <Stack.Screen name="AlarmScreen" component={AlarmScreen} options={{
+          headerShown:false  
+        }}/>
+        <Stack.Screen name="AccountScreen" component={AccountScreen} options={{
           headerShown:false  
         }}/>
       </Stack.Navigator>
