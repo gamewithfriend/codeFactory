@@ -150,7 +150,7 @@ export default function MainScreen ({navigation}) {
       const jsonAlramList = await response.json();
       let alramCount =0;
       let alramRecentOneMsg  ="";
-      if(jsonAlramList != null){
+      if(jsonAlramList.length > 0){
         alramRecentOneMsg = jsonAlramList.findMyAlramList[0].sendNickName + " "+ jsonAlramList.findMyAlramList[0].cdDtlDesc;
       }else{
         alramRecentOneMsg = "알람이 없습니다";
