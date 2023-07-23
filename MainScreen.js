@@ -178,10 +178,15 @@ export default function MainScreen ({navigation}) {
 
     ////addFriendTrigger----친구신청 함수/////// 
     const addFriendTrigger = (targetId)=>{
-      sessions=  Session.sessionGet("sessionInfo");
-      const sessionId = sessions.uIntgId;
-      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionId}&yourNick=${targetId}`);
+      addFriendDetail(targetId);
     };
+
+    const addFriendDetail = async(targetId) => {
+      sessions=  await Session.sessionGet("sessionInfo");
+      const sessionIdForAdd = sessions.uIntgId;
+      const responseAddFriend = await  fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
+    };
+
 
     ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 
     const targetLikeTrigger = (targetId)=>{
