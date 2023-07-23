@@ -46,5 +46,9 @@ export const createFile = async (fileName, fileItem) => {
 };
 
 export const deleteFile = async (fileName) => {
+	const directoryUri = FileSystem.documentDirectory + 'HDUO';
+	let fileUri =  `${directoryUri}/${fileName}`;
 
+	// 파일 삭제
+	await FileSystem.deleteAsync(fileUri);
 };
