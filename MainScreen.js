@@ -237,6 +237,12 @@ export default function MainScreen ({navigation}) {
       const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionId}&yourNick=${targetId}`);
     };
 
+    const checkFrend = async(targetId) => {
+      sessions=  await Session.sessionGet("sessionInfo");
+      const sessionIdForcheckFrend = sessions.uIntgId;
+      const responseTwo = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${sessionIdForcheckFrend}&youId=${targetId}`)
+      const jsonUserFriendState = await responseTwo.json();
+    };
 
     let token;
     let userInfo = {};
