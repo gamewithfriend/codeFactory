@@ -55,7 +55,7 @@ export default function OptionSelect ({route,navigation}) {
             console.log(gameTypePlusTwo)  
         }
 
-        const response = await fetch (`http://192.168.1.4/hexa/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
+        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
         const jsonOptionList = await response.json();
         for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
           let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
@@ -100,20 +100,25 @@ export default function OptionSelect ({route,navigation}) {
                 ,gameTypePlusTwo:optionOne
                 },{navigation});    
       }else{
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        console.log(route.params.gameTypePlus)
-        console.log(route.params.gameType.cdDtlName)
-       
+        
+
         let optionOne = getOptionList[indexNumber].cdDtlName;
+        let optionOneArr = getOptionList[indexNumber];
+        let tempOpionList = getOptionList;
         if(route.params.gameType.cdDtlName == "소환사의협곡"){
             optionOne = getOptionListTwo[indexNumber].cdDtlName;
+            optionOneArr = getOptionListTwo[indexNumber];
+            tempOpionList = getOptionListTwo;
         }
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        console.log(optionOne)
         navigation.navigate('OptionSelectDetail',{gameType: route.params.gameType
                                                     ,gameTypePlus:userNumber
                                                     ,gameTypePlus:indexNumber
                                                     ,optionOne: optionOne
-                                                    ,optionOneArr:getOptionList[indexNumber]
-                                                    ,getOptionList:getOptionList
+                                                    ,optionOneArr:optionOneArr
+                                                    ,getOptionList:tempOpionList
+                                                    ,gameTypePlusTwo:route.params.gameTypePlusTwo
                                                 },{navigation});
       }
       

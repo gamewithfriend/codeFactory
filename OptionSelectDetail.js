@@ -182,6 +182,7 @@ export default function OtionSelectDetail ({ route,navigation }) {
                                               optionOneDetail: tempOptionOneDetail,
                                               gameType:route.params.gameType,
                                               getOptionList:route.params.getOptionList
+                                              ,gameTypePlusTwo:route.params.gameTypePlusTwo
                                               },{navigation});
     };
     const rankSubmit = ()=>{
