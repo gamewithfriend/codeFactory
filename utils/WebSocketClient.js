@@ -18,7 +18,6 @@ export default class WebSocketClient {
   
     onMessage = (message) => {
       const messagePayload = JSON.parse(message.data);
-      console.log('Received message from the server: ', messagePayload);
       console.log('this.onReceiveMessage: ', this.onReceiveMessage);
   
       if (this.onReceiveMessage) this.onReceiveMessage(messagePayload);
