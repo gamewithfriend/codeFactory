@@ -12,6 +12,7 @@ export default function OptionSelect ({route,navigation}) {
     const [ok, setOptionName] = useState(0);
     const [changeOptionValue, optionValue] = useState("true");
     const [getOptionList, setOptionList] = useState([]);
+    const [getOptionListTwo, setOptionListTwo] = useState([]);
     const [getNumberList, setNumberList] = useState([]);
     const isFocused = useIsFocused();
     
@@ -45,14 +46,39 @@ export default function OptionSelect ({route,navigation}) {
 
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionList = async() =>{
-        const gameType= route.params.gameType.cdDtlName    
-        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}`)
+        const gameType= route.params.gameType.cdDtlName 
+        console.log(gameType)
+        let gameTypePlusTwo = "";
+        if(route.params.gameTypePlusTwo != "" ){
+            gameTypePlusTwo = route.params.gameTypePlusTwo;
+            console.log("gameTypePlusTwo@@@@@@@@@@@@@@@@@@@@@@@@@@@2") 
+            console.log(gameTypePlusTwo)  
+        }
+
+        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
         const jsonOptionList = await response.json();
         for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
           let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
           jsonOptionList.selectOptionList[i].url = tempUrl;
         }
         setOptionList(jsonOptionList.selectOptionList);
+        
+    };
+
+    ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
+    const serverGetOptionListForRank = async(gameTypePlusTwoTemp) =>{
+        const gameType= route.params.gameType.cdDtlName 
+        console.log(gameType)
+        let gameTypePlusTwo = gameTypePlusTwoTemp;
+
+
+        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
+        const jsonOptionList = await response.json();
+        for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+          let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+          jsonOptionList.selectOptionList[i].url = tempUrl;
+        }
+        setOptionListTwo(jsonOptionList.selectOptionList);
         
     };
 
@@ -64,18 +90,41 @@ export default function OptionSelect ({route,navigation}) {
                                             ,gameTypePlus:userNumber
                                             ,gameTypePlusIndex:indexNumber
                                             },{navigation});
-      }else{
+      }else if(route.params.gameTypePlus == "" && route.params.gameType.cdDtlName == "소환사의협곡" ){
         let optionOne = getOptionList[indexNumber].cdDtlName;
+            console.log(optionOne)
+            serverGetOptionListForRank(optionOne);
+            navigation.navigate('OptionSelect',{gameType: route.params.gameType
+                ,gameTypePlus:userNumber
+                ,gameTypePlusIndex:indexNumber
+                ,gameTypePlusTwo:optionOne
+                },{navigation});    
+      }else{
+        
+
+        let optionOne = getOptionList[indexNumber].cdDtlName;
+        let optionOneArr = getOptionList[indexNumber];
+        let tempOpionList = getOptionList;
+        if(route.params.gameType.cdDtlName == "소환사의협곡"){
+            optionOne = getOptionListTwo[indexNumber].cdDtlName;
+            optionOneArr = getOptionListTwo[indexNumber];
+            tempOpionList = getOptionListTwo;
+        }
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        console.log(optionOne)
         navigation.navigate('OptionSelectDetail',{gameType: route.params.gameType
                                                     ,gameTypePlus:userNumber
                                                     ,gameTypePlus:indexNumber
                                                     ,optionOne: optionOne
-                                                    ,optionOneArr:getOptionList[indexNumber]
-                                                    ,getOptionList:getOptionList
+                                                    ,optionOneArr:optionOneArr
+                                                    ,getOptionList:tempOpionList
+                                                    ,gameTypePlusTwo:route.params.gameTypePlusTwo
                                                 },{navigation});
       }
       
     };
+
+    
     useEffect(() => {        
         serverGetOptionList();
         setNumberList(numberList);
@@ -100,7 +149,47 @@ export default function OptionSelect ({route,navigation}) {
                 </View>       
             </View>
             );                  
-    }else if(route.params.gameType.cdDtlName ==="격전" ){
+    }else if(route.params.gameTypePlusTwo =="랭크" ){
+        return (      
+            <View style={styles.container} >
+            <View style={styles.topContainer} >
+                <Text style={styles.topContainerTitle}>매칭 옵션 선택</Text> 
+            </View>
+            <View style={styles.centerContainer} >
+                <View style={styles.centerTopContainer}>
+                    <Text style={styles.centerContainerTitle}>조건1</Text>
+                </View>
+                <View style={styles.centerBottomContainer}>
+                <ScrollView pagingEnabled 
+                            horizontal
+                            onMomentumScrollEnd={(event) => {optionChange(event.nativeEvent.contentOffset.x)}}
+                            showsHorizontalScrollIndicator = {false}>
+                    {getOptionListTwo.length === 0? (
+                        <View >
+                            <ActivityIndicator color="black" size="large"/>
+                        </View>
+                        ) : (
+                            getOptionListTwo.map( (info, index) =>    
+                            <View   key={index} style={styles.contentBottom}>
+                                <View style={styles.itemBox}>
+                                    <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                    <Image resizeMode='contain' style={styles.backImg} s source={{
+                                            uri: `${info.url}`,
+                                          }}/>       
+                                </View>  
+                            </View>
+                        )
+                        )
+                    }         
+                </ScrollView>
+                </View>
+            </View> 
+            <View style={styles.bottomContainer} >
+              <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+            </View>       
+        </View> 
+            );                  
+    }else if(route.params.gameType.cdDtlName ==="격전" || (route.params.gameType.cdDtlName ==="소환사의협곡" && route.params.gameTypePlusTwo ==="자유랭크" ) ){
         return (      
         <View style={styles.container} >
         <View style={styles.topContainer} >

@@ -26,7 +26,7 @@ export default function OptionSelectFour ({ route,navigation }) {
      const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let tempOptionValueFour = changeOptionValueTwo[indexNumber].cdDtlName;
-      if(tempOptionValueFour == "선택하지 않음"){
+      if(tempOptionValueFour == "선택하지않음"){
         alert("게임 매칭 시작");
         navigation.navigate('GameMatching',{  0: route.params.optionOne
                                                     ,1: route.params.optionOneDetail
@@ -34,8 +34,8 @@ export default function OptionSelectFour ({ route,navigation }) {
                                                     ,3:route.params.optionTwoDetail
                                                     ,4:route.params.optionThree
                                                     ,5:route.params.optionThreeDetail
-                                                    ,6:tempOptionValueFour                                                    
-                                                    ,optionValueBox: route.params.optionValueBox
+                                                    // ,6:tempOptionValueFour                                                    
+                                                    // ,optionValueBox: route.params.optionValueBox
                                                   },{navigation});
       }else{
         console.log("조건1")

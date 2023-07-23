@@ -36,12 +36,12 @@ export default function OptionSelectTwo ({ route,navigation }) {
      const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let tempOptionValueTwo = changeOptionValueTwo[indexNumber].cdDtlName;
-      if(tempOptionValueTwo == "선택하지 않음"){
+      if(tempOptionValueTwo == "선택하지않음"){
         alert("게임 매칭 시작");
         navigation.navigate('GameMatching',{  0: route.params.optionOne
                                                     ,1: route.params.optionOneDetail
-                                                    ,2:tempOptionValueTwo
-                                                    ,optionValueBox: changeOptionValueTwo
+                                                    // ,2:tempOptionValueTwo
+                                                    // ,optionValueBox: changeOptionValueTwo
                                                   },{navigation});
       }else{
         console.log("조건1")
