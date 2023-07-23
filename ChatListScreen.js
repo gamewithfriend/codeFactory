@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, StatusBar, SafeAreaView, Dimensions,Modal,Pressable,Alert,Button,TextInput } from 'react-native';
 import * as Session from './utils/session';
+import { useIsFocused } from '@react-navigation/native';
 
 
 const realUrl = "3.37.211.126";
@@ -8,6 +9,7 @@ const testUrl = "192.168.219.142";
 
 // 세션정보를 담기위한 변수 선언
 let session = "";
+
 
 export default function ChatListScreen ({navigation}) {
     const [chatList, setChatList] = useState([]);
@@ -17,6 +19,7 @@ export default function ChatListScreen ({navigation}) {
     const [getStateFriendList, setStateFriendList] = useState([]);
     const [text, onChangeText] = React.useState('Useless Text');
 
+    let isFocused = useIsFocused();
 
     // 채팅 대화 상대를 담기위한 변수 선언
     let receivers = [];
@@ -159,7 +162,7 @@ export default function ChatListScreen ({navigation}) {
     useEffect(()=> {
         initChatList();
         getFriendList();
-    }, []);
+    }, [isFocused]);
     
     return (
         <SafeAreaView stlye={styles.container}>

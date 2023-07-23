@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, TextInput, Button, FlatList, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import { GiftedChat, MessageText } from 'react-native-gifted-chat';
 import WebSocketClient from './utils/WebSocketClient.js';
 import * as Session from './utils/session.js';
+import { getDirectoryUri, createFile, readFile, deleteFile } from './utils/expoFileSystem.js';
+import { NavigationContainer, useNavigation, useIsFocused } from '@react-navigation/native';
 
 // 최상위 변수 선언
 const realUrl = "3.37.211.126";
@@ -14,38 +16,23 @@ let client;
 // 메세지 발송 유저 유지를 위한 변수 선언
 let user;
 
-const MOCK_MESSAGES = [
-    {
-      _id: 'test11',
-      text: 'Hello, World!',
-      createdAt: new Date(),
-      user: {
-        _id: 'test11',
-        name: 'Simple Chatter',
-        avatar: 'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375__340.png',
-      },
-    },
-  ];
-
 export default function TextChat({route,navigator}) {
-    
-    // let session = "";
-    // let user = {};
-    // console.log("session : ", session);
-    // 채팅방 아이디
     const chatRoomId = route.params.chatRoomId;
+    const isFocused = useIsFocused();
     
-    // 채팅방 입장시 웹소켓 open
     
-    const [name, setName] = useState('');
-    const [isEnter, setIsEnter] = useState(false);
+    
     const [messages, setMessages] = useState([]);
 
     useEffect(() =>{
       // 현재 로그인 한 사람의 세션 정보 받기
       getSession();
-      // 웹소켓 open
-      client = new WebSocketClient("ws://" + testUrl + ":8080/chat/" + chatRoomId);
+
+      // 로컬스토리지에 저장된 채팅방 가져오기, 읽지 않은 채팅 목록도 확인하자
+      getChatMessage(chatRoomId + '.txt');
+      
+      // 채팅방 입장시 웹소켓 open
+      client = new WebSocketClient("ws://" + realUrl + ":8080/chat/" + chatRoomId);
 
       return () => client.close();
     }, [chatRoomId]);
@@ -53,9 +40,21 @@ export default function TextChat({route,navigator}) {
     useEffect(() => {
         client.onReceiveMessage = (newMessage) => {
             setMessages(GiftedChat.append(messages, newMessage));
-        }
-        
+            // 파일 insert 해주는 건 여기다가 넣으면 되겠지
+            let chatList = GiftedChat.prepend(messages, []);
+            chatList.unshift(newMessage);
+
+            // 자 이제 파일로 만들어서 넣어
+            createFile(chatRoomId + '.txt', JSON.stringify(chatList));  
+        };
     }, [messages]);
+
+    useEffect(() => {
+      console.log(isFocused);
+      if (!isFocused) {
+        client.close();
+      }
+    }, [isFocused]);
 
     const onSend = (newMessages) => {
         client.send(newMessages[0]);
@@ -76,12 +75,11 @@ export default function TextChat({route,navigator}) {
     // 세션을 받아오는 함수
     const getSession = async () => {
       session = await Session.sessionGet("sessionInfo");
-      console.log(session);
       user = { 
         _id : session.uIntgId, 
         user: {
           _id: session.uIntgId, 
-          name: session.uNickName, 
+          name: session.uNickname, 
           avatar: 'https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375__340.png'
         },
       };
@@ -89,22 +87,39 @@ export default function TextChat({route,navigator}) {
       setMessages([user]);
     };
     
-    // 채팅참여자들을 세팅하는 함수
-    const setChatter = async (chatRoomId) => {
-      let tmpData = {"chatRoomId" : chatRoomId};
+    // 파일로 저장된 채팅방 내용을 가져오는 함수
+    const getChatMessage = async (fileName)=> {
+      let fileContent = await readFile(fileName);
 
-      const response = await fetch("http://" + realUrl + ":8080/chat/selectChatter.do", {
+      if (fileContent != null && fileContent != undefined && fileContent != "") {
+        setMessages(JSON.parse(fileContent));
+      }
+
+      // DB에 저장된 tmp 메세지 가져오기
+      let data = {"chatRoomId" : chatRoomId, "receiver" : session.uIntgId};
+      // 읽지 않은 채팅 메세지가 있는지 확인 후 등록
+      const response = await fetch("http://" + realUrl + ":8080/chat/selectUnreadMsg.do", {
                                     method : "POST",
                                     headers : {
                                         'Content-Type': 'application/json; charset=utf-8',
                                     },
-                                    body : JSON.stringify(tmpData)
+                                    body : JSON.stringify(data)
                                   });
-      const rtnData = await response.json();
-      const resultList = rtnData.resultList;
+      const jsonData = await response.json();
+      if (fileContent != null && fileContent != "" && jsonData != null && jsonData != "") {
+        const jsonArray = JSON.stringify(jsonData.resultList);
+        const concatArray = [...JSON.parse(jsonArray), ...JSON.parse(fileContent)];
+
+        createFile(chatRoomId + '.txt', JSON.stringify(concatArray));  
+        
+        setMessages(concatArray);
+      } else {
+        setMessages(JSON.parse(fileContent));
+      }
       
-      console.log("resultList", resultList);
-    }
+
+      setMessages(concatArray);
+    };
 
     const renderImages = () => {
       return (
@@ -161,6 +176,10 @@ export default function TextChat({route,navigator}) {
             renderUsernameOnMessage={true}
             renderMessageText={renderMessageText}
             // renderBubble={renderBubble}
+            messageIdGenerator={() => {
+              // messageIdGenerator를 사용하여 유니크한 키 생성
+              return Math.random().toString(36).substring(7);
+            }}
           />
         </View>
       );
