@@ -47,10 +47,15 @@ export default function MainScreen ({navigation}) {
 
     ////targetLike----좋아요 기능함수///////
     const targetLike = async(targetId) =>{
+      targetLikeDetail(targetId);
+      
+    };
+
+    const targetLikeDetail = async(targetId) =>{
       sessions = await Session.sessionGet("sessionInfo");
       const sessionId = sessions.uIntgId;
-      const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${sessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
-      serverGetFindMyAlramList();
+      const response = await fetch (`http://192.168.1.4/hexa/main/likeTarget.do?myNick=${sessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
+      serverGetUserLikeTop5List();
     };
 
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
@@ -184,7 +189,8 @@ export default function MainScreen ({navigation}) {
     const addFriendDetail = async(targetId) => {
       sessions=  await Session.sessionGet("sessionInfo");
       const sessionIdForAdd = sessions.uIntgId;
-      const responseAddFriend = await  fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
+      const responseAddFriend = await  fetch (`http:/192.168.1.4/hexa/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
+      serverGetUserLikeTop5List();
     };
 
 

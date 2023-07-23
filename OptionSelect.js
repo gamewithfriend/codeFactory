@@ -72,7 +72,7 @@ export default function OptionSelect ({route,navigation}) {
         let gameTypePlusTwo = gameTypePlusTwoTemp;
 
 
-        const response = await fetch (`http://192.168.1.4/hexa/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
+        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
         const jsonOptionList = await response.json();
         for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
           let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
