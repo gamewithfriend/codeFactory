@@ -28,14 +28,14 @@ export default function OptionSelectThree ({ route,navigation }) {
     const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let tempOptionValueThree = changeOptionValueTwo[indexNumber].cdDtlName;
-      if(tempOptionValueThree == "선택하지 않음"){
+      if(tempOptionValueThree == "선택하지않음"){
         alert("게임 매칭 시작");
         navigation.navigate('GameMatching',{  0: route.params.optionOne
                                                     ,1: route.params.optionOneDetail
                                                     ,2:route.params.optionTwo
                                                     ,3:route.params.optionTwoDetail
-                                                    ,4:tempOptionValueThree
-                                                    ,optionValueBox: route.params.optionValueBox
+                                                    // ,4:tempOptionValueThree
+                                                    // ,optionValueBox: route.params.optionValueBox
                                                   },{navigation});
       }else{
         console.log("조건1")
