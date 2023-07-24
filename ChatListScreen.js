@@ -140,7 +140,7 @@ export default function ChatListScreen ({navigation}) {
             param.receivers = receivers;
         }
         console.log("파라미터 : ", param);
-        await fetch("http://" + testUrl + ":8080/chat/openChatRoom.do", {
+        await fetch("http://" + realUrl + ":8080/chat/openChatRoom.do", {
                                         method : "POST",
                                         headers : {
                                             'Content-Type': 'application/json; charset=utf-8',
