@@ -60,9 +60,9 @@ export default function TextChat({route,navigator}) {
         client.send(newMessages[0]);
     };
 
-    const handleReport = () => {
+    const handleReport = (user) => {
       // 신고 버튼을 눌렀을 때 수행할 작업을 여기에 작성합니다.
-    
+      console.log(user);
       console.log('Report button pressed!');
     };
 
@@ -116,15 +116,12 @@ export default function TextChat({route,navigator}) {
       } else {
         setMessages(JSON.parse(fileContent));
       }
-      
-
-      setMessages(concatArray);
     };
 
-    const renderImages = () => {
+    const renderImages = (user) => {
       return (
         <View style={styles.imageContainer}>
-          <TouchableOpacity onPress={handleReport}>
+          <TouchableOpacity onPress={() => handleReport(user)}>
           <Image
             source={require('./assets/images/report-icon.png')}
             style={{ width: 20, height: 20 }}
@@ -151,7 +148,7 @@ export default function TextChat({route,navigator}) {
                 <MessageText {...props} />
               </View>
               <View >
-                {renderImages()}
+                {renderImages(props.currentMessage.user.user)}
               </View>
             </View>
           // </View>
