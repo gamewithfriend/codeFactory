@@ -26,7 +26,7 @@ export default function FriendScreen ({navigation}) {
       let userInfo= await Session.sessionGet("sessionInfo");
       setUserInfo(userInfo);
       getMyNick = userInfo.uIntgId;
-      const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${getMyNick}`)
+      const response = await fetch (`http://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}`)
       // const response = await fetch (`http://192.168.0.187:8080/friend/findFriendList.do?myNick=${getMyNick}`)
       const json = await response.json();
       setStateFriendList(json.friendList)
@@ -37,7 +37,7 @@ export default function FriendScreen ({navigation}) {
     const getMyInfo = async() =>{
       let userInfo= await Session.sessionGet("sessionInfo");
       const sessionId = userInfo.uIntgId;
-      const response = await fetch (`http://3.37.211.126:8080/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
+      const response = await fetch (`http://hduo88.com/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
       const json = await response.json();
       if(json != ''){
         setUserInfo(json.user[0]);
@@ -51,7 +51,7 @@ export default function FriendScreen ({navigation}) {
     const viewProfileModal = async (searchId) => {
       setModalVisible(true);
       let userInfo = await Session.sessionGet("sessionInfo");
-      const response = await fetch (`http://3.37.211.126:8080/friend/findFriendList.do?myNick=${userInfo.uIntgId}&keyWord=${searchId}`)
+      const response = await fetch (`http://hduo88.com/friend/findFriendList.do?myNick=${userInfo.uIntgId}&keyWord=${searchId}`)
       const json = await response.json();
       console.log(json)
       if(json != ''){
@@ -103,7 +103,7 @@ export default function FriendScreen ({navigation}) {
                     // ) : (
                       userInfo.profileImgUrl !== '' ? (
                       <Image
-                        source={{ uri: `http://3.37.211.126:8080/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
+                        source={{ uri: `http://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
                         style={styles.profileImg}
                         resizeMode='contain'
                       />
@@ -163,7 +163,7 @@ export default function FriendScreen ({navigation}) {
                                     {
                                       info.profileImgUrl !== null ? (
                                         <Image
-                                          source={{ uri: `http://3.37.211.126:8080/tomcatImg/myPage/${info.profileImgUrl}`}}
+                                          source={{ uri: `http://hduo88.com/tomcatImg/myPage/${info.profileImgUrl}`}}
                                           style={styles.profileImg}
                                           resizeMode='contain'
                                       />
@@ -199,7 +199,7 @@ export default function FriendScreen ({navigation}) {
                   {
                     getFriendInfo.profileImgUrl !== null ? (
                       <Image
-                        source={{ uri: `http://3.37.211.126:8080/tomcatImg/myPage/${getFriendInfo.profileImgUrl}`}}
+                        source={{ uri: `http://hduo88.com/tomcatImg/myPage/${getFriendInfo.profileImgUrl}`}}
                         style={styles.modalImg}
                         resizeMode='contain'
                     />

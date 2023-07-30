@@ -23,7 +23,7 @@ export default function SettingScreen ({navigation}) {
   const userDelete = async() =>{
     sessions = await Session.sessionGet("sessionInfo");
     const sessionId = sessions.uIntgId;
-    const response = await fetch (`http://3.37.211.126:8080/login/userDelete.do?myId=${sessionId}`).catch(error => {console.log(error)});
+    const response = await fetch (`http://hduo88.com/login/userDelete.do?myId=${sessionId}`).catch(error => {console.log(error)});
     navigation.navigate('Login');
   };
 

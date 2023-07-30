@@ -19,7 +19,7 @@ export default function AlarmScreen ({navigation}) {
   const serverGetFindMyAlramList = async() =>{
     const session = await Session.sessionGet("sessionInfo");
     const sessionId = session.uIntgId;
-    const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
+    const response = await fetch (`http://hduo88.com/alram/findMyAlramList.do?myId=${sessionId}`)
     const jsonAlramList = await response.json();
     console.log("alramList$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     console.log(jsonAlramList.findMyAlramList)
@@ -27,7 +27,7 @@ export default function AlarmScreen ({navigation}) {
   };
   const alarmDelet = async(seq) =>{
     const alSeq = seq;
-    const response = await fetch (`http://3.37.211.126:8080/alram/alramDelete.do?alSeq=${alSeq}`)
+    const response = await fetch (`http://hduo88.com/alram/alramDelete.do?alSeq=${alSeq}`)
     const jsonAlramList = await response.json();
     serverGetFindMyAlramList();
   };
@@ -63,7 +63,7 @@ export default function AlarmScreen ({navigation}) {
   const checkFriend = async(alSendId) =>{
     const session = await Session.sessionGet("sessionInfo");
     const sessionId = session.uIntgId;
-    const response = await fetch (`http://3.37.211.126:8080/friend/friendCheck.do?myId=${sessionId}&targetId=${alSendId}`)
+    const response = await fetch (`http://hduo88.com/friend/friendCheck.do?myId=${sessionId}&targetId=${alSendId}`)
     const friendState = await response.json();
     console.log(friendState.vo.fStateCd)
     setFriendCheck(friendState.vo.fStateCd);
@@ -71,14 +71,14 @@ export default function AlarmScreen ({navigation}) {
 
   const updateReadYn = async(seq) =>{
     const alSeq = seq;
-    const response = await fetch (`http://3.37.211.126:8080/alram/alramRead.do?alSeq=${alSeq}`)
+    const response = await fetch (`http://hduo88.com/alram/alramRead.do?alSeq=${alSeq}`)
     serverGetFindMyAlramList();
   };
 
   const addFriendAccept = async() =>{
     const session = await Session.sessionGet("sessionInfo");
     const sessionId = session.uIntgId;
-    const response = await fetch (`http://3.37.211.126:8080/friend/addFriendAccept.do?myId=${sessionId}&targetId=${getSendId}`)
+    const response = await fetch (`http://hduo88.com/friend/addFriendAccept.do?myId=${sessionId}&targetId=${getSendId}`)
     alert("sssss")
   };
 

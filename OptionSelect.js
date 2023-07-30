@@ -55,10 +55,10 @@ export default function OptionSelect ({route,navigation}) {
             console.log(gameTypePlusTwo)  
         }
 
-        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
+        const response = await fetch (`http://hduo88.com/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
         const jsonOptionList = await response.json();
         for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-          let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+          let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
           jsonOptionList.selectOptionList[i].url = tempUrl;
         }
         setOptionList(jsonOptionList.selectOptionList);
@@ -72,10 +72,10 @@ export default function OptionSelect ({route,navigation}) {
         let gameTypePlusTwo = gameTypePlusTwoTemp;
 
 
-        const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
+        const response = await fetch (`http://hduo88.com/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
         const jsonOptionList = await response.json();
         for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-          let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+          let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
           jsonOptionList.selectOptionList[i].url = tempUrl;
         }
         setOptionListTwo(jsonOptionList.selectOptionList);

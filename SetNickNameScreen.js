@@ -34,7 +34,7 @@ export default function SetNickNameScreen ({navigation}) {
         let userInfo= await Session.sessionGet("sessionInfo");
         setNickName(userInfo.uNickname);
         const sessionId = userInfo.uIntgId;
-        const response = await fetch (`http://3.37.211.126:8080/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
+        const response = await fetch (`http://hduo88.com/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
         const json = await response.json();
         if(json != ''){
             setUserInfo(json.user[0]);
@@ -173,7 +173,7 @@ export default function SetNickNameScreen ({navigation}) {
     };
 
     const uploadImageAsync = async () => {
-        const apiUrl = 'http://3.37.211.126:8080/mypage/changeMyImage.do';
+        const apiUrl = 'http://hduo88.com/mypage/changeMyImage.do';
         const formData = new FormData();
         
         formData.append('image', {
@@ -212,7 +212,7 @@ export default function SetNickNameScreen ({navigation}) {
                     ) : (
                     userInfo.profileImgUrl !== '' ? (
                     <Image
-                        source={{ uri: `http://3.37.211.126:8080/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
+                        source={{ uri: `http://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
                         style={styles.image}
                         resizeMode='contain'
                         onPress={openImagePickerAsync}

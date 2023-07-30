@@ -15,8 +15,8 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [getModalIndex, setModalIndex] = useState(0);
     const [getModalChangeIndex, setModalChangeIndex] = useState(0);
-    const [getSelectedModalImgOne, setSelectedModalImgOne] = useState("http://3.37.211.126:8080/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
-    const [getSelectedModalImgTwo, setSelectedModalImgTwo] = useState("http://3.37.211.126:8080/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
+    const [getSelectedModalImgOne, setSelectedModalImgOne] = useState("http://hduo88.com/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
+    const [getSelectedModalImgTwo, setSelectedModalImgTwo] = useState("http://hduo88.com/tomcatImg/option/a5bffe51b4e4466f8f8287edfc67d8a4");
     const [getSelectedModalRankNameOne, setSelectedModalRankNameOne] = useState("");
     const [getSelectedModalRankNameTwo, setSelectedModalRankNameTwo] = useState("");
     const [getRankUnderOptionListOne, setRankUnderOptionListOne] = useState([]);
@@ -28,10 +28,10 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionList = async() =>{
       const matchingOptionCode= route.params.optionTwoArr.cdDtlName;   
-      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectMatchingGameOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const response = await fetch (`http://hduo88.com/gameMatching/selectMatchingGameOption.do?matchingOptionCode=${matchingOptionCode}`)
       const jsonOptionList = await response.json();
       for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
         jsonOptionList.selectOptionList[i].url = tempUrl;
       }
       setOptionList(jsonOptionList.selectOptionList);
@@ -42,11 +42,11 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       setChampionSelect(index)
     };
     const getSearchChampionList = async(keyWord) =>{
-      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
+      const response = await fetch (`http://hduo88.com/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
       const json = await response.json();
       for (let i =0; i<json.gameVO.length; i++) {
         let tempChName = json.gameVO[i].chName;
-        let tempUrl = `http://3.37.211.126:8080/tomcatImg/champ/${json.gameVO[i].url}`;
+        let tempUrl = `http://hduo88.com/tomcatImg/champ/${json.gameVO[i].url}`;
         json.gameVO[i]= {
           chIndex : json.gameVO[i].chIndex,
           chName : json.gameVO[i].chName,
@@ -200,10 +200,10 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     };
     const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
       const matchingOptionCode=forRankUnderOptionListCode;   
-      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const response = await fetch (`http://hduo88.com/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
       const jsonOptionList = await response.json();
       for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
         jsonOptionList.selectOptionList[i].url = tempUrl;
       }
       if(getModalIndex ==0){
@@ -214,10 +214,10 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
     };
     const serverGetRankUnderOptionListForSelectFirst = async(forRankUnderOptionListCode,underRankIndexOne) =>{
       const matchingOptionCode=forRankUnderOptionListCode; 
-      const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+      const response = await fetch (`http://hduo88.com/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
       const jsonOptionList = await response.json();
       for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+        let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
         jsonOptionList.selectOptionList[i].url = tempUrl;
       }
       const tempTwoArrLength =  jsonOptionList.selectOptionList.length;
@@ -231,10 +231,10 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
           setSelectedModalImgTwo(getoptionList[0].url);
           setSelectedModalRankNameTwo(getoptionList[0].cdDtlName);
           const matchingOptionCode=getoptionList[0].cdDtlId;   
-          const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+          const response = await fetch (`http://hduo88.com/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
           const jsonOptionList = await response.json();
           for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-            let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+            let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
             jsonOptionList.selectOptionList[i].url = tempUrl;
           }
           setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
@@ -247,11 +247,11 @@ export default function OptionSelectTwoDetail ({ route,navigation }) {
       }
     };
     const getChampionList = async() =>{
-    const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectChampion.do).then(response`);
+    const response = await fetch (`http://hduo88.com/gameMatching/selectChampion.do).then(response`);
       let json = await response.json();   
       for (let i =0; i<json.gameVO.length; i++) {
         let tempChName = json.gameVO[i].chName;
-        let tempUrl = `http://3.37.211.126:8080/tomcatImg/champ/${json.gameVO[i].url}`;
+        let tempUrl = `http://hduo88.com/tomcatImg/champ/${json.gameVO[i].url}`;
         json.gameVO[i]= {
           chIndex : json.gameVO[i].chIndex,
           chName : json.gameVO[i].chName,

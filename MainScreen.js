@@ -54,16 +54,16 @@ export default function MainScreen ({navigation}) {
     const targetLikeDetail = async(targetId) =>{
       sessions = await Session.sessionGet("sessionInfo");
       const sessionId = sessions.uIntgId;
-      const response = await fetch (`http://3.37.211.126:8080/main/likeTarget.do?myNick=${sessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
+      const response = await fetch (`http://hduo88.com/main/likeTarget.do?myNick=${sessionId}&yourNick=${targetId}`).catch(error => {console.log(error)});
       serverGetUserLikeTop5List();
     };
 
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionList = async() =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
+      const response = await fetch (`http://hduo88.com/main/selectMatchingOptionList.do`)
       const jsonOptionList = await response.json();
       for(var i=0; i<jsonOptionList.selectMatchingOptionList.length; i++){ 
-        let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
+        let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
         jsonOptionList.selectMatchingOptionList[i].url = tempUrl;
       }
       setOptionList(jsonOptionList.selectMatchingOptionList);
@@ -71,14 +71,14 @@ export default function MainScreen ({navigation}) {
 
     ////serverGetUserLikeTop5List----좋아요 TOP5리스트 서버에서 가져오기 함수///////  
     const serverGetUserLikeTop5List = async() =>{
-      const response = await fetch (`http://3.37.211.126:8080/main/fameTop5.do`)
+      const response = await fetch (`http://hduo88.com/main/fameTop5.do`)
       const jsonUserList = await response.json();
       sessions = await Session.sessionGet("sessionInfo");
       const sessionId = sessions.uIntgId;
       for(let i=0; i<jsonUserList.selectLikeTop5List.length; i++){
         //////좋아요 확인////////
         let youId = jsonUserList.selectLikeTop5List[i].ylYouId;
-        const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
+        const response = await fetch (`http://hduo88.com/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
         const jsonMsg = await response.json();
         const youserLikeTemp = jsonMsg.msg;
         if(youserLikeTemp == "N"){
@@ -89,7 +89,7 @@ export default function MainScreen ({navigation}) {
           jsonUserList.selectLikeTop5List[i].test = "Y";
         }
         //////친구 확인////////
-        const responseTwo = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
+        const responseTwo = await fetch (`http://hduo88.com/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
         const jsonUserFriendState = await responseTwo.json();
 
         if(jsonUserFriendState.selectUserFriendState == null){
@@ -113,7 +113,7 @@ export default function MainScreen ({navigation}) {
     const serverGetTargetUserLikeYn = async(youId,indexNumber) =>{
       sessions = await Session.sessionGet("sessionInfo");
       const sessionId = sessions.uIntgId;
-      const response = await fetch (`http://3.37.211.126:8080/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
+      const response = await fetch (`http://hduo88.com/main/findTargetLike.do?myId=${sessionId}&targetId=${youId}`)
       const jsonMsg = await response.json();
       setLikeYn(jsonMsg.msg);
       youserLikeCheck = jsonMsg.msg;
@@ -130,7 +130,7 @@ export default function MainScreen ({navigation}) {
     const serverGetTargetUserFriendState = async(youId,indexNumber) =>{
       sessions = await Session.sessionGet("sessionInfo");
       const sessionId = sessions.uIntgId;
-      const response = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
+      const response = await fetch (`http://hduo88.com/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
       const jsonUserFriendState = await response.json();
       if(jsonUserFriendState.selectUserFriendState == null){
         getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
@@ -151,7 +151,7 @@ export default function MainScreen ({navigation}) {
     const serverGetFindMyAlramList = async() =>{
       sessions= await Session.sessionGet("sessionInfo");
       const sessionId = sessions.uIntgId;
-      const response = await fetch (`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
+      const response = await fetch (`http://hduo88.com/alram/findMyAlramList.do?myId=${sessionId}`)
       const jsonAlramList = await response.json();
       let alramCount =0;
       let alramRecentOneMsg  ="";
@@ -184,12 +184,13 @@ export default function MainScreen ({navigation}) {
     ////addFriendTrigger----친구신청 함수/////// 
     const addFriendTrigger = (targetId)=>{
       addFriendDetail(targetId);
+      let testState = checkFrend(targetId);
     };
 
     const addFriendDetail = async(targetId) => {
       sessions=  await Session.sessionGet("sessionInfo");
       const sessionIdForAdd = sessions.uIntgId;
-      const responseAddFriend = await  fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
+      const responseAddFriend = await  fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
       serverGetUserLikeTop5List();
     };
 
@@ -234,14 +235,16 @@ export default function MainScreen ({navigation}) {
     };
 
     const checkRiotId = async() => {
-      const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${sessionId}&yourNick=${targetId}`);
+      const responseAddFriend = fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${sessionId}&yourNick=${targetId}`);
     };
 
     const checkFrend = async(targetId) => {
       sessions=  await Session.sessionGet("sessionInfo");
       const sessionIdForcheckFrend = sessions.uIntgId;
-      const responseTwo = await fetch (`http://3.37.211.126:8080/friend/selectUserFriend.do?myId=${sessionIdForcheckFrend}&youId=${targetId}`)
+      const responseTwo = await fetch (`http://hduo88.com/friend/selectUserFriend.do?myId=${sessionIdForcheckFrend}&youId=${targetId}`)
       const jsonUserFriendState = await responseTwo.json();
+      console.log(jsonUserFriendState.selectUserFriendState[0])
+      return jsonUserFriendState;
     };
 
     let token;

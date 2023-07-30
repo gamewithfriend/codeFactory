@@ -66,7 +66,7 @@ export default function MatchingHistoryScreen ({navigation}) {
         (date == null || date == '' || date == undefined) ? baseDate = "" : baseDate = date;
 
         //const response = await fetch (`http://192.168.45.20:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
-        const response = await fetch (`http://3.37.211.126:8080/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
+        const response = await fetch (`http://hduo88.com/matching/historyList.do?myID=${myID}&selectType=${selectType}&baseDate=${baseDate}`);
         const json = await response.json();
         setStateHistoryList(json.historyList);
         setStateDisplayDate(json.displayDate);
@@ -78,7 +78,7 @@ export default function MatchingHistoryScreen ({navigation}) {
     const addFriendTrigger = (targetId) => {
         const myID = '112664865495468363793';
         //const responseAddFriend = fetch (`http://192.168.45.20:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
-        const responseAddFriend = fetch (`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
+        const responseAddFriend = fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${myID}&yourNick=${targetId}`);
     };
 
     // 신고 버튼 클릭시
@@ -88,7 +88,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                 
             try {
                 //const responseSubmitReport = await fetch('http://192.168.45.20:8080/report/submitReport.do',
-                const responseSubmitReport = await fetch('http://3.37.211.126:8080/report/submitReport.do', 
+                const responseSubmitReport = await fetch('http://hduo88.com/report/submitReport.do', 
                 {
                     method: 'POST',
                     headers: {
