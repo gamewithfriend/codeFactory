@@ -94,13 +94,17 @@ export default function MainScreen ({navigation}) {
 
         if(jsonUserFriendState.selectUserFriendState == null){
           jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus.png');
+          jsonUserList.selectLikeTop5List[i].friendState = "";
         }else{
           if(jsonUserFriendState.selectUserFriendState.fStateCd == "10501"){
             jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/minus.png');
+            jsonUserList.selectLikeTop5List[i].friendState = "10501";
           }else if(jsonUserFriendState.selectUserFriendState.fStateCd == "10502"){
             jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/send.png');
+            jsonUserList.selectLikeTop5List[i].friendState = "10502";
           }else{
             jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus.png');
+            jsonUserList.selectLikeTop5List[i].friendState = "";
           }
         }
         
@@ -134,13 +138,17 @@ export default function MainScreen ({navigation}) {
       const jsonUserFriendState = await response.json();
       if(jsonUserFriendState.selectUserFriendState == null){
         getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
+        getUserLikeTop5List[indexNumber].friendState = "";
       }else{
         if(jsonUserFriendState.selectUserFriendState.fStateCd == "10501"){
           getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/minus.png');
+          getUserLikeTop5List[indexNumber].friendState = "10501";
         }else if(jsonUserFriendState.selectUserFriendState.fStateCd == "10502"){
           getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/send.png');
+          getUserLikeTop5List[indexNumber].friendState = "10502";
         }else{
           getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
+          getUserLikeTop5List[indexNumber].friendState = "";
         }
       }
       setUserLikeTop5List(getUserLikeTop5List)
@@ -182,12 +190,20 @@ export default function MainScreen ({navigation}) {
     };
 
     ////addFriendTrigger----친구신청 함수/////// 
-    const addFriendTrigger = (targetId)=>{
-      addFriendDetail(targetId);
-      let testState = checkFrend(targetId);
+    const addFriendTrigger = (targetId,friendState)=>{
+      console.log("test@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22")
+      console.log(friendState)
+      console.log(targetId)
+      if(friendState == "10502"){
+        alert("현재 친구신청 메세지가 보내진상태입니다.")
+      }else{
+        addFriendDetail(targetId,friendState);
+      }
+      
     };
 
-    const addFriendDetail = async(targetId) => {
+    const addFriendDetail = async(targetId,friendState) => {
+ 
       sessions=  await Session.sessionGet("sessionInfo");
       const sessionIdForAdd = sessions.uIntgId;
       const responseAddFriend = await  fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
@@ -238,14 +254,7 @@ export default function MainScreen ({navigation}) {
       const responseAddFriend = fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${sessionId}&yourNick=${targetId}`);
     };
 
-    const checkFrend = async(targetId) => {
-      sessions=  await Session.sessionGet("sessionInfo");
-      const sessionIdForcheckFrend = sessions.uIntgId;
-      const responseTwo = await fetch (`http://hduo88.com/friend/selectUserFriend.do?myId=${sessionIdForcheckFrend}&youId=${targetId}`)
-      const jsonUserFriendState = await responseTwo.json();
-      console.log(jsonUserFriendState.selectUserFriendState[0])
-      return jsonUserFriendState;
-    };
+    
 
     let token;
     let userInfo = {};
@@ -461,7 +470,7 @@ export default function MainScreen ({navigation}) {
                                           <View >
                                             <Text >닉네임: {info.uNickname}</Text>
                                           </View>
-                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriendTrigger(info.ylYouId)}>
+                                          <View style={styles.userItemView} onStartShouldSetResponder={() =>addFriendTrigger(info.ylYouId,info.friendState)}>
                                             <Image resizeMode='contain' style={styles.frendAdd} 
                                             source={info.friendUrl}/>      
                                           </View>
