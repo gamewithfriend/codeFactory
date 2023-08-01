@@ -174,7 +174,7 @@ export default function ChatListScreen({ navigation }) {
             <SafeAreaView style={glStyles.flexContainer}>
                 <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
-                <View style={glStyles.flexRowBtwn}>
+                <View style={[glStyles.flexRowBtwn, glStyles.pdHrzn10]}>
                     <Text style={glStyles.pageTit}>채팅</Text>
                     <View style={glStyles.flexRow}>
                         <TouchableOpacity onPress={addFriendChat}>
@@ -188,7 +188,7 @@ export default function ChatListScreen({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={glStyles.flexContainer}>
+                <View style={[glStyles.flexContainer, glStyles.pdHrzn10]}>
                     {chatList.length === 0 ? (
                         <View style={glStyles.flexCenter}>
                             <Text style={glStyles.basicText}>참여중인 채팅방이 없습니다.</Text>

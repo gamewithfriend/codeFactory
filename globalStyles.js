@@ -22,7 +22,7 @@ export const glStyles = StyleSheet.create({
     fontSize: 14,
     textAlign: "right"
   },
-  pd10: {
+  pdHrzn10: {
     paddingHorizontal: 15,
   },
   // flexbox 설정
