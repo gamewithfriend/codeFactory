@@ -46,6 +46,10 @@ export const glStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
   },
+  flexRowEven: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
 
   // 글자설정
   pageTit: {
