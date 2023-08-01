@@ -85,14 +85,15 @@ export default function OptionSelect ({route,navigation}) {
     const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let userNumber = getNumberList[indexNumber].optionName;
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+      console.log(route.params.gameType)
       if(route.params.gameTypePlus == "" && route.params.gameType == "격전"){
         navigation.navigate('OptionSelect',{gameType: route.params.gameType
                                             ,gameTypePlus:userNumber
                                             ,gameTypePlusIndex:indexNumber
                                             },{navigation});
       }else if(route.params.gameTypePlus == "" && route.params.gameType.cdDtlName == "소환사의협곡" ){
-        let optionOne = getOptionList[indexNumber].cdDtlName;
-            console.log(optionOne)
+        let optionOne = getOptionList[indexNumber].cdDtlName;          
             serverGetOptionListForRank(optionOne);
             navigation.navigate('OptionSelect',{gameType: route.params.gameType
                 ,gameTypePlus:userNumber
@@ -189,7 +190,9 @@ export default function OptionSelect ({route,navigation}) {
             </View>       
         </View> 
             );                  
-    }else if(route.params.gameType.cdDtlName ==="격전" || (route.params.gameType.cdDtlName ==="소환사의협곡" && route.params.gameTypePlusTwo ==="자유랭크" ) ){
+    }else if(route.params.gameType.cdDtlName ==="격전" || 
+    (route.params.gameType.cdDtlName ==="소환사의협곡" && route.params.gameTypePlusTwo ==="자유랭크" ) ||
+    (route.params.gameType.cdDtlName ==="소환사의협곡" && route.params.gameTypePlusTwo ==="일반" )){
         return (      
         <View style={styles.container} >
         <View style={styles.topContainer} >
@@ -220,6 +223,25 @@ export default function OptionSelect ({route,navigation}) {
                                     )
                                 }         
                     </ScrollView>
+            </View>
+                </View> 
+                <View style={styles.bottomContainer} >
+                  <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                </View>       
+            </View>
+            );                  
+    }else if(route.params.gameType.cdDtlName ==="소환사의협곡" && route.params.gameTypePlusTwo ==="자유랭크"  && route.params.gameTypePlus !="" ){
+        return (      
+        <View style={styles.container} >
+        <View style={styles.topContainer} >
+            <Text style={styles.topContainerTitle}>매칭 옵션 선택</Text> 
+        </View>
+        <View style={styles.centerContainer} >
+            <View style={styles.centerTopContainer}>
+                <Text style={styles.centerContainerTitle}>{route.params.gameTypePlusTwo}</Text>
+            </View>
+            <View style={styles.centerBottomContainer}>
+                   
             </View>
                 </View> 
                 <View style={styles.bottomContainer} >
