@@ -5,6 +5,12 @@ import * as Session from './utils/session.js';
 import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
 
+//이소망 추가
+import MainFrame from './MainFrame';
+import { glStyles } from './globalStyles';
+import colors from './assets/colors/colors';
+import { Ionicons } from '@expo/vector-icons';
+
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.219.142";
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -91,11 +97,11 @@ export default function FriendScreen({ navigation }) {
   }, [isFocused]);
 
   return (
-    <View >
-      <View>
-        <Text style={styles.titleFont}>친구</Text>
+    <MainFrame>
+      <View style={glStyles.pdHrzn15}>
+        <Text style={glStyles.pageTit}>친구</Text>
       </View>
-      <TouchableOpacity style={styles.profileView} onPress={editMyProfile}>
+      <TouchableOpacity style={[styles.profileView, glStyles.pdHrzn15]} onPress={editMyProfile}>
         <View style={styles.profileImgView}>
           {
             // selectedImage.uri !== '' ? (
@@ -224,7 +230,7 @@ export default function FriendScreen({ navigation }) {
           <Button title="Close" onPress={closeProfileModal} />
         </View>
       </Modal>
-    </View>
+    </MainFrame >
   );
 }
 

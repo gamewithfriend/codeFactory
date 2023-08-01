@@ -7,7 +7,7 @@ import { useIsFocused } from '@react-navigation/native';
 import MainFrame from './MainFrame';
 import { glStyles } from './globalStyles';
 import colors from './assets/colors/colors';
-import { FontAwesome5, Entypo, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.219.142";
@@ -171,104 +171,102 @@ export default function ChatListScreen({ navigation }) {
 
     return (
         <MainFrame>
-            <SafeAreaView style={glStyles.flexContainer}>
-                <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+            <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
-                <View style={[glStyles.flexRowBtwn, glStyles.pdHrzn10]}>
-                    <Text style={glStyles.pageTit}>채팅</Text>
-                    <View style={glStyles.flexRow}>
-                        <TouchableOpacity onPress={addFriendChat}>
-                            <Ionicons name="person-add" size="20" style={glStyles.cardIcon} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={handleAdd}>
-                            <Ionicons name="add" size="24" style={glStyles.cardIcon} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={handleAdd}>
-                            <Ionicons name="add" size="24" style={glStyles.cardIcon} />
-                        </TouchableOpacity>
+            <View style={[glStyles.flexRowBtwn, glStyles.pdHrzn15]}>
+                <Text style={glStyles.pageTit}>채팅</Text>
+                <View style={glStyles.flexRow}>
+                    <TouchableOpacity onPress={addFriendChat}>
+                        <Ionicons name="person-add" size="20" style={glStyles.cardIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleAdd}>
+                        <Ionicons name="add" size="24" style={glStyles.cardIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleAdd}>
+                        <Ionicons name="add" size="24" style={glStyles.cardIcon} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={glStyles.flexContainer}>
+                {chatList.length === 0 ? (
+                    <View style={[glStyles.flexContainer, glStyles.flexCenter]}>
+                        <Text style={glStyles.basicText}>참여중인 채팅방이 없습니다.</Text>
                     </View>
-                </View>
-                <View style={[glStyles.flexContainer, glStyles.pdHrzn10]}>
-                    {chatList.length === 0 ? (
-                        <View style={glStyles.flexCenter}>
-                            <Text style={glStyles.basicText}>참여중인 채팅방이 없습니다.</Text>
-                        </View>
-                    ) : (
-                        <FlatList style={glStyles.basicList}
-                            data={chatList}
-                            keyExtractor={item => item.id}
-                            renderItem={({ item }) => (
-                                <View style={glStyles.basicItem} onStartShouldSetResponder={() => moveToChatRoom(item.id)}>
-                                    <ImageBackground
-                                        source={require('./assets/images/chatImg.jpg')}
-                                        style={glStyles.basicItemImg}
-                                        resizeMode="cover"
-                                        imageStyle={{ borderRadius: 17 }}
-                                    />
-                                    <View style={glStyles.basicItemInfo}>
-                                        <Text style={glStyles.basicInfoTit}>{item.name}</Text>
-                                        <Text style={glStyles.basicInfoDttm}>2023.08.02</Text>
-                                        <Text style={glStyles.basicInfoCntn}>마지막 대화 내용</Text>
-                                    </View>
-                                </View>
-                            )}
-                            getItemLayout={getItemLayout}
-                        />
-                    )}
-                </View>
-                <View style={styles.centeredView}>
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            Alert.alert('Modal has been closed.');
-                            setModalVisible(!modalVisible);
-                        }}>
-                        <Pressable style={{
-                            flex: 1,
-                            backgroundColor: 'transparent',
-                        }}
-                            onPress={() => setModalVisible(false)}
-                        />
-                        <View>
-
-                            <View style={styles.modalView}>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={text => onChange(text)}
-                                    value={text}
+                ) : (
+                    <FlatList style={glStyles.basicList}
+                        data={chatList}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => (
+                            <View style={glStyles.basicItem} onStartShouldSetResponder={() => moveToChatRoom(item.id)}>
+                                <ImageBackground
+                                    source={require('./assets/images/chatImg.jpg')}
+                                    style={glStyles.basicItemImg}
+                                    resizeMode="cover"
+                                    imageStyle={{ borderRadius: 17 }}
                                 />
-                                {getStateFriendList.length === 0 ? (
-                                    <Text>친구가 없습니다.</Text>
-                                ) : (
-                                    <FlatList
-                                        data={getStateFriendList}
-                                        keyExtractor={item => item.id}
-                                        renderItem={({ item }) => (
-                                            <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
-                                                <View style={styles.itemBoxView}>
-                                                    <View style={styles.itemBoxPhoto}>
-                                                        <Image resizeMode='contain' style={styles.profileImg}
-                                                            source={require("./assets/images/emptyProfile.jpg")} />
-                                                    </View>
-                                                    <View style={styles.listName} >
-                                                        <Text>{item.appNick}</Text>
-                                                    </View>
-                                                </View>
-                                            </View>
-                                        )}
-                                        getItemLayout={getItemLayout}
-                                    />
-                                )}
-                                <View style={styles.modalBottomContainer} >
-                                    <Button color={"black"} onPress={addFriendForChat} title='선택하기'></Button>
+                                <View style={glStyles.basicItemInfo}>
+                                    <Text style={glStyles.basicInfoTit}>{item.name}</Text>
+                                    <Text style={glStyles.basicInfoDttm}>2023.08.02</Text>
+                                    <Text style={glStyles.basicInfoCntn}>마지막 대화 내용</Text>
                                 </View>
                             </View>
+                        )}
+                        getItemLayout={getItemLayout}
+                    />
+                )}
+            </View>
+            <View style={styles.centeredView}>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <Pressable style={{
+                        flex: 1,
+                        backgroundColor: 'transparent',
+                    }}
+                        onPress={() => setModalVisible(false)}
+                    />
+                    <View>
+
+                        <View style={styles.modalView}>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={text => onChange(text)}
+                                value={text}
+                            />
+                            {getStateFriendList.length === 0 ? (
+                                <Text>친구가 없습니다.</Text>
+                            ) : (
+                                <FlatList
+                                    data={getStateFriendList}
+                                    keyExtractor={item => item.id}
+                                    renderItem={({ item }) => (
+                                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
+                                            <View style={styles.itemBoxView}>
+                                                <View style={styles.itemBoxPhoto}>
+                                                    <Image resizeMode='contain' style={styles.profileImg}
+                                                        source={require("./assets/images/emptyProfile.jpg")} />
+                                                </View>
+                                                <View style={styles.listName} >
+                                                    <Text>{item.appNick}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    )}
+                                    getItemLayout={getItemLayout}
+                                />
+                            )}
+                            <View style={styles.modalBottomContainer} >
+                                <Button color={"black"} onPress={addFriendForChat} title='선택하기'></Button>
+                            </View>
                         </View>
-                    </Modal>
-                </View>
-            </SafeAreaView>
+                    </View>
+                </Modal>
+            </View>
         </MainFrame>
     );
 }

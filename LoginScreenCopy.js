@@ -131,7 +131,7 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <MainFrame>
-            <View style={glStyles.flexCenter}>
+            <View style={[glStyles.flexContainer, glStyles.flexCenter]}>
 
                 <TouchableOpacity style={[glStyles.mdBtn, glStyles.btnBlue]} disabled={!request} title="Google Login" onPress={() => { promptAsync(); }}>
                     <Text style={glStyles.btnText}>Google 로그인</Text>

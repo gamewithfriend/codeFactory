@@ -330,158 +330,156 @@ export default function MainScreen({ navigation }) {
 
   return (
     <MainFrame>
-      <View style={styles.mainContainer} >
-        <View style={styles.mainSatusView}>
-          <View style={styles.mainSatusItemView} onStartShouldSetResponder={() => setModalVisible(true)} >
-            <FontAwesome5 name="bell" size="22" style={glStyles.cardIcon} />
-            <Text style={styles.mainSatusCountFont}>{getAlramCount}</Text>
-          </View>
+      <View style={styles.mainSatusView}>
+        <View style={styles.mainSatusItemView} onStartShouldSetResponder={() => setModalVisible(true)} >
+          <FontAwesome5 name="bell" size="22" style={glStyles.cardIcon} />
+          <Text style={styles.mainSatusCountFont}>{getAlramCount}</Text>
         </View>
-        <View>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setModalVisible(!modalVisible);
-            }}>
-            <Pressable style={{
-              flex: 1,
-              backgroundColor: 'transparent',
-            }}
-              onPress={() => setModalVisible(false)}
-            />
-            <View style={styles.centeredView} >
-              <View style={styles.modalView}>
-                <View onStartShouldSetResponder={() => alramListTrigger()}>
-                  {getAlramRecentOneMsg === "" ? (
-                    <Text style={styles.modalText}>알람이 없습니다.</Text>
-                  ) : (
-                    <Text style={styles.modalText}>{getAlramRecentOneMsg}</Text>
-                  )}
-                </View>
+      </View>
+      <View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <Pressable style={{
+            flex: 1,
+            backgroundColor: 'transparent',
+          }}
+            onPress={() => setModalVisible(false)}
+          />
+          <View style={styles.centeredView} >
+            <View style={styles.modalView}>
+              <View onStartShouldSetResponder={() => alramListTrigger()}>
+                {getAlramRecentOneMsg === "" ? (
+                  <Text style={styles.modalText}>알람이 없습니다.</Text>
+                ) : (
+                  <Text style={styles.modalText}>{getAlramRecentOneMsg}</Text>
+                )}
               </View>
             </View>
-          </Modal>
-        </View>
-        <View style={{ marginBottom: 20 }}>
-          <View style={glStyles.titleBox}>
-            <Text style={glStyles.titleText}>맵 설정</Text>
           </View>
-          <ScrollView style={glStyles.slideList}
-            pagingEnabled
-            horizontal
-            onMomentumScrollEnd={(event) => { optionChange(event.nativeEvent.contentOffset.x) }}
-            showsHorizontalScrollIndicator={false}>
-            {getOptionList.length === 0 ? (
+        </Modal>
+      </View>
+      <View style={{ marginBottom: 20 }}>
+        <View style={glStyles.titleBox}>
+          <Text style={glStyles.titleText}>맵 설정</Text>
+        </View>
+        <ScrollView style={glStyles.slideList}
+          pagingEnabled
+          horizontal
+          onMomentumScrollEnd={(event) => { optionChange(event.nativeEvent.contentOffset.x) }}
+          showsHorizontalScrollIndicator={false}>
+          {getOptionList.length === 0 ? (
+            <View >
+            </View>
+          ) : (
+            getOptionList.map((info, index) =>
+              <View key={index} style={glStyles.slideItems}>
+                <View style={glStyles.slideImgBox}>
+                  <Image resizeMode='contain' style={glStyles.slideImg}
+                    source={{
+                      uri: `${info.url}`,
+                    }}
+                  />
+                </View>
+              </View>
+            )
+          )
+          }
+        </ScrollView>
+        <View>
+          <Button color={colors.fontWh} title='선택' onPress={optionSubmit} style={styles.clickButton}>
+          </Button>
+        </View>
+      </View>
+      <View style={glStyles.flexContainer}>
+        <View style={glStyles.titleBox}>
+          <Text style={glStyles.titleText}>친구 추천</Text>
+        </View>
+        <ScrollView style={glStyles.cardList}
+          pagingEnabled
+          onMomentumScrollEnd={(event) => { friendChange(event.nativeEvent.contentOffset.x) }}
+          showsHorizontalScrollIndicator={false}>
+          <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
+            {getUserLikeTop5List.length === 0 ? (
               <View >
               </View>
             ) : (
-              getOptionList.map((info, index) =>
-                <View key={index} style={glStyles.slideItems}>
-                  <View style={glStyles.slideImgBox}>
-                    <Image resizeMode='contain' style={glStyles.slideImg}
-                      source={{
-                        uri: `${info.url}`,
-                      }}
-                    />
+              getUserLikeTop5List.map((info, index) =>
+                <View>
+                  <View key={index} style={glStyles.cardItems}>
+                    <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
+                    <View style={glStyles.cardInfo}>
+                      <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
+                      <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
+                      <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
+                      <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
+                      <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
+                      <View style={glStyles.btnBox}>
+                        <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
+                          <Ionicons name="add" size="25" style={glStyles.cardIcon} />
+                        </View>
+                        <View>
+                          <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                        </View>
+                        <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
+                          <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  <View key={index} style={glStyles.cardItems}>
+                    <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
+                    <View style={glStyles.cardInfo}>
+                      <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
+                      <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
+                      <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
+                      <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
+                      <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
+                      <View style={glStyles.btnBox}>
+                        <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
+                          <Ionicons name="add" size="25" style={glStyles.cardIcon} />
+                        </View>
+                        <View>
+                          <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                        </View>
+                        <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
+                          <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  <View key={index} style={glStyles.cardItems}>
+                    <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
+                    <View style={glStyles.cardInfo}>
+                      <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
+                      <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
+                      <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
+                      <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
+                      <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
+                      <View style={glStyles.btnBox}>
+                        <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
+                          <Ionicons name="add" size="25" style={glStyles.cardIcon} />
+                        </View>
+                        <View>
+                          <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                        </View>
+                        <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
+                          <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
+                        </View>
+                      </View>
+                    </View>
                   </View>
                 </View>
               )
             )
             }
-          </ScrollView>
-          <View>
-            <Button color={colors.fontWh} title='선택' onPress={optionSubmit} style={styles.clickButton}>
-            </Button>
           </View>
-        </View>
-        <View style={glStyles.flexContainer}>
-          <View style={glStyles.titleBox}>
-            <Text style={glStyles.titleText}>친구 추천</Text>
-          </View>
-          <ScrollView style={glStyles.cardList}
-            pagingEnabled
-            onMomentumScrollEnd={(event) => { friendChange(event.nativeEvent.contentOffset.x) }}
-            showsHorizontalScrollIndicator={false}>
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
-              {getUserLikeTop5List.length === 0 ? (
-                <View >
-                </View>
-              ) : (
-                getUserLikeTop5List.map((info, index) =>
-                  <View>
-                    <View key={index} style={glStyles.cardItems}>
-                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
-                      <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
-                        <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
-                            <Ionicons name="add" size="25" style={glStyles.cardIcon} />
-                          </View>
-                          <View>
-                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
-                          </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
-                            <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    <View key={index} style={glStyles.cardItems}>
-                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
-                      <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
-                        <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
-                            <Ionicons name="add" size="25" style={glStyles.cardIcon} />
-                          </View>
-                          <View>
-                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
-                          </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
-                            <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    <View key={index} style={glStyles.cardItems}>
-                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
-                      <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
-                        <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
-                            <Ionicons name="add" size="25" style={glStyles.cardIcon} />
-                          </View>
-                          <View>
-                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
-                          </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
-                            <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                )
-              )
-              }
-            </View>
-          </ScrollView>
-        </View>
+        </ScrollView>
       </View>
     </MainFrame >
 
@@ -504,7 +502,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "4%",
     flexDirection: "row",
-    marginTop: "15%",
     marginBottom: "4%",
     justifyContent: "flex-end",
   },

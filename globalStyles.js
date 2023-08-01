@@ -22,13 +22,16 @@ export const glStyles = StyleSheet.create({
     fontSize: 14,
     textAlign: "right"
   },
-  pdHrzn10: {
+
+  // 패딩 설정
+  pdHrzn15: {
     paddingHorizontal: 15,
   },
+  pdR10: { paddingRight: 10, },
+
   // flexbox 설정
   flexContainer: { flex: 1 },
   flexCenter: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center"
   },
@@ -39,6 +42,11 @@ export const glStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  flexRowStrt: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+
   // 글자설정
   pageTit: {
     fontWeight: "bold",
@@ -131,12 +139,18 @@ export const glStyles = StyleSheet.create({
 
   // 기본 리스트 스타일
   basicList: {
-    paddingTop: 15
+    paddingTop: 15,
+    paddingHorizontal: 15
   },
   basicItem: {
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  addPartLine: {
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: colors.fontWh
   },
   basicItemImg: {
     width: 52,
