@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, StatusBar, SafeAreaView, Dimensions, Modal, Pressable, Alert, Button, TextInput } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ImageBackground, Image, StatusBar, SafeAreaView, Dimensions, Modal, Pressable, Alert, Button, TextInput } from 'react-native';
 import * as Session from './utils/session';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -174,58 +174,42 @@ export default function ChatListScreen({ navigation }) {
             <SafeAreaView style={glStyles.flexContainer}>
                 <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
-                <View style={styles.header}>
-
-                    <TouchableOpacity onPress={addFriendChat}>
-                        <Image
-                            source={require('./assets/images/addFriendChat.png')}
-                            style={styles.image}
-                            resizeMode="contain"
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleAdd}>
-                        <Image
-                            source={require('./assets/images/addFriend.png')}
-                            style={styles.image}
-                            resizeMode="contain"
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleAdd}>
-                        <Image
-                            source={require('./assets/images/addFriend.png')}
-                            style={styles.image}
-                            resizeMode="contain"
-                        />
-                    </TouchableOpacity>
+                <View style={glStyles.flexRowBtwn}>
+                    <Text style={glStyles.pageTit}>채팅</Text>
+                    <View style={glStyles.flexRow}>
+                        <TouchableOpacity onPress={addFriendChat}>
+                            <Ionicons name="person-add" size="20" style={glStyles.cardIcon} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleAdd}>
+                            <Ionicons name="add" size="24" style={glStyles.cardIcon} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleAdd}>
+                            <Ionicons name="add" size="24" style={glStyles.cardIcon} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={glStyles.flexContainer}>
                     {chatList.length === 0 ? (
-                        // <View style={glStyles.flexCenter}>
-                        //     <Text style={glStyles.basicText}>참여중인 채팅방이 없습니다.</Text>
-                        // </View>
-                        <View style={glStyles.basicList}>
-                            <View style={glStyles.basicItem} onStartShouldSetResponder={() => moveToChatRoom("text")}>
-                                <Image
-                                    source={require('./assets/images/chatImg.jpg')}
-                                    style={glStyles.image}
-                                    resizeMode="contain"
-                                />
-                                <View style={glStyles.basicItemInfo}>
-                                    <Text style={glStyles.basicText}>대화창 이름</Text>
-                                    <Text style={glStyles.basicText}>마지막 대화 내용</Text>
-                                </View>
-                                <View>
-
-                                </View>
-                            </View>
+                        <View style={glStyles.flexCenter}>
+                            <Text style={glStyles.basicText}>참여중인 채팅방이 없습니다.</Text>
                         </View>
                     ) : (
-                        <FlatList
+                        <FlatList style={glStyles.basicList}
                             data={chatList}
                             keyExtractor={item => item.id}
                             renderItem={({ item }) => (
-                                <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => moveToChatRoom(item.id)}>
-                                    <Text>{item.name}</Text>
+                                <View style={glStyles.basicItem} onStartShouldSetResponder={() => moveToChatRoom(item.id)}>
+                                    <ImageBackground
+                                        source={require('./assets/images/chatImg.jpg')}
+                                        style={glStyles.basicItemImg}
+                                        resizeMode="cover"
+                                        imageStyle={{ borderRadius: 17 }}
+                                    />
+                                    <View style={glStyles.basicItemInfo}>
+                                        <Text style={glStyles.basicInfoTit}>{item.name}</Text>
+                                        <Text style={glStyles.basicInfoDttm}>2023.08.02</Text>
+                                        <Text style={glStyles.basicInfoCntn}>마지막 대화 내용</Text>
+                                    </View>
                                 </View>
                             )}
                             getItemLayout={getItemLayout}
@@ -272,8 +256,6 @@ export default function ChatListScreen({ navigation }) {
                                                         <Text>{item.appNick}</Text>
                                                     </View>
                                                 </View>
-
-
                                             </View>
                                         )}
                                         getItemLayout={getItemLayout}
@@ -297,7 +279,7 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         // backgroundColor: 'red',
     },
     body: {

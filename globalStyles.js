@@ -3,6 +3,13 @@ import { Dimensions } from 'react-native';
 import colors from './assets/colors/colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const fontSize = {
+  xlg: SCREEN_WIDTH > 500 ? 26 : 24,
+  lg: SCREEN_WIDTH > 500 ? 24 : 22,
+  md: SCREEN_WIDTH > 500 ? 20 : 16,
+  sm: SCREEN_WIDTH > 500 ? 14 : 13,
+  xsm: SCREEN_WIDTH > 500 ? 13 : 12,
+};
 
 export const glStyles = StyleSheet.create({
   // 광고
@@ -15,7 +22,9 @@ export const glStyles = StyleSheet.create({
     fontSize: 14,
     textAlign: "right"
   },
-
+  pd10: {
+    paddingHorizontal: 15,
+  },
   // flexbox 설정
   flexContainer: { flex: 1 },
   flexCenter: {
@@ -23,19 +32,30 @@ export const glStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-
+  flexRow: {
+    flexDirection: "row",
+  },
+  flexRowBtwn: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   // 글자설정
+  pageTit: {
+    fontWeight: "bold",
+    fontSize: fontSize.lg,
+    color: colors.fontWh,
+  },
   titleBox: {
     paddingLeft: 20,
     paddingBottom: 20,
   },
   titleText: {
-    fontSize: SCREEN_WIDTH > 500 ? 20 : 16,
+    fontSize: fontSize.md,
     color: colors.fontWh,
   },
   basicText: {
+    fontSize: fontSize.sm,
     color: colors.fontWh,
-    fontSize: 14
   },
 
   // 버튼 설정
@@ -111,23 +131,43 @@ export const glStyles = StyleSheet.create({
 
   // 기본 리스트 스타일
   basicList: {
-    width: SCREEN_WIDTH,
+    paddingTop: 15
   },
   basicItem: {
-    paddingHorizontal: 20,
-    height: 180,
-    marginBottom: 9,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  image: {
-    width: 50,
-    height: 50,
+  basicItemImg: {
+    width: 52,
+    height: 52,
   },
   basicItemInfo: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingLeft: 10,
     paddingTop: 3,
+    flexDirection: 'row',
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
+  basicInfoTit: {
+    fontSize: fontSize.md,
+    color: colors.fontWh,
+    fontWeight: 'bold',
+    paddingBottom: 6,
+  },
+  basicInfoDttm: {
+    color: colors.fontWh,
+    fontSize: fontSize.xsm,
+  },
+  basicInfoCntn: {
+    width: "100%",
+    color: colors.fontWh,
+    fontSize: fontSize.sm
+  }
 
 
 
 });
+
