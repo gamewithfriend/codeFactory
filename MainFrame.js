@@ -12,9 +12,7 @@ export default function MainFrame({ children }) {
       start={{ x: 0, y: 0 }}
       end={{ x: 0.1, y: 0.95 }}
     >
-      <View style={[glStyles.flexContainer, glStyles.pd10]}>
-        {children}
-      </View>
+      {children}
       <View style={glStyles.adver}>
         <Text style={glStyles.adverText}>광고</Text>
       </View>
