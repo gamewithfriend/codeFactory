@@ -2,10 +2,10 @@
 import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator,StackNavigationProp } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View ,Text, ScrollView, Dimensions,Image, ImageBackground, ActivityIndicator,TextInput,Button} from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions, Image, ImageBackground, ActivityIndicator, TextInput, Button } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainScreen from './MainScreen';
 import DetailScreen from './DetailScreen';
@@ -24,37 +24,72 @@ import OptionSelectFour from './OptionSelectFour';
 import OptionSelectFourDetail from './OptionSelectFourDetail';
 import SetNickNameScreen from './SetNickNameScreen';
 import TextChat from './TextChat';
-// import MatchingHistoryScreen from './MatchingHistoryScreen';
+import MatchingHistoryScreen from './MatchingHistoryScreen';
 import AlarmScreen from './AlarmScreen';
 import ChatListScreen from './ChatListScreen';
-import AccountScreen from './AccountScreen';
-import * as Session from './utils/session.js';
+import MainScreenCopy from './MainScreenCopy';
+import ChatListScreenCopy from './ChatListScreenCopy';
+import FriendScreenCopy from './FriendScreenCopy';
+import LoginCopy from './LoginScreenCopy';
+import { FontAwesome5, Entypo, Ionicons } from '@expo/vector-icons';
+import colors from './assets/colors/colors';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-let SESSION;
 
-function HomeTab(){
+function HomeTab() {
   return (
-       <Tab.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>
-        <Tab.Screen name='MainScreen' component={MainScreen}/>
-        {/* <Tab.Screen name='Home' component={First} options={{tabBarStyle: {display: 'none'}}} /> */}
-        {/* <Tab.Screen name='DetailScreen' component={DetailScreen}/> */}
-        <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/>
-        <Tab.Screen name='ChatListScreen' component={ChatListScreen}/>
-        <Tab.Screen name='FriendScreen' component={FriendScreen}/>       
-        <Tab.Screen name='TextChat' component={TextChat}/>
-        <Tab.Screen name='Setting' component={SettingScreen}/>
-        <Tab.Screen name='Login' component={Login}/>     
-      </Tab.Navigator>
-  
+    <Tab.Navigator screenOptions={({ route }) => ({
+      headerShown: false,
+      gestureEnabled: true,
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+
+        if (route.name === 'Home') {
+          iconName = focused ? 'home-sharp' : 'home-outline';
+        } else if (route.name === 'Chat') {
+          iconName = focused ? 'chatbubble-sharp' : 'chatbubble-outline';
+        } else if (route.name === 'Friends') {
+          iconName = focused ? 'people' : 'people-outline';
+        } else if (route.name === 'Settings') {
+          iconName = focused ? 'settings' : 'settings-outline';
+        } else if (route.name === 'Login') {
+          iconName = focused ? 'log-in' : 'log-in-outline';
+        }
+
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+      tabBarStyle: {
+        height: 90,
+        paddingHorizontal: 5,
+        paddingTop: 0,
+        backgroundColor: 'rgba(34,36,40,1)',
+        borderTopWidth: 0,
+      },
+
+    })}
+      tabBarOptions={{
+        activeTintColor: colors.fontWh,
+        inactiveTintColor: colors.gray,
+      }}
+    >
+      <Tab.Screen name='Home' component={MainScreenCopy} />
+      {/* <Tab.Screen name='MainScreen' component={MainScreen} /> */}
+      {/* <Tab.Screen name='Home' component={First} options={{tabBarStyle: {display: 'none'}}} /> */}
+      {/* <Tab.Screen name='DetailScreen' component={DetailScreen}/> */}
+      {/* <Tab.Screen name='GameMatchingScreen' component={OptionSelect} options={{tabBarStyle: {display: 'none'}}}/> */}
+      {/* <Tab.Screen name='ChatListScreen' component={ChatListScreen} /> */}
+      <Tab.Screen name='Chat' component={ChatListScreenCopy} />
+      <Tab.Screen name='Friends' component={FriendScreenCopy} />
+      <Tab.Screen name='Settings' component={SettingScreen} />
+      {/* <Tab.Screen name='Login' component={Login} /> */}
+      <Tab.Screen name='Login' component={LoginCopy} />
+    </Tab.Navigator >
+
   );
 }
 
 export default function App() {
-  
-  const [isBlocked, setIsBlocked] = useState(false);
-
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -69,144 +104,54 @@ export default function App() {
         alert('알림 권한이 거부되었습니다!');
       }
     })();
-},[]);
-  useEffect(() => {
-    loginCheck();
   }, []);
-// sessionGet 메서드의 비동기적 처리를해결하기 위한 조치
-const loginCheck = async () => {
-  let session = await Session.sessionGet("sessionInfo");
-  // await sessionClear();
-
-  console.log(session);
-
-  // 세션값이 확인이 되지 않으면 구글로그인 연동 -> 구글 로그인 안에서 session setting 컨트롤
-  if (session == null || session == undefined || session == "") {
-      try {
-          promptAsync();
-          if (response?.type === 'success') { 
-              token = response.authentication.accessToken;
-              getUserInfo();
-          }
-      } catch (error) {
-          console.error(error);
-      }
-  } else {    // 세션값 확인되면 로그인 정보 최신화 후 닉네임 체크 로직 
-      checkLoginUserInfo("192.168.219.104", session);
-  }
-}
-
-const getUserInfo = async () => {
-try {
-  const response = await fetch(
-  "https://www.googleapis.com/userinfo/v2/me",
-  {
-      headers: { Authorization: `Bearer ${token}` }
-  }
-  );
-  const user = await response.json();
-  console.log(user);
-  if (user != null && user != undefined && user.verified_email ==true) {
-      userInfo.uIntgId = user.id;
-  }
-  
-  let ipAddress = await Network.getIpAddressAsync();
-  let modelName = Device.modelName;
-  
-  userInfo.uLastLoginIp = ipAddress;
-  userInfo.uLastTerminalKind = modelName;
-  
-  if (userInfo != null) {
-      checkLoginUserInfo("192.168.219.104", userInfo);
-  }
-
-} catch (error) {
-  console.log(error);
-  Alert.alert("Error!");
-}
-};
-
-const checkLoginUserInfo = async (url, data) => {
-  await fetch("http://" + url + ":8080/login/loginCheck.do", {
-                              method : "POST",
-                              headers : {
-                                  'Content-Type': 'application/json; charset=utf-8',
-                              },
-                              body : JSON.stringify(data)
-                            }).then(response => response.json()
-                             ).then(async (result) => {
-                                  // 최초로그인 및 로그인 확인이 끝났으면 session 값을 set 및 get 해준다
-                                  if (result.sessionInfo.uIntgId != null && result.sessionInfo.uIntgId != undefined && result.sessionInfo.uIntgId != "") {
-                                      let tmpSessionData = JSON.stringify(result.sessionInfo);
-
-                                      await Session.sessionSave("sessionInfo", tmpSessionData);
-
-                                      if (result.sessionInfo.uStateCd == "10601") {
-                                        setIsBlocked(false);
-                                      } else {
-                                        setIsBlocked(true);
-                                      }
-                                  }
-                             }).catch( error => {
-                                  console.error(error);
-                             }) ;
-};
-  
   return (
     <NavigationContainer>
-      {isBlocked ? (
-        <Text>접근이 차단되었습니다.</Text>
-      ) : (
-      <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: true}}>            
+      <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
         <Stack.Screen name="HomeTab" component={HomeTab} options={{
-          headerShown:false  
-        }}/>
+          headerShown: false
+        }} />
         <Stack.Screen name="OptionSelect" component={OptionSelect} options={{
-          headerShown:true  
-        }}/>
+          headerShown: true
+        }} />
         <Stack.Screen name="OptionSelectDetail" component={OptionSelectDetail} options={{
-          headerShown:true  
-        }}/>
+          headerShown: true
+        }} />
         <Stack.Screen name="OptionSelectTwo" component={OptionSelectTwo} options={{
-          headerShown:true  
-        }}/>
+          headerShown: true
+        }} />
         <Stack.Screen name="OptionSelectTwoDetail" component={OptionSelectTwoDetail} options={{
-          headerShown:true  
-        }}/>
+          headerShown: true
+        }} />
         <Stack.Screen name="OptionSelectThree" component={OptionSelectThree} options={{
-          headerShown:true  
-        }}/>
+          headerShown: true
+        }} />
         <Stack.Screen name="OptionSelectThreeDetail" component={OptionSelectThreeDetail} options={{
-          headerShown:true  
-        }}/>
-         <Stack.Screen name="OptionSelectFour" component={OptionSelectFour} options={{
-          headerShown:false  
-        }}/>
+          headerShown: true
+        }} />
+        <Stack.Screen name="OptionSelectFour" component={OptionSelectFour} options={{
+          headerShown: false
+        }} />
         <Stack.Screen name="OptionSelectFourDetail" component={OptionSelectFourDetail} options={{
-          headerShown:false  
-        }}/>
+          headerShown: false
+        }} />
         <Stack.Screen name="GameMatching" component={GameMatching} options={{
-          headerShown:false  
-        }}/>
+          headerShown: false
+        }} />
         <Stack.Screen name="SetNickNameScreen" component={SetNickNameScreen} options={{
-          headerShown:false  
-        }}/>
+          headerShown: false
+        }} />
         <Stack.Screen name="TextChat" component={TextChat} options={{
-          headerShown:false  
-        }}/>
-        {/* <Stack.Screen name="MatchingHistoryScreen" component={MatchingHistoryScreen} options={{
-          headerShown:false  
-        }}/> */}
+          headerShown: false
+        }} />
+        <Stack.Screen name="MatchingHistoryScreen" component={MatchingHistoryScreen} options={{
+          headerShown: false
+        }} />
         <Stack.Screen name="AlarmScreen" component={AlarmScreen} options={{
-          headerShown:false  
-        }}/>
-        <Stack.Screen name="AccountScreen" component={AccountScreen} options={{
-          headerShown:false  
-        }}/>
+          headerShown: false
+        }} />
       </Stack.Navigator>
-      )}
     </NavigationContainer>
-         
   );
 }
 

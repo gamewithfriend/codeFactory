@@ -3,6 +3,11 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, StatusBar, S
 import * as Session from './utils/session';
 import { useIsFocused } from '@react-navigation/native';
 
+//이소망 추가
+import MainFrame from './MainFrame';
+import { glStyles } from './globalStyles';
+import colors from './assets/colors/colors';
+import { FontAwesome5, Entypo, Ionicons } from '@expo/vector-icons';
 
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.219.142";
@@ -165,113 +170,124 @@ export default function ChatListScreen({ navigation }) {
     }, [isFocused]);
 
     return (
-        <SafeAreaView stlye={styles.container}>
-            <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+        <MainFrame>
+            <SafeAreaView style={glStyles.flexContainer}>
+                <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
 
-            <View style={styles.header}>
+                <View style={styles.header}>
 
-                <TouchableOpacity onPress={addFriendChat}>
-                    <Image
-                        source={require('./assets/images/addFriendChat.png')}
-                        style={styles.image}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleAdd}>
-                    <Image
-                        source={require('./assets/images/addFriend.png')}
-                        style={styles.image}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleAdd}>
-                    <Image
-                        source={require('./assets/images/addFriend.png')}
-                        style={styles.image}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.body}>
-                {chatList.length === 0 ? (
-                    // <Text>참여중인 채팅방이 없습니다.</Text>
-                    <View>
-                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => moveToChatRoom("test")}>
-                            <Text>test</Text>
-                        </View>
-                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => moveToChatRoom("test")}>
-                            <Text>test</Text>
-                        </View>
-                    </View>
-                ) : (
-                    <FlatList
-                        data={chatList}
-                        keyExtractor={item => item.id}
-                        renderItem={({ item }) => (
-                            <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => moveToChatRoom(item.id)}>
-                                <Text>{item.name}</Text>
-                            </View>
-                        )}
-                        getItemLayout={getItemLayout}
-                    />
-                )}
-            </View>
-            <View style={styles.centeredView}>
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
-                        setModalVisible(!modalVisible);
-                    }}>
-                    <Pressable style={{
-                        flex: 1,
-                        backgroundColor: 'transparent',
-                    }}
-                        onPress={() => setModalVisible(false)}
-                    />
-                    <View style={styles.centeredView} >
-
-                        <View style={styles.modalView}>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={text => onChange(text)}
-                                value={text}
-                            />
-                            {getStateFriendList.length === 0 ? (
-                                <Text>친구가 없습니다.</Text>
-                            ) : (
-                                <FlatList
-                                    data={getStateFriendList}
-                                    keyExtractor={item => item.id}
-                                    renderItem={({ item }) => (
-                                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
-                                            <View style={styles.itemBoxView}>
-                                                <View style={styles.itemBoxPhoto}>
-                                                    <Image resizeMode='contain' style={styles.profileImg}
-                                                        source={require("./assets/images/emptyProfile.jpg")} />
-                                                </View>
-                                                <View style={styles.listName} >
-                                                    <Text>{item.appNick}</Text>
-                                                </View>
-                                            </View>
-
-
-                                        </View>
-                                    )}
-                                    getItemLayout={getItemLayout}
+                    <TouchableOpacity onPress={addFriendChat}>
+                        <Image
+                            source={require('./assets/images/addFriendChat.png')}
+                            style={styles.image}
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleAdd}>
+                        <Image
+                            source={require('./assets/images/addFriend.png')}
+                            style={styles.image}
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleAdd}>
+                        <Image
+                            source={require('./assets/images/addFriend.png')}
+                            style={styles.image}
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
+                </View>
+                <View style={glStyles.flexContainer}>
+                    {chatList.length === 0 ? (
+                        // <View style={glStyles.flexCenter}>
+                        //     <Text style={glStyles.basicText}>참여중인 채팅방이 없습니다.</Text>
+                        // </View>
+                        <View style={glStyles.basicList}>
+                            <View style={glStyles.basicItem} onStartShouldSetResponder={() => moveToChatRoom("text")}>
+                                <Image
+                                    source={require('./assets/images/chatImg.jpg')}
+                                    style={glStyles.image}
+                                    resizeMode="contain"
                                 />
-                            )}
-                            <View style={styles.modalBottomContainer} >
-                                <Button color={"black"} onPress={addFriendForChat} title='선택하기'></Button>
+                                <View style={glStyles.basicItemInfo}>
+                                    <Text style={glStyles.basicText}>대화창 이름</Text>
+                                    <Text style={glStyles.basicText}>마지막 대화 내용</Text>
+                                </View>
+                                <View>
+
+                                </View>
                             </View>
                         </View>
-                    </View>
-                </Modal>
-            </View>
-        </SafeAreaView>
+                    ) : (
+                        <FlatList
+                            data={chatList}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => moveToChatRoom(item.id)}>
+                                    <Text>{item.name}</Text>
+                                </View>
+                            )}
+                            getItemLayout={getItemLayout}
+                        />
+                    )}
+                </View>
+                <View style={styles.centeredView}>
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert('Modal has been closed.');
+                            setModalVisible(!modalVisible);
+                        }}>
+                        <Pressable style={{
+                            flex: 1,
+                            backgroundColor: 'transparent',
+                        }}
+                            onPress={() => setModalVisible(false)}
+                        />
+                        <View>
 
+                            <View style={styles.modalView}>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={text => onChange(text)}
+                                    value={text}
+                                />
+                                {getStateFriendList.length === 0 ? (
+                                    <Text>친구가 없습니다.</Text>
+                                ) : (
+                                    <FlatList
+                                        data={getStateFriendList}
+                                        keyExtractor={item => item.id}
+                                        renderItem={({ item }) => (
+                                            <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
+                                                <View style={styles.itemBoxView}>
+                                                    <View style={styles.itemBoxPhoto}>
+                                                        <Image resizeMode='contain' style={styles.profileImg}
+                                                            source={require("./assets/images/emptyProfile.jpg")} />
+                                                    </View>
+                                                    <View style={styles.listName} >
+                                                        <Text>{item.appNick}</Text>
+                                                    </View>
+                                                </View>
+
+
+                                            </View>
+                                        )}
+                                        getItemLayout={getItemLayout}
+                                    />
+                                )}
+                                <View style={styles.modalBottomContainer} >
+                                    <Button color={"black"} onPress={addFriendForChat} title='선택하기'></Button>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+                </View>
+            </SafeAreaView>
+        </MainFrame>
     );
 }
 const styles = StyleSheet.create({
@@ -296,10 +312,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     image: {
         width: 30, height: 30
-    },
-    centeredView: {
-        flex: 1,
-        marginTop: "5%",
     },
     itemBoxView: {
         flexDirection: "row"
