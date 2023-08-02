@@ -88,13 +88,17 @@ export default function MainScreen({ navigation }) {
 
       if (jsonUserFriendState.selectUserFriendState == null) {
         jsonUserList.selectLikeTop5List[i].friendUrl = require('./assets/images/plus.png');
+        jsonUserList.selectLikeTop5List[i].friendState = "";
       } else {
         if (jsonUserFriendState.selectUserFriendState.fStateCd == "10501") {
           jsonUserList.selectLikeTop5List[i].friendUrl = require('./assets/images/minus.png');
+          jsonUserList.selectLikeTop5List[i].friendState = "10501";
         } else if (jsonUserFriendState.selectUserFriendState.fStateCd == "10502") {
           jsonUserList.selectLikeTop5List[i].friendUrl = require('./assets/images/send.png');
+          jsonUserList.selectLikeTop5List[i].friendState = "10502";
         } else {
           jsonUserList.selectLikeTop5List[i].friendUrl = require('./assets/images/plus.png');
+          jsonUserList.selectLikeTop5List[i].friendState = "";
         }
       }
 
@@ -172,12 +176,27 @@ export default function MainScreen({ navigation }) {
   };
 
   ////addFriendTrigger----친구신청 함수/////// 
-  const addFriendTrigger = (targetId) => {
-    const responseAddFriend = fetch(`http://3.37.211.126:8080/friend/friendAdd.do?myNick=${getSessionId}&yourNick=${targetId}`);
+  const addFriendTrigger = (targetId,friendState)=>{
+    console.log("test@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22")
+    console.log(friendState)
+    console.log(targetId)
+    if(friendState == "10502"){
+      alert("현재 친구신청 메세지가 보내진상태입니다.")
+    }else{
+      addFriendDetail(targetId,friendState);
+    }
+    
+  };
+  const addFriendDetail = async(targetId,friendState) => {
+ 
+    sessions=  await Session.sessionGet("sessionInfo");
+    const sessionIdForAdd = sessions.uIntgId;
+    const responseAddFriend = await  fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
+    serverGetUserLikeTop5List();
   };
 
   ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 
-  const targetLikeTrigger = (targetId) => {
+  const targetLikeTrigger = (targetId)=>{
     targetLike(targetId);
     serverGetUserLikeTop5List();
   };
@@ -412,48 +431,6 @@ export default function MainScreen({ navigation }) {
               ) : (
                 getUserLikeTop5List.map((info, index) =>
                   <View>
-                    <View key={index} style={glStyles.cardItems}>
-                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
-                      <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
-                        <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
-                            <Ionicons name="add" size="25" style={glStyles.cardIcon} />
-                          </View>
-                          <View>
-                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
-                          </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
-                            <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    <View key={index} style={glStyles.cardItems}>
-                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
-                      <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
-                        <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
-                            <Ionicons name="add" size="25" style={glStyles.cardIcon} />
-                          </View>
-                          <View>
-                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
-                          </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
-                            <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
                     <View key={index} style={glStyles.cardItems}>
                       <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
                       <View style={glStyles.cardInfo}>
