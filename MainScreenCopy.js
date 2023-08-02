@@ -48,7 +48,9 @@ export default function MainScreen({ navigation }) {
 
   ////targetLike----좋아요 기능함수///////
   const targetLike = async (targetId) => {
-    const response = await fetch(`http://3.37.211.126:8080/main/likeTarget.do?myNick=${getSessionId}&yourNick=${targetId}`).catch(error => { console.log(error) });
+    sessions=  await Session.sessionGet("sessionInfo");
+    const sessionIdForLike = sessions.uIntgId;
+    const response = await fetch(`http://3.37.211.126:8080/main/likeTarget.do?myNick=${sessionIdForLike}&yourNick=${targetId}`).catch(error => { console.log(error) });
     serverGetFindMyAlramList();
   };
 
@@ -76,10 +78,10 @@ export default function MainScreen({ navigation }) {
       const jsonMsg = await response.json();
       const youserLikeTemp = jsonMsg.msg;
       if (youserLikeTemp == "N") {
-        jsonUserList.selectLikeTop5List[i].url = require('./assets/images/emptyHeart.png');
+        jsonUserList.selectLikeTop5List[i].url ="heart-outline";
         jsonUserList.selectLikeTop5List[i].test = "N";
       } else {
-        jsonUserList.selectLikeTop5List[i].url = require('./assets/images/fullHeart.png');
+        jsonUserList.selectLikeTop5List[i].url ="heart";
         jsonUserList.selectLikeTop5List[i].test = "Y";
       }
       //////친구 확인////////
