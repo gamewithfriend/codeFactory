@@ -188,6 +188,10 @@ export default function MainScreen({ navigation }) {
  
     sessions=  await Session.sessionGet("sessionInfo");
     const sessionIdForAdd = sessions.uIntgId;
+    if(sessionIdForAdd == targetId){
+      alert("자신에게는 친구신청을 보낼수없습니다.")
+      return;
+    }
     const responseAddFriend = await  fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
     serverGetUserLikeTop5List();
   };
@@ -405,10 +409,10 @@ export default function MainScreen({ navigation }) {
             )
             }
           </ScrollView>
-          <View>
+          {/* <View>
             <Button color={colors.fontWh} title='선택' onPress={optionSubmit} style={styles.clickButton}>
             </Button>
-          </View>
+          </View> */}
         </View>
         <View style={glStyles.flexContainer}>
           <View style={glStyles.titleBox}>
@@ -416,7 +420,7 @@ export default function MainScreen({ navigation }) {
           </View>
           <ScrollView style={glStyles.cardList}
             pagingEnabled
-            onMomentumScrollEnd={(event) => { friendChange(event.nativeEvent.contentOffset.x) }}
+            // onMomentumScrollEnd={(event) => { friendChange(event.nativeEvent.contentOffset.x) }}
             showsHorizontalScrollIndicator={false}>
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
               {getUserLikeTop5List.length === 0 ? (
