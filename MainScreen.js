@@ -245,9 +245,6 @@ export default function MainScreen ({navigation}) {
 
     const goMatchingHistory = () => {
         navigation.navigate('MatchingHistoryScreen',{navigation});
-     
-      
-
     };
 
     const checkRiotId = async() => {
