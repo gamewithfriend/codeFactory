@@ -452,6 +452,48 @@ export default function MainScreen({ navigation }) {
                         </View>
                       </View>
                     </View>
+                    <View key={index} style={glStyles.cardItems}>
+                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
+                      <View style={glStyles.cardInfo}>
+                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
+                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
+                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
+                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
+                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
+                        <View style={glStyles.btnBox}>
+                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
+                            <Ionicons name="add" size="25" style={glStyles.cardIcon} />
+                          </View>
+                          <View>
+                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                          </View>
+                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
+                            <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                    <View key={index} style={glStyles.cardItems}>
+                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
+                      <View style={glStyles.cardInfo}>
+                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
+                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
+                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
+                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
+                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
+                        <View style={glStyles.btnBox}>
+                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId)}>
+                            <Ionicons name="add" size="25" style={glStyles.cardIcon} />
+                          </View>
+                          <View>
+                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                          </View>
+                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
+                            <Entypo name="heart-outlined" size="20" style={glStyles.cardIcon} />
+                          </View>
+                        </View>
+                      </View>
+                    </View>
                   </View>
                 )
               )
@@ -481,7 +523,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "4%",
     flexDirection: "row",
-    marginTop: "15%",
     marginBottom: "4%",
     justifyContent: "flex-end",
   },

@@ -1,9 +1,15 @@
 import React, { Component, useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Dimensions, ActivityIndicator, Image, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Dimensions, ActivityIndicator, ImageBackground, Image, TouchableOpacity, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Session from './utils/session.js';
 import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
+
+//이소망 추가
+import MainFrame from './MainFrame';
+import { glStyles } from './globalStyles';
+import colors from './assets/colors/colors';
+import { Ionicons } from '@expo/vector-icons';
 
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.219.142";
@@ -91,11 +97,11 @@ export default function FriendScreen({ navigation }) {
   }, [isFocused]);
 
   return (
-    <View >
-      <View>
-        <Text style={styles.titleFont}>친구</Text>
+    <MainFrame>
+      <View style={glStyles.pdHrzn15}>
+        <Text style={glStyles.pageTit}>친구</Text>
       </View>
-      <TouchableOpacity style={styles.profileView} onPress={editMyProfile}>
+      <TouchableOpacity style={[styles.profileView, glStyles.pdHrzn15]} onPress={editMyProfile}>
         <View style={styles.profileImgView}>
           {
             // selectedImage.uri !== '' ? (
@@ -114,20 +120,16 @@ export default function FriendScreen({ navigation }) {
           }
         </View>
         <View style={styles.profileMesaageView}>
-          <Text style={styles.statusMessageFont}>{userInfo.unickname}</Text>
+          <Text style={glStyles.basicText}>{userInfo.unickname}</Text>
         </View>
       </TouchableOpacity>
       <View style={styles.lineDesign} />
       <View style={styles.friendView}>
         <View style={styles.friendCountView}>
-          <View  >
-            <Text style={styles.statusMessageFont} >친구수:</Text>
-          </View>
-          <View  >
-            <Text style={styles.statusMessageFont} >{getFriendNum}</Text>
-          </View>
+          <Text style={glStyles.basicText} >친구수:</Text>
+          <Text style={glStyles.basicText} >{getFriendNum}</Text>
         </View>
-        <View style={styles.friendListView}>
+        <View style={glStyles.basicList}>
           <ScrollView pagingEnabled={false}
             showsHorizontalScrollIndicator={false}>
             {getStateFriendList.length === 0 ? (
@@ -136,16 +138,10 @@ export default function FriendScreen({ navigation }) {
             ) : (
               <View style={styles.friendHeader}>
                 <View style={styles.itemBox}>
-                  <View style={styles.itemBoxPhoto}>
-
-                  </View>
-                  <View style={styles.itemBoxMessage}>
-                    <View style={styles.itemBoxMessageHeaderName}>
-                      <Text>닉네임</Text>
-                    </View>
-                    <View style={styles.itemBoxMessageHeaderStatus}>
-                      <Text>소환사명</Text>
-                    </View>
+                  <View style={styles.itemBoxPhoto}></View>
+                  <View style={[glStyles.flexContainer, glStyles.flexRowEven]}>
+                    <Text style={glStyles.basicText}>닉네임</Text>
+                    <Text style={glStyles.basicText}>소환사명</Text>
                   </View>
                 </View>
               </View>
@@ -157,28 +153,33 @@ export default function FriendScreen({ navigation }) {
               </View>
             ) : (
               getStateFriendList.map((info, index) =>
-                <View key={index} style={styles.centerBottomContainer} data={info.fYouId} onStartShouldSetResponder={() => openChat(info)}>
+                <View key={index} style={glStyles.basicItem} data={info.fYouId} onStartShouldSetResponder={() => openChat(info)}>
                   <TouchableOpacity style={styles.itemBox} onPress={viewProfileModal.bind(this, info.fYouId)}>
                     <View style={styles.itemBoxPhoto}>
                       {
                         info.profileImgUrl !== null ? (
-                          <Image
+                          <ImageBackground
                             source={{ uri: `http://hduo88.com/tomcatImg/myPage/${info.profileImgUrl}` }}
-                            style={styles.profileImg}
-                            resizeMode='contain'
+                            style={glStyles.basicItemImg}
+                            resizeMode="cover"
+                            imageStyle={{ borderRadius: 17 }}
                           />
                         ) : (
-                          <Image resizeMode='contain' style={styles.profileImg}
-                            source={require("./assets/images/emptyProfile.jpg")} />
+                          <ImageBackground
+                            source={require("./assets/images/emptyProfile.jpg")}
+                            style={glStyles.basicItemImg}
+                            resizeMode="cover"
+                            imageStyle={{ borderRadius: 17 }}
+                          />
                         )
                       }
                     </View>
-                    <View style={styles.itemBoxMessage}>
-                      <View style={styles.itemBoxMessageName}>
-                        <Text>{info.appNick}</Text>
+                    <View>
+                      <View>
+                        <Text style={glStyles.basicText}>{info.appNick}</Text>
                       </View>
-                      <View style={styles.itemBoxMessageStatus}>
-                        <Text>{info.glSummoner}</Text>
+                      <View>
+                        <Text style={glStyles.basicText}>{info.glSummoner}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -224,7 +225,7 @@ export default function FriendScreen({ navigation }) {
           <Button title="Close" onPress={closeProfileModal} />
         </View>
       </Modal>
-    </View>
+    </MainFrame >
   );
 }
 

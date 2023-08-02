@@ -2,6 +2,12 @@ import React, { Component, useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Image } from 'react-native';
 // import { RTCPeerConnection, RTCView } from 'react-native-webrtc';
 
+//이소망 추가
+import MainFrame from './MainFrame';
+import { glStyles } from './globalStyles';
+import colors from './assets/colors/colors';
+import { Ionicons } from '@expo/vector-icons';
+
 export default function SettingScreen({ navigation }) {
   const optionSubmit = () => {
     navigation.navigate('MatchingHistoryScreen');
@@ -12,42 +18,36 @@ export default function SettingScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.rowView} onPress={optionSubmit}>
-          <Image resizeMode='contain' style={styles.statusImg}
-            source={require("./assets/images/bell.png")} />
-          <Text>Setting</Text>
+    <MainFrame>
+      <View style={glStyles.pdHrzn15}>
+        <Text style={glStyles.pageTit}>세팅</Text>
+      </View>
+      <View style={glStyles.basicList}>
+        <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
+          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Text style={glStyles.basicInfoTit}>Settings</Text>
           {/* <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button> */}
         </View>
-        <View style={styles.lineDesign} />
-        <View style={styles.rowView} onStartShouldSetResponder={() => goAccountScreen()} >
-          <Image resizeMode='contain' style={styles.statusImg}
-            source={require("./assets/images/bell.png")} />
-          <Text>account</Text>
+        <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
+          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
-        <View style={styles.lineDesign} />
-        <View style={styles.rowView}>
-          <Image resizeMode='contain' style={styles.statusImg}
-            source={require("./assets/images/bell.png")} />
-          <Text>Setting</Text>
+        <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
+          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
-        <View style={styles.lineDesign} />
-        <View style={styles.rowView}>
-          <Image resizeMode='contain' style={styles.statusImg}
-            source={require("./assets/images/bell.png")} />
-          <Text>Setting</Text>
+        <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
+          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
-        <View style={styles.lineDesign} />
-        <View style={styles.rowView}>
-          <Image resizeMode='contain' style={styles.statusImg}
-            source={require("./assets/images/bell.png")} />
-          <Text>Setting</Text>
+        <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
+          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
         <View style={styles.lineDesign} />
       </View>
 
-    </View>
+    </MainFrame>
   );
 
 

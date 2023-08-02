@@ -31,7 +31,8 @@ import MainScreenCopy from './MainScreenCopy';
 import ChatListScreenCopy from './ChatListScreenCopy';
 import FriendScreenCopy from './FriendScreenCopy';
 import LoginCopy from './LoginScreenCopy';
-import { FontAwesome5, Entypo, Ionicons } from '@expo/vector-icons';
+import SettingScreenCopy from './SettingScreenCopy';
+import { Ionicons } from '@expo/vector-icons';
 import colors from './assets/colors/colors';
 
 const Stack = createStackNavigator();
@@ -81,7 +82,7 @@ function HomeTab() {
       {/* <Tab.Screen name='ChatListScreen' component={ChatListScreen} /> */}
       <Tab.Screen name='Chat' component={ChatListScreenCopy} />
       <Tab.Screen name='Friends' component={FriendScreenCopy} />
-      <Tab.Screen name='Settings' component={SettingScreen} />
+      <Tab.Screen name='Settings' component={SettingScreenCopy} />
       {/* <Tab.Screen name='Login' component={Login} /> */}
       <Tab.Screen name='Login' component={LoginCopy} />
     </Tab.Navigator >
