@@ -61,6 +61,11 @@ export const glStyles = StyleSheet.create({
     paddingLeft: 20,
     paddingBottom: 20,
   },
+  titleBoxIcon: {
+    paddingLeft: 20,
+    paddingBottom: 20,
+    flexDirection:'row',
+  },
   titleText: {
     fontSize: fontSize.md,
     color: colors.fontWh,
@@ -183,7 +188,12 @@ export const glStyles = StyleSheet.create({
     width: "100%",
     color: colors.fontWh,
     fontSize: fontSize.sm
-  }
+  },
+
+  // 마진 view 스타일
+  justMarginLeft: {
+    marginLeft:"3%",
+  },
 
 
 
