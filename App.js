@@ -67,12 +67,13 @@ function HomeTab() {
         backgroundColor: 'rgba(34,36,40,1)',
         borderTopWidth: 0,
       },
-
-    })}
-      tabBarOptions={{
+      tabBarOptions:{
         activeTintColor: colors.fontWh,
         inactiveTintColor: colors.gray,
-      }}
+      }
+
+    })}
+      
     >
       <Tab.Screen name='Home' component={MainScreenCopy} />
       {/* <Tab.Screen name='MainScreen' component={MainScreen} /> */}

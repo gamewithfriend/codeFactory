@@ -58,9 +58,27 @@ export default function MainScreen({ navigation }) {
   const serverGetOptionList = async () => {
     const response = await fetch(`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
     const jsonOptionList = await response.json();
+    let tempUrl2 = "";
+    let tempUrl3 = "";
     for (var i = 0; i < jsonOptionList.selectMatchingOptionList.length; i++) {
       let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
+
+      if(jsonOptionList.selectMatchingOptionList[i+1] !=undefined){
+
+        tempUrl2 = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i+1].url}`;
+      } else{
+        tempUrl2 = jsonOptionList.selectMatchingOptionList[i-2].url;
+        
+      }
+
+      if(jsonOptionList.selectMatchingOptionList[i+2] !=undefined){
+        tempUrl3 = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i+2].url}`;
+      } else{
+        tempUrl3 = jsonOptionList.selectMatchingOptionList[i-1].url;
+      }
       jsonOptionList.selectMatchingOptionList[i].url = tempUrl;
+      jsonOptionList.selectMatchingOptionList[i].url2 = tempUrl2;
+      jsonOptionList.selectMatchingOptionList[i].url3 = tempUrl3;
     }
     setOptionList(jsonOptionList.selectMatchingOptionList);
   };
@@ -166,6 +184,7 @@ export default function MainScreen({ navigation }) {
     setOptionName(Math.floor(index / 100))
     let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
     setSelectedOption(getOptionList[indexNumber]);
+   
   };
 
   ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
@@ -228,9 +247,8 @@ export default function MainScreen({ navigation }) {
         , gameTypePlusIndex: 0
       }, { navigation });
     }
-
-
   };
+
   let token;
   let userInfo = {};
 
@@ -399,22 +417,38 @@ export default function MainScreen({ navigation }) {
             ) : (
               getOptionList.map((info, index) =>
                 <View key={index} style={glStyles.slideItems}>
-                  <View style={glStyles.slideImgBox}>
-                    <Image resizeMode='contain' style={glStyles.slideImg}
-                      source={{
-                        uri: `${info.url}`,
-                      }}
-                    />
+                  <View style={glStyles.slideImgBox2}>
+                    <View style={glStyles.cardItems4}>
+                      <Image resizeMode='contain' style={glStyles.slideImg}
+                        source={{
+                          uri: `${info.url3}`,
+                        }}
+                      />
+                    </View>                                       
+                    <View style={glStyles.cardItems3}>
+                      <Image resizeMode='contain' style={glStyles.slideImg}
+                        source={{
+                          uri: `${info.url2}`,
+                        }}
+                      />
+                    </View> 
+                    <View style={glStyles.cardItems2}  >
+                      <Image resizeMode='contain' style={glStyles.slideImg}
+                        source={{
+                          uri: `${info.url}`,
+                        }}
+                      />
+                    </View>                                     
                   </View>
                 </View>
               )
             )
             }
           </ScrollView>
-          {/* <View>
+           <View>
             <Button color={colors.fontWh} title='선택' onPress={optionSubmit} style={styles.clickButton}>
             </Button>
-          </View> */}
+          </View> 
         </View>
         <View style={glStyles.flexContainer}>
           <View style={glStyles.titleBox}>
@@ -430,8 +464,8 @@ export default function MainScreen({ navigation }) {
                 </View>
               ) : (
                 getUserLikeTop5List.map((info, index) =>
-                  <View>
-                    <View key={index} style={glStyles.cardItems}>
+                  <View key={index}>
+                    <View  style={glStyles.cardItems}>
                       <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
                       <View style={glStyles.cardInfo}>
                         <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>

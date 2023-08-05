@@ -82,6 +82,14 @@ export default function OptionSelect ({route,navigation}) {
         
     };
 
+    const optionSubmitNumber = () => {
+      let indexNumber = Math.floor((ok+1)/4);
+      let userNumber = getNumberList[indexNumber].optionName;
+      navigation.navigate('OptionSelect',{gameType: route.params.gameType
+        ,gameTypePlus:userNumber
+        ,gameTypePlusIndex:indexNumber
+        },{navigation});
+    };    
     const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let userNumber = getNumberList[indexNumber].optionName;
@@ -147,7 +155,7 @@ export default function OptionSelect ({route,navigation}) {
                 </View> 
                 <View style={styles.bottomContainer} >
                   <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
-                </View>       
+                </View >       
             </View>
             );                  
     }else if(route.params.gameTypePlusTwo =="랭크" ){
@@ -226,7 +234,7 @@ export default function OptionSelect ({route,navigation}) {
             </View>
                 </View> 
                 <View style={styles.bottomContainer} >
-                  <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button>
+                  <Button color={"black"} style={styles.choiceButton} onPress={optionSubmitNumber} title='선택하기'></Button>
                 </View>       
             </View>
             );                  

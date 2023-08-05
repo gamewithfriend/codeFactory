@@ -111,9 +111,17 @@ export const glStyles = StyleSheet.create({
     justifyContent: "center",
   },
   slideImgBox: {
-    width: SCREEN_WIDTH * 0.43,
+    width: SCREEN_WIDTH * 1,
     height: SCREEN_WIDTH * 0.43,
     alignItems: "center",
+    flexDirection:"row",
+  },
+  slideImgBox2: {
+    width: SCREEN_WIDTH * 1,
+    height: SCREEN_WIDTH * 0.43,
+    alignItems: "center",
+    flexDirection:"row",
+    justifyContent: "center",
   },
   slideImg: {
     width: '100%',
@@ -130,6 +138,29 @@ export const glStyles = StyleSheet.create({
     height: 180,
     marginBottom: 9,
     backgroundColor: "#333",
+  },
+  cardItems2: {
+    borderRadius: 45,
+    width: 180,
+    height: 180,
+    marginBottom: 9,
+    
+  },
+  cardItems3: {
+    borderRadius: 45,
+    width: 180,
+    height: 140,
+    marginBottom: 9,
+    left:"35%",
+    position:'absolute',
+  },
+  cardItems4: {
+    borderRadius: 45,
+    width: 180,
+    height: 140,
+    marginBottom: 9,
+    left:"45%",
+    position:'absolute',
   },
   cardLabel: {
     paddingTop: 5,
