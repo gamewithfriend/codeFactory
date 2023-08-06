@@ -127,6 +127,12 @@ export const glStyles = StyleSheet.create({
     width: '100%',
     height: "100%",
   },
+  slideImg2: {
+    width: '100%',
+    height: "100%",
+    opacity:0.6,
+    position:'absolute',
+  },
 
   // 카드 리스트
   cardList: {

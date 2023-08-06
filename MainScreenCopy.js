@@ -121,7 +121,9 @@ export default function MainScreen({ navigation }) {
           jsonUserList.selectLikeTop5List[i].friendState = "";
         }
       }
-
+      //모스트 1 캐릭터 배경화면
+      let tempMostPickUrl = jsonUserList.selectLikeTop5List[i].glMostUrl;
+      jsonUserList.selectLikeTop5List[i].glMostUrl = `http://3.37.211.126:8080/tomcatImg/champ/${tempMostPickUrl}`
     }
     setUserLikeTop5List(jsonUserList.selectLikeTop5List);
 
@@ -465,7 +467,12 @@ export default function MainScreen({ navigation }) {
               ) : (
                 getUserLikeTop5List.map((info, index) =>
                   <View key={index}>
-                    <View  style={glStyles.cardItems}>
+                    <View  style={glStyles.cardItems2}>
+                    <Image resizeMode='cover' style={glStyles.slideImg2}
+                        source={{
+                          uri: `${info.glMostUrl}`,
+                        }}
+                      />
                       <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
                       <View style={glStyles.cardInfo}>
                         <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
@@ -620,10 +627,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     position: 'absolute',
-    top: -270,
-    bottom: 500,
-    left: 120,
-    right: 40,
+    top: -640,
+    bottom: 540,
+    left: 180,
+    right: 0,
   },
   button: {
     borderRadius: 20,
