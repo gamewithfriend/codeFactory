@@ -22,6 +22,7 @@ import OptionSelectThree from './OptionSelectThree';
 import OptionSelectThreeDetail from './OptionSelectThreeDetail';
 import OptionSelectFour from './OptionSelectFour';
 import OptionSelectFourDetail from './OptionSelectFourDetail';
+import OptionSelectSpecial from './OptionSelectSpecial';
 import SetNickNameScreen from './SetNickNameScreen';
 import TextChat from './TextChat';
 import MatchingHistoryScreen from './MatchingHistoryScreen';
@@ -150,6 +151,9 @@ export default function App() {
           headerShown: false
         }} />
         <Stack.Screen name="AlarmScreen" component={AlarmScreen} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name="OptionSelectSpecial" component={OptionSelectSpecial} options={{
           headerShown: false
         }} />
       </Stack.Navigator>

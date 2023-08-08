@@ -33,11 +33,7 @@ export default function OptionSelect ({route,navigation}) {
     ////setRecommendUserList----격전 인원수 조정함수 함수///////
     const setRecommendUserList = async() =>{ 
        let gameTypePlusIndex = 0;
-       let  ueserNum= gameTypePlusIndex+1;
-       console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$44")
-       console.log(ueserNum)
-
-        
+       let  ueserNum= gameTypePlusIndex+1;       
     };
 
     const optionChange = (index)=>{
@@ -46,13 +42,10 @@ export default function OptionSelect ({route,navigation}) {
 
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionList = async() =>{
-        const gameType= route.params.gameType.cdDtlName 
-        console.log(gameType)
+        const gameType= route.params.gameType.cdDtlName;
         let gameTypePlusTwo = "";
         if(route.params.gameTypePlusTwo != "" ){
-            gameTypePlusTwo = route.params.gameTypePlusTwo;
-            console.log("gameTypePlusTwo@@@@@@@@@@@@@@@@@@@@@@@@@@@2") 
-            console.log(gameTypePlusTwo)  
+            gameTypePlusTwo = route.params.gameTypePlusTwo; 
         }
 
         const response = await fetch (`http://hduo88.com/gameMatching/selectMatchingOption.do?gameType=${gameType}&gameTypePlusTwo=${gameTypePlusTwo}`)
@@ -67,8 +60,7 @@ export default function OptionSelect ({route,navigation}) {
 
     ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
     const serverGetOptionListForRank = async(gameTypePlusTwoTemp) =>{
-        const gameType= route.params.gameType.cdDtlName 
-        console.log(gameType)
+        const gameType= route.params.gameType.cdDtlName; 
         let gameTypePlusTwo = gameTypePlusTwoTemp;
 
 
@@ -85,16 +77,14 @@ export default function OptionSelect ({route,navigation}) {
     const optionSubmitNumber = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let userNumber = getNumberList[indexNumber].optionName;
-      navigation.navigate('OptionSelect',{gameType: route.params.gameType
-        ,gameTypePlus:userNumber
-        ,gameTypePlusIndex:indexNumber
-        },{navigation});
+      navigation.navigate('OptionSelectSpecial',{gameType: route.params.gameType
+                                                ,gameTypePlus:userNumber
+                                                ,gameTypePlusTwo:route.params.gameTypePlusTwo
+                                                },{navigation});
     };    
     const optionSubmit = () => {
       let indexNumber = Math.floor((ok+1)/4);
       let userNumber = getNumberList[indexNumber].optionName;
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-      console.log(route.params.gameType)
       if(route.params.gameTypePlus == "" && route.params.gameType == "격전"){
         navigation.navigate('OptionSelect',{gameType: route.params.gameType
                                             ,gameTypePlus:userNumber
@@ -119,8 +109,6 @@ export default function OptionSelect ({route,navigation}) {
             optionOneArr = getOptionListTwo[indexNumber];
             tempOpionList = getOptionListTwo;
         }
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        console.log(optionOne)
         navigation.navigate('OptionSelectDetail',{gameType: route.params.gameType
                                                     ,gameTypePlus:userNumber
                                                     ,gameTypePlus:indexNumber

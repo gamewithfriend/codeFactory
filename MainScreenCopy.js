@@ -42,7 +42,7 @@ export default function MainScreen({ navigation }) {
   const [getUserLike, setUserLike] = useState("");
   const onChangeid = (payload) => setid(payload);
   const onChangepassWord = (payload) => setpassWord(payload);
-  let reChampionList = [];
+  
   let youserLikeCheck = "";
   let sessions = "";
 
@@ -58,33 +58,16 @@ export default function MainScreen({ navigation }) {
   const serverGetOptionList = async () => {
     const response = await fetch(`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
     const jsonOptionList = await response.json();
-    let tempUrl2 = "";
-    let tempUrl3 = "";
     for (var i = 0; i < jsonOptionList.selectMatchingOptionList.length; i++) {
       let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
-
-      if(jsonOptionList.selectMatchingOptionList[i+1] !=undefined){
-
-        tempUrl2 = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i+1].url}`;
-      } else{
-        tempUrl2 = jsonOptionList.selectMatchingOptionList[i-2].url;
-        
-      }
-
-      if(jsonOptionList.selectMatchingOptionList[i+2] !=undefined){
-        tempUrl3 = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i+2].url}`;
-      } else{
-        tempUrl3 = jsonOptionList.selectMatchingOptionList[i-1].url;
-      }
       jsonOptionList.selectMatchingOptionList[i].url = tempUrl;
-      jsonOptionList.selectMatchingOptionList[i].url2 = tempUrl2;
-      jsonOptionList.selectMatchingOptionList[i].url3 = tempUrl3;
     }
     setOptionList(jsonOptionList.selectMatchingOptionList);
   };
 
   ////serverGetUserLikeTop5List----좋아요 TOP5리스트 서버에서 가져오기 함수///////  
   const serverGetUserLikeTop5List = async () => {
+    let reUserLikeTop5List = [];
     const response = await fetch(`http://3.37.211.126:8080/main/fameTop5.do`)
     const jsonUserList = await response.json();
     sessions = await Session.sessionGet("sessionInfo");
@@ -124,8 +107,14 @@ export default function MainScreen({ navigation }) {
       //모스트 1 캐릭터 배경화면
       let tempMostPickUrl = jsonUserList.selectLikeTop5List[i].glMostUrl;
       jsonUserList.selectLikeTop5List[i].glMostUrl = `http://3.37.211.126:8080/tomcatImg/champ/${tempMostPickUrl}`
+      if((i+1)%2 ==0){
+        let tempBox = [];
+        tempBox.push(jsonUserList.selectLikeTop5List[i]);
+        tempBox.push(jsonUserList.selectLikeTop5List[i-1]);
+        reUserLikeTop5List.push(tempBox);
+      }
     }
-    setUserLikeTop5List(jsonUserList.selectLikeTop5List);
+    setUserLikeTop5List(reUserLikeTop5List);
 
   };
 
@@ -419,21 +408,7 @@ export default function MainScreen({ navigation }) {
             ) : (
               getOptionList.map((info, index) =>
                 <View key={index} style={glStyles.slideItems}>
-                  <View style={glStyles.slideImgBox2}>
-                    <View style={glStyles.cardItems4}>
-                      <Image resizeMode='contain' style={glStyles.slideImg}
-                        source={{
-                          uri: `${info.url3}`,
-                        }}
-                      />
-                    </View>                                       
-                    <View style={glStyles.cardItems3}>
-                      <Image resizeMode='contain' style={glStyles.slideImg}
-                        source={{
-                          uri: `${info.url2}`,
-                        }}
-                      />
-                    </View> 
+                  <View style={glStyles.slideImgBox2}>                   
                     <View style={glStyles.cardItems2}  >
                       <Image resizeMode='contain' style={glStyles.slideImg}
                         source={{
@@ -461,42 +436,72 @@ export default function MainScreen({ navigation }) {
             // onMomentumScrollEnd={(event) => { friendChange(event.nativeEvent.contentOffset.x) }}
             showsHorizontalScrollIndicator={false}>
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
+              <View >
               {getUserLikeTop5List.length === 0 ? (
                 <View >
                 </View>
               ) : (
+                
                 getUserLikeTop5List.map((info, index) =>
-                  <View key={index}>
+                <View  key={index} style={glStyles.justFlexDirectionRow}>
                     <View  style={glStyles.cardItems2}>
-                    <Image resizeMode='cover' style={glStyles.slideImg2}
-                        source={{
-                          uri: `${info.glMostUrl}`,
-                        }}
-                      />
-                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
+                      <Image resizeMode='cover' style={glStyles.slideImg2}
+                          source={{
+                            uri: `${info[0].glMostUrl}`,
+                          }}
+                        />
+                      <Text style={glStyles.cardLabel} >TOP{index*2 + 1}</Text>
                       <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info.uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info.glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info.glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info.glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info.glTime}</Text>
+                        <Text style={glStyles.basicText}>닉네임: {info[0].uNickname}</Text>
+                        <Text style={glStyles.basicText} >랭크 :{info[0].glRank}</Text>
+                        <Text style={glStyles.basicText} >포지션 :{info[0].glPosition}</Text>
+                        <Text style={glStyles.basicText} >챔피언 :{info[0].glChampion}</Text>
+                        <Text style={glStyles.basicText} >시간대 :{info[0].glTime}</Text>
                         <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info.ylYouId,info.friendState)}>
-                            <Ionicons name={info.friendUrl} size="25" style={glStyles.cardIcon} />                          
+                          <View onStartShouldSetResponder={() => addFriendTrigger(info[0].ylYouId,info[0].friendState)}>
+                            <Ionicons name={info[0].friendUrl} size="25" style={glStyles.cardIcon} />                          
                           </View>
                           <View>
                             <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
                           </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info.ylYouId)}>
-                            <Ionicons name={info.url} size="20" style={glStyles.cardIcon} />
+                          <View onStartShouldSetResponder={() => targetLikeTrigger(info[0].ylYouId)}>
+                            <Ionicons name={info[0].url} size="20" style={glStyles.cardIcon} />
                           </View>
                         </View>
                       </View>
-                    </View>                    
-                  </View>
+                    </View>
+                    <View  style={glStyles.cardItems2}>
+                      <Image resizeMode='cover' style={glStyles.slideImg2}
+                          source={{
+                            uri: `${info[1].glMostUrl}`,
+                          }}
+                        />
+                      <Text style={glStyles.cardLabel} >TOP{index*2  + 2}</Text>
+                      <View style={glStyles.cardInfo}>
+                        <Text style={glStyles.basicText}>닉네임: {info[1].uNickname}</Text>
+                        <Text style={glStyles.basicText} >랭크 :{info[1].glRank}</Text>
+                        <Text style={glStyles.basicText} >포지션 :{info[1].glPosition}</Text>
+                        <Text style={glStyles.basicText} >챔피언 :{info[1].glChampion}</Text>
+                        <Text style={glStyles.basicText} >시간대 :{info[1].glTime}</Text>
+                        <View style={glStyles.btnBox}>
+                          <View onStartShouldSetResponder={() => addFriendTrigger(info[1].ylYouId,info[1].friendState)}>
+                            <Ionicons name={info[1].friendUrl} size="25" style={glStyles.cardIcon} />                          
+                          </View>
+                          <View>
+                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                          </View>
+                          <View onStartShouldSetResponder={() => targetLikeTrigger(info[1].ylYouId)}>
+                            <Ionicons name={info[1].url} size="20" style={glStyles.cardIcon} />
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                </View>                 
                 )
+               
               )
               }
+               </View>
             </View>
           </ScrollView>
         </View>

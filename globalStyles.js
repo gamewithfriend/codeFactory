@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Dimensions } from 'react-native';
 import colors from './assets/colors/colors';
+import { block } from 'react-native-reanimated';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const fontSize = {
@@ -132,6 +133,7 @@ export const glStyles = StyleSheet.create({
     height: "100%",
     opacity:0.6,
     position:'absolute',
+    borderRadius: 45,
   },
 
   // 카드 리스트
@@ -150,23 +152,6 @@ export const glStyles = StyleSheet.create({
     width: 180,
     height: 180,
     marginBottom: 9,
-    
-  },
-  cardItems3: {
-    borderRadius: 45,
-    width: 180,
-    height: 140,
-    marginBottom: 9,
-    left:"35%",
-    position:'absolute',
-  },
-  cardItems4: {
-    borderRadius: 45,
-    width: 180,
-    height: 140,
-    marginBottom: 9,
-    left:"45%",
-    position:'absolute',
   },
   cardLabel: {
     paddingTop: 5,
@@ -231,7 +216,11 @@ export const glStyles = StyleSheet.create({
   justMarginLeft: {
     marginLeft:"3%",
   },
-
+   // flexDirection: 'row', view 스타일
+   justFlexDirectionRow: {
+    marginLeft:"3%",
+    flexDirection: 'row',
+  },
 
 
 });
