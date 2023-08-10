@@ -4,13 +4,13 @@ import colors from './assets/colors/colors';
 import { block } from 'react-native-reanimated';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const fontSize = {
-  xlg: SCREEN_WIDTH > 500 ? 26 : 24,
-  lg: SCREEN_WIDTH > 500 ? 24 : 22,
-  md: SCREEN_WIDTH > 500 ? 20 : 16,
-  sm: SCREEN_WIDTH > 500 ? 14 : 13,
-  xsm: SCREEN_WIDTH > 500 ? 13 : 12,
-};
+// const fontSize = {
+//   xlg: SCREEN_WIDTH > 500 ? 26 : 24,
+//   lg: SCREEN_WIDTH > 500 ? 24 : 22,
+//   md: SCREEN_WIDTH > 500 ? 20 : 16,
+//   sm: SCREEN_WIDTH > 500 ? 14 : 13,
+//   xsm: SCREEN_WIDTH > 500 ? 13 : 12,
+// };
 
 export const glStyles = StyleSheet.create({
   // 광고
@@ -55,7 +55,7 @@ export const glStyles = StyleSheet.create({
   // 글자설정
   pageTit: {
     fontWeight: "bold",
-    fontSize: fontSize.lg,
+    fontSize: 22,
     color: colors.fontWh,
   },
   titleBox: {
@@ -65,14 +65,14 @@ export const glStyles = StyleSheet.create({
   titleBoxIcon: {
     paddingLeft: 20,
     paddingBottom: 20,
-    flexDirection:'row',
+    flexDirection: 'row',
   },
   titleText: {
-    fontSize: fontSize.md,
+    fontSize: 16,
     color: colors.fontWh,
   },
   basicText: {
-    fontSize: fontSize.sm,
+    fontSize: 14,
     color: colors.fontWh,
   },
 
@@ -115,13 +115,13 @@ export const glStyles = StyleSheet.create({
     width: SCREEN_WIDTH * 1,
     height: SCREEN_WIDTH * 0.43,
     alignItems: "center",
-    flexDirection:"row",
+    flexDirection: "row",
   },
   slideImgBox2: {
     width: SCREEN_WIDTH * 1,
     height: SCREEN_WIDTH * 0.43,
     alignItems: "center",
-    flexDirection:"row",
+    flexDirection: "row",
     justifyContent: "center",
   },
   slideImg: {
@@ -131,8 +131,8 @@ export const glStyles = StyleSheet.create({
   slideImg2: {
     width: '100%',
     height: "100%",
-    opacity:0.6,
-    position:'absolute',
+    opacity: 0.6,
+    position: 'absolute',
     borderRadius: 45,
   },
 
@@ -197,28 +197,28 @@ export const glStyles = StyleSheet.create({
     alignItems: "center",
   },
   basicInfoTit: {
-    fontSize: fontSize.md,
+    fontSize: 16,
     color: colors.fontWh,
     fontWeight: 'bold',
     paddingBottom: 6,
   },
   basicInfoDttm: {
     color: colors.fontWh,
-    fontSize: fontSize.xsm,
+    fontSize: 13,
   },
   basicInfoCntn: {
     width: "100%",
     color: colors.fontWh,
-    fontSize: fontSize.sm
+    fontSize: 14
   },
 
   // 마진 view 스타일
   justMarginLeft: {
-    marginLeft:"3%",
+    marginLeft: "3%",
   },
-   // flexDirection: 'row', view 스타일
-   justFlexDirectionRow: {
-    marginLeft:"3%",
+  // flexDirection: 'row', view 스타일
+  justFlexDirectionRow: {
+    marginLeft: "3%",
     flexDirection: 'row',
   },
 
