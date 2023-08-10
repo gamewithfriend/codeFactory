@@ -145,13 +145,6 @@ export const glStyles = StyleSheet.create({
     width: 180,
     height: 180,
     marginBottom: 9,
-    backgroundColor: "#333",
-  },
-  cardItems2: {
-    borderRadius: 45,
-    width: 180,
-    height: 180,
-    marginBottom: 9,
   },
   cardLabel: {
     paddingTop: 5,

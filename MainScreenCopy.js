@@ -42,13 +42,13 @@ export default function MainScreen({ navigation }) {
   const [getUserLike, setUserLike] = useState("");
   const onChangeid = (payload) => setid(payload);
   const onChangepassWord = (payload) => setpassWord(payload);
-  
+
   let youserLikeCheck = "";
   let sessions = "";
 
   ////targetLike----좋아요 기능함수///////
   const targetLike = async (targetId) => {
-    sessions=  await Session.sessionGet("sessionInfo");
+    sessions = await Session.sessionGet("sessionInfo");
     const sessionIdForLike = sessions.uIntgId;
     const response = await fetch(`http://3.37.211.126:8080/main/likeTarget.do?myNick=${sessionIdForLike}&yourNick=${targetId}`).catch(error => { console.log(error) });
     serverGetFindMyAlramList();
@@ -79,10 +79,10 @@ export default function MainScreen({ navigation }) {
       const jsonMsg = await response.json();
       const youserLikeTemp = jsonMsg.msg;
       if (youserLikeTemp == "N") {
-        jsonUserList.selectLikeTop5List[i].url ="heart-outline";
+        jsonUserList.selectLikeTop5List[i].url = "heart-outline";
         jsonUserList.selectLikeTop5List[i].test = "N";
       } else {
-        jsonUserList.selectLikeTop5List[i].url ="heart";
+        jsonUserList.selectLikeTop5List[i].url = "heart";
         jsonUserList.selectLikeTop5List[i].test = "Y";
       }
       //////친구 확인////////
@@ -107,10 +107,10 @@ export default function MainScreen({ navigation }) {
       //모스트 1 캐릭터 배경화면
       let tempMostPickUrl = jsonUserList.selectLikeTop5List[i].glMostUrl;
       jsonUserList.selectLikeTop5List[i].glMostUrl = `http://3.37.211.126:8080/tomcatImg/champ/${tempMostPickUrl}`
-      if((i+1)%2 ==0){
+      if ((i + 1) % 2 == 0) {
         let tempBox = [];
         tempBox.push(jsonUserList.selectLikeTop5List[i]);
-        tempBox.push(jsonUserList.selectLikeTop5List[i-1]);
+        tempBox.push(jsonUserList.selectLikeTop5List[i - 1]);
         reUserLikeTop5List.push(tempBox);
       }
     }
@@ -175,7 +175,7 @@ export default function MainScreen({ navigation }) {
     setOptionName(Math.floor(index / 100))
     let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
     setSelectedOption(getOptionList[indexNumber]);
-   
+
   };
 
   ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
@@ -188,28 +188,28 @@ export default function MainScreen({ navigation }) {
   };
 
   ////addFriendTrigger----친구신청 함수/////// 
-  const addFriendTrigger = (targetId,friendState)=>{
-    if(friendState == "10502"){
+  const addFriendTrigger = (targetId, friendState) => {
+    if (friendState == "10502") {
       alert("현재 친구신청 메세지가 보내진상태입니다.")
-    }else{
-      addFriendDetail(targetId,friendState);
+    } else {
+      addFriendDetail(targetId, friendState);
     }
-    
+
   };
-  const addFriendDetail = async(targetId,friendState) => {
- 
-    sessions=  await Session.sessionGet("sessionInfo");
+  const addFriendDetail = async (targetId, friendState) => {
+
+    sessions = await Session.sessionGet("sessionInfo");
     const sessionIdForAdd = sessions.uIntgId;
-    if(sessionIdForAdd == targetId){
+    if (sessionIdForAdd == targetId) {
       alert("자신에게는 친구신청을 보낼수없습니다.")
       return;
     }
-    const responseAddFriend = await  fetch (`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
+    const responseAddFriend = await fetch(`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
     serverGetUserLikeTop5List();
   };
 
   ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 
-  const targetLikeTrigger = (targetId)=>{
+  const targetLikeTrigger = (targetId) => {
     targetLike(targetId);
     serverGetUserLikeTop5List();
   };
@@ -221,7 +221,7 @@ export default function MainScreen({ navigation }) {
   };
 
   const goMatchingHistory = () => {
-    navigation.navigate('MatchingHistoryScreen',{navigation});
+    navigation.navigate('MatchingHistoryScreen', { navigation });
   };
 
   const optionSubmit = () => {
@@ -393,8 +393,8 @@ export default function MainScreen({ navigation }) {
         <View style={{ marginBottom: 20 }}>
           <View style={glStyles.titleBoxIcon}>
             <Text style={glStyles.titleText}>게임모드 옵션 설정</Text>
-            <View style={glStyles.justMarginLeft} onStartShouldSetResponder={() =>goMatchingHistory()}>
-              <Ionicons name="time-outline" size="22" style={glStyles.cardIcon} /> 
+            <View style={glStyles.justMarginLeft} onStartShouldSetResponder={() => goMatchingHistory()}>
+              <Ionicons name="time-outline" size="22" style={glStyles.cardIcon} />
             </View>
           </View>
           <ScrollView style={glStyles.slideList}
@@ -408,24 +408,24 @@ export default function MainScreen({ navigation }) {
             ) : (
               getOptionList.map((info, index) =>
                 <View key={index} style={glStyles.slideItems}>
-                  <View style={glStyles.slideImgBox2}>                   
-                    <View style={glStyles.cardItems2}  >
+                  <View style={glStyles.slideImgBox2}>
+                    <View style={glStyles.cardItems}  >
                       <Image resizeMode='contain' style={glStyles.slideImg}
                         source={{
                           uri: `${info.url}`,
                         }}
                       />
-                    </View>                                     
+                    </View>
                   </View>
                 </View>
               )
             )
             }
           </ScrollView>
-           <View>
+          <View>
             <Button color={colors.fontWh} title='선택' onPress={optionSubmit} style={styles.clickButton}>
             </Button>
-          </View> 
+          </View>
         </View>
         <View style={glStyles.flexContainer}>
           <View style={glStyles.titleBox}>
@@ -435,22 +435,21 @@ export default function MainScreen({ navigation }) {
             pagingEnabled
             // onMomentumScrollEnd={(event) => { friendChange(event.nativeEvent.contentOffset.x) }}
             showsHorizontalScrollIndicator={false}>
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
-              <View >
+            <View style={glStyles.flexRowEven}>
               {getUserLikeTop5List.length === 0 ? (
                 <View >
                 </View>
               ) : (
-                
+
                 getUserLikeTop5List.map((info, index) =>
-                <View  key={index} style={glStyles.justFlexDirectionRow}>
-                    <View  style={glStyles.cardItems2}>
+                  <View key={index}>
+                    <View style={glStyles.cardItems}>
                       <Image resizeMode='cover' style={glStyles.slideImg2}
-                          source={{
-                            uri: `${info[0].glMostUrl}`,
-                          }}
-                        />
-                      <Text style={glStyles.cardLabel} >TOP{index*2 + 1}</Text>
+                        source={{
+                          uri: `${info[0].glMostUrl}`,
+                        }}
+                      />
+                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
                       <View style={glStyles.cardInfo}>
                         <Text style={glStyles.basicText}>닉네임: {info[0].uNickname}</Text>
                         <Text style={glStyles.basicText} >랭크 :{info[0].glRank}</Text>
@@ -458,8 +457,8 @@ export default function MainScreen({ navigation }) {
                         <Text style={glStyles.basicText} >챔피언 :{info[0].glChampion}</Text>
                         <Text style={glStyles.basicText} >시간대 :{info[0].glTime}</Text>
                         <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info[0].ylYouId,info[0].friendState)}>
-                            <Ionicons name={info[0].friendUrl} size="25" style={glStyles.cardIcon} />                          
+                          <View onStartShouldSetResponder={() => addFriendTrigger(info[0].ylYouId, info[0].friendState)}>
+                            <Ionicons name={info[0].friendUrl} size="25" style={glStyles.cardIcon} />
                           </View>
                           <View>
                             <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
@@ -470,13 +469,13 @@ export default function MainScreen({ navigation }) {
                         </View>
                       </View>
                     </View>
-                    <View  style={glStyles.cardItems2}>
+                    <View style={glStyles.cardItems}>
                       <Image resizeMode='cover' style={glStyles.slideImg2}
-                          source={{
-                            uri: `${info[1].glMostUrl}`,
-                          }}
-                        />
-                      <Text style={glStyles.cardLabel} >TOP{index*2  + 2}</Text>
+                        source={{
+                          uri: `${info[1].glMostUrl}`,
+                        }}
+                      />
+                      <Text style={glStyles.cardLabel} >TOP{index + 3}</Text>
                       <View style={glStyles.cardInfo}>
                         <Text style={glStyles.basicText}>닉네임: {info[1].uNickname}</Text>
                         <Text style={glStyles.basicText} >랭크 :{info[1].glRank}</Text>
@@ -484,8 +483,8 @@ export default function MainScreen({ navigation }) {
                         <Text style={glStyles.basicText} >챔피언 :{info[1].glChampion}</Text>
                         <Text style={glStyles.basicText} >시간대 :{info[1].glTime}</Text>
                         <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info[1].ylYouId,info[1].friendState)}>
-                            <Ionicons name={info[1].friendUrl} size="25" style={glStyles.cardIcon} />                          
+                          <View onStartShouldSetResponder={() => addFriendTrigger(info[1].ylYouId, info[1].friendState)}>
+                            <Ionicons name={info[1].friendUrl} size="25" style={glStyles.cardIcon} />
                           </View>
                           <View>
                             <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
@@ -496,12 +495,11 @@ export default function MainScreen({ navigation }) {
                         </View>
                       </View>
                     </View>
-                </View>                 
+                  </View>
                 )
-               
+
               )
               }
-               </View>
             </View>
           </ScrollView>
         </View>
