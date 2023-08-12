@@ -9,7 +9,6 @@ import axios from 'axios';
 import MainFrame from './MainFrame';
 import { glStyles } from './globalStyles';
 import colors from './assets/colors/colors';
-import { Ionicons } from '@expo/vector-icons';
 
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.219.142";

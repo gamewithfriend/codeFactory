@@ -24,24 +24,24 @@ export default function SettingScreen({ navigation }) {
       </View>
       <View style={glStyles.basicList}>
         <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
-          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>Settings</Text>
           {/* <Button color={"black"} style={styles.choiceButton} onPress={optionSubmit} title='선택하기'></Button> */}
         </View>
         <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
-          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
         <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
-          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
         <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
-          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
         <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
-          <Ionicons name="settings-outline" size="24" style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
+          <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
         <View style={styles.lineDesign} />

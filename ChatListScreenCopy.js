@@ -177,13 +177,13 @@ export default function ChatListScreen({ navigation }) {
                 <Text style={glStyles.pageTit}>채팅</Text>
                 <View style={glStyles.flexRow}>
                     <TouchableOpacity onPress={addFriendChat}>
-                        <Ionicons name="person-add" size="20" style={glStyles.cardIcon} />
+                        <Ionicons name="person-add" size={20} style={glStyles.cardIcon} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleAdd}>
-                        <Ionicons name="add" size="24" style={glStyles.cardIcon} />
+                        <Ionicons name="add" size={24} style={glStyles.cardIcon} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleAdd}>
-                        <Ionicons name="add" size="24" style={glStyles.cardIcon} />
+                        <Ionicons name="add" size={24} style={glStyles.cardIcon} />
                     </TouchableOpacity>
                 </View>
             </View>

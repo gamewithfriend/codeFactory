@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "testApp",
-    "slug": "testApp",
+    "slug": "testapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -35,9 +35,14 @@
     },
     "extra": {
       "eas": {
-        "projectId": "16406385-ca8a-416d-9e43-613b77e8f33b"
+        "projectId": "58534f23-95f9-4a97-9b12-da853c69b177"
       }
     },
-    "scheme": "https://auth.expo.io/@hopehope/testApp"
+    "scheme": "https://testApp/testapp",
+    "owner": "yozing"
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-9328111145151518~9882050520",
+    "ios_app_id": "ca-app-pub-9328111145151518~7507114722"
   }
 }

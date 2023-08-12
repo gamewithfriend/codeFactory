@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, TextInput, Image, Dimensions, ActivityI
 import { glStyles } from './globalStyles';
 import { LinearGradient } from 'expo-linear-gradient';
 import colors from './assets/colors/colors';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads'
 
 export default function MainFrame({ children }) {
   return (
@@ -16,7 +17,13 @@ export default function MainFrame({ children }) {
         {children}
       </SafeAreaView>
       <View style={glStyles.adver}>
-        <Text style={glStyles.adverText}>광고</Text>
+        <BannerAd
+                  unitId={TestIds.BANNER}
+                  size={BannerAdSize.INLINE_ADAPTIVE_BANNER}
+                  requestOptions={{
+                      requestNonPersonalizedAdsOnl: true,
+                  }}
+        />
       </View>
     </LinearGradient>
   );

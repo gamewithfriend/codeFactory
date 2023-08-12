@@ -358,7 +358,7 @@ export default function MainScreen({ navigation }) {
       <View style={styles.mainContainer} >
         <View style={styles.mainSatusView}>
           <View style={styles.mainSatusItemView} onStartShouldSetResponder={() => setModalVisible(true)} >
-            <FontAwesome5 name="bell" size="22" style={glStyles.cardIcon} />
+            <FontAwesome5 name="bell" size={22} style={glStyles.cardIcon} />
             <Text style={styles.mainSatusCountFont}>{getAlramCount}</Text>
           </View>
         </View>
@@ -394,7 +394,7 @@ export default function MainScreen({ navigation }) {
           <View style={glStyles.titleBoxIcon}>
             <Text style={glStyles.titleText}>게임모드 옵션 설정</Text>
             <View style={glStyles.justMarginLeft} onStartShouldSetResponder={() => goMatchingHistory()}>
-              <Ionicons name="time-outline" size="22" style={glStyles.cardIcon} />
+              <Ionicons name="time-outline" size={22} style={glStyles.cardIcon} />
             </View>
           </View>
           <ScrollView style={glStyles.slideList}
@@ -458,13 +458,13 @@ export default function MainScreen({ navigation }) {
                         <Text style={glStyles.basicText} >시간대 :{info[0].glTime}</Text>
                         <View style={glStyles.btnBox}>
                           <View onStartShouldSetResponder={() => addFriendTrigger(info[0].ylYouId, info[0].friendState)}>
-                            <Ionicons name={info[0].friendUrl} size="25" style={glStyles.cardIcon} />
+                            <Ionicons name={info[0].friendUrl} size={25} style={glStyles.cardIcon} />
                           </View>
                           <View>
-                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                            <Ionicons name="chatbubble-sharp" size={20} style={glStyles.cardIcon} />
                           </View>
                           <View onStartShouldSetResponder={() => targetLikeTrigger(info[0].ylYouId)}>
-                            <Ionicons name={info[0].url} size="20" style={glStyles.cardIcon} />
+                            <Ionicons name={info[0].url} size={20} style={glStyles.cardIcon} />
                           </View>
                         </View>
                       </View>
@@ -484,13 +484,13 @@ export default function MainScreen({ navigation }) {
                         <Text style={glStyles.basicText} >시간대 :{info[1].glTime}</Text>
                         <View style={glStyles.btnBox}>
                           <View onStartShouldSetResponder={() => addFriendTrigger(info[1].ylYouId, info[1].friendState)}>
-                            <Ionicons name={info[1].friendUrl} size="25" style={glStyles.cardIcon} />
+                            <Ionicons name={info[1].friendUrl} size={25} style={glStyles.cardIcon} />
                           </View>
                           <View>
-                            <Ionicons name="chatbubble-sharp" size="20" style={glStyles.cardIcon} />
+                            <Ionicons name="chatbubble-sharp" size={20} style={glStyles.cardIcon} />
                           </View>
                           <View onStartShouldSetResponder={() => targetLikeTrigger(info[1].ylYouId)}>
-                            <Ionicons name={info[1].url} size="20" style={glStyles.cardIcon} />
+                            <Ionicons name={info[1].url} size={20} style={glStyles.cardIcon} />
                           </View>
                         </View>
                       </View>
