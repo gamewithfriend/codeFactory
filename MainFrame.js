@@ -17,13 +17,13 @@ export default function MainFrame({ children }) {
         {children}
       </SafeAreaView>
       <View style={glStyles.adver}>
-        <BannerAd
+        {/* <BannerAd
                   unitId={TestIds.BANNER}
                   size={BannerAdSize.INLINE_ADAPTIVE_BANNER}
                   requestOptions={{
                       requestNonPersonalizedAdsOnl: true,
                   }}
-        />
+        /> */}
       </View>
     </LinearGradient>
   );
