@@ -221,7 +221,7 @@ export default function MainScreen({ navigation }) {
   };
 
   const goMatchingHistory = () => {
-    navigation.navigate('MatchingHistoryScreen', { navigation });
+    navigation.navigate('MatchingHistoryScreenCopy', { navigation });
   };
 
   const optionSubmit = () => {

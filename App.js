@@ -29,6 +29,7 @@ import MatchingHistoryScreen from './MatchingHistoryScreen';
 import AlarmScreen from './AlarmScreen';
 import ChatListScreen from './ChatListScreen';
 import MainScreenCopy from './MainScreenCopy';
+import MatchingHistoryScreenCopy from './MatchingHistoryScreenCopy';
 import ChatListScreenCopy from './ChatListScreenCopy';
 import FriendScreenCopy from './FriendScreenCopy';
 import LoginCopy from './LoginScreenCopy';
@@ -68,13 +69,13 @@ function HomeTab() {
         backgroundColor: 'rgba(34,36,40,1)',
         borderTopWidth: 0,
       },
-      tabBarOptions:{
+      tabBarOptions: {
         activeTintColor: colors.fontWh,
         inactiveTintColor: colors.gray,
       }
 
     })}
-      
+
     >
       <Tab.Screen name='Home' component={MainScreenCopy} />
       {/* <Tab.Screen name='MainScreen' component={MainScreen} /> */}
@@ -154,6 +155,9 @@ export default function App() {
           headerShown: false
         }} />
         <Stack.Screen name="OptionSelectSpecial" component={OptionSelectSpecial} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name="MatchingHistoryScreenCopy" component={MatchingHistoryScreenCopy} options={{
           headerShown: false
         }} />
       </Stack.Navigator>

@@ -51,6 +51,11 @@ export const glStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
+  flexRowEvenCntr: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
 
   // 글자설정
   pageTit: {
