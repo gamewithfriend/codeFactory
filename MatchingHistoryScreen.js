@@ -178,7 +178,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                         text="고의 트롤 행위"
                                         iconStyle={{ borderColor: "red" }}
                                         textStyle={{ textDecorationLine: "none" }}
-                                        onPress={(isChecked: boolean) => {reportOptionCheck("11401")}}
+                                      
                                     />
                                     <BouncyCheckbox
                                         style={styles.reportCheckbox}
@@ -188,7 +188,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                         text="게임 내 공격적인 언어 사용"
                                         iconStyle={{ borderColor: "red" }}
                                         textStyle={{ textDecorationLine: "none" }}
-                                        onPress={(isChecked: boolean) => {reportOptionCheck("11402")}}
+                                        
                                     />
                                     <BouncyCheckbox
                                         style={styles.reportCheckbox}
@@ -198,7 +198,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                         text="탈주 행위 또는 자리비움"
                                         iconStyle={{ borderColor: "red" }}
                                         textStyle={{ textDecorationLine: "none" }}
-                                        onPress={(isChecked: boolean) => {reportOptionCheck("11403")}}
+                                        
                                     />
                                     <BouncyCheckbox
                                         style={styles.reportCheckbox}
@@ -208,7 +208,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                         text="티어에 맞지 않는 플레이 (대리 의심)"
                                         iconStyle={{ borderColor: "red" }}
                                         textStyle={{ textDecorationLine: "none" }}
-                                        onPress={(isChecked: boolean) => {reportOptionCheck("11404")}}
+                                        
                                     />
                                     <BouncyCheckbox
                                         style={styles.reportCheckbox}
@@ -218,7 +218,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                         text="불법 프로그램 사용"
                                         iconStyle={{ borderColor: "red" }}
                                         textStyle={{ textDecorationLine: "none" }}
-                                        onPress={(isChecked: boolean) => {reportOptionCheck("11405")}}
+                                        
                                     />
                                     <BouncyCheckbox
                                         style={styles.reportCheckbox}
@@ -228,7 +228,7 @@ export default function MatchingHistoryScreen ({navigation}) {
                                         text="기타"
                                         iconStyle={{ borderColor: "red" }}
                                         textStyle={{ textDecorationLine: "none" }}
-                                        onPress={(isChecked: boolean) => {reportOptionCheck("11406")}}
+                                        
                                     />
                                 </View>
                                 <View style={styles.reportTextInputArea}>
