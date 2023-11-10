@@ -93,7 +93,7 @@ export default function MainScreen ({navigation}) {
         const jsonUserFriendState = await responseTwo.json();
 
         if(jsonUserFriendState.selectUserFriendState == null){
-          jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus.png');
+          jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus_bk.png');
           jsonUserList.selectLikeTop5List[i].friendState = "";
         }else{
           if(jsonUserFriendState.selectUserFriendState.fStateCd == "10501"){
@@ -103,7 +103,7 @@ export default function MainScreen ({navigation}) {
             jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/send.png');
             jsonUserList.selectLikeTop5List[i].friendState = "10502";
           }else{
-            jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus.png');
+            jsonUserList.selectLikeTop5List[i].friendUrl =require('./assets/images/plus_bk.png');
             jsonUserList.selectLikeTop5List[i].friendState = "";
           }
         }
@@ -137,7 +137,7 @@ export default function MainScreen ({navigation}) {
       const response = await fetch (`http://hduo88.com/friend/selectUserFriend.do?myId=${sessionId}&youId=${youId}`)
       const jsonUserFriendState = await response.json();
       if(jsonUserFriendState.selectUserFriendState == null){
-        getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
+        getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus_bk.png');
         getUserLikeTop5List[indexNumber].friendState = "";
       }else{
         if(jsonUserFriendState.selectUserFriendState.fStateCd == "10501"){
@@ -147,7 +147,7 @@ export default function MainScreen ({navigation}) {
           getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/send.png');
           getUserLikeTop5List[indexNumber].friendState = "10502";
         }else{
-          getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus.png');
+          getUserLikeTop5List[indexNumber].friendUrl =require('./assets/images/plus_bk.png');
           getUserLikeTop5List[indexNumber].friendState = "";
         }
       }
