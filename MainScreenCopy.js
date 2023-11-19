@@ -423,7 +423,8 @@ export default function MainScreen({ navigation }) {
             }
           </ScrollView>
           <View>
-            <Button color={colors.fontWh} title='선택' onPress={optionSubmit} style={styles.clickButton}>
+            {/* 버튼 아니면 onPress가 안되는 것인지 확인 필요. 버튼 객체가 스타일이 안먹음*/}
+            <Button color={colors.lightBlue} title='선택' onPress={optionSubmit} style={[glStyles.mdBtn, glStyles.btnBlue]}>
             </Button>
           </View>
         </View>

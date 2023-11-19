@@ -152,7 +152,7 @@ export default function MatchingHistoryScreen({ navigation }) {
             <View style={glStyles.titleBox}>
                 <Text style={glStyles.titleText}>매칭 이력</Text>
             </View>
-            <View style={styles.contentsView}>
+            <View style={[glStyles.flexContainer, glStyles.pdHrzn15]}>
                 {/*신고 모달 화면 */}
                 <View style={styles.centeredView}>
                     <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={() => { setModalVisible(!modalVisible); }}>
@@ -169,7 +169,7 @@ export default function MatchingHistoryScreen({ navigation }) {
                                         <Text style={styles.reportTitle_text}>{reportNicname} 유저 신고하기</Text>
                                     </View>
                                 </View>
-                                <View style={styles.reportCheckboxArea}>
+                                {/* <View style={styles.reportCheckboxArea}>
                                     <Text style={{ fontSize: 15, fontWeight: 'bold' }}>신고 사유를 선택해주세요. (복수 선택 가능)</Text>
                                     <BouncyCheckbox
                                         style={styles.reportCheckbox}
@@ -249,7 +249,7 @@ export default function MatchingHistoryScreen({ navigation }) {
                                             />
                                         </KeyboardAvoidingView>
                                     </SafeAreaView>
-                                </View>
+                                </View> */}
                                 {/* <View style={styles.lineDesign}></View> */}
 
                                 <View style={styles.reportButtonArea}>
@@ -269,7 +269,7 @@ export default function MatchingHistoryScreen({ navigation }) {
 
 
                 <View style={glStyles.flexContainer}>
-                    <View style={glStyles.flexRowEvenCntr}>
+                    <View style={[glStyles.flexRowEvenCntr, glStyles.mgbt20]}>
                         {(getPreviousDate === "" || getPreviousDate === "isNull") ? (
                             <View style={styles.previousButtonView}></View>
                         ) : (
@@ -291,7 +291,7 @@ export default function MatchingHistoryScreen({ navigation }) {
                         }
                     </View>
 
-                    <View style={[glStyles.pdHrzn15]}>
+                    <View style={[glStyles.flexContainer]}>
                         <ScrollView pagingEnabled={false} showsHorizontalScrollIndicator={false}>
                             {getStateHistoryList.length === 0 ? (
                                 <View style={[glStyles.flexContainer, glStyles.flexCenter]}>
@@ -299,66 +299,39 @@ export default function MatchingHistoryScreen({ navigation }) {
                                 </View>
                             ) : (
                                 getStateHistoryList.map((info, index) =>
-                                    <View key={info.mMatchingID} style={styles.profileView}>
-                                        <View style={styles.profileImgView}>
-                                            <Image resizeMode='stretch' style={styles.profileImg}
+                                    <View key={info.mMatchingID} style={[glStyles.basicItem, glStyles.pd15, glStyles.addPartLine]}>
+                                        <View style={[glStyles.flexCenter, glStyles.pdR10]}>
+                                            <Image resizeMode='cover' style={glStyles.basicItemImg}
                                                 source={require("./assets/images/emptyProfile.jpg")} />
+                                            <Text style={[glStyles.mgTop5, glStyles.basicText]}><Ionicons name="thumbs-up-outline" size={15} style={glStyles.cardIcon} /> 127 </Text>
                                         </View>
-                                        <View style={styles.profileInfoView}>
-                                            <View style={styles.infoArea}>
-                                                <View style={styles.tierArea}>
-                                                    <View style={styles.tierImgView}>
-                                                        <Image resizeMode='center' style={styles.tierImg}
-                                                            source={require("./assets/images/rank/emblem-gold.png")} />
-                                                    </View>
-                                                    <View style={styles.tierName}>
-                                                        <Text>{info.mUserRank}</Text>
-                                                    </View>
-                                                </View>
-                                                <View style={styles.userArea}>
-                                                    <View style={styles.userName}>
-                                                        <Text>{info.mUserNickname}</Text>
-                                                    </View>
-                                                    <View style={styles.userLike}>
-                                                        <View style={styles.likeCount}>
-                                                            <Text>7</Text>
-                                                        </View>
-                                                        <View style={styles.likeImgView}>
-                                                            <Image resizeMode='stretch' style={styles.likeImg}
-                                                                source={require("./assets/images/fullHeart.png")} />
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                                <View style={styles.mostArea}>
-                                                    <View style={styles.mostChampions}>
-                                                        <Text>{info.mUserChmpion}</Text>
-                                                    </View>
-                                                    <View style={styles.oftenTime}>
-                                                        <Text>{info.mUserTime}</Text>
-                                                    </View>
-                                                </View>
+                                        <View style={[glStyles.flexGrow1, glStyles.flexRowBtwnCntr]}>
+                                            <View>
+                                                <Text style={glStyles.basicText}>{info.mUserNickname}</Text>
+                                                <Text style={[glStyles.basicText, styles.matchingPointTextDetail]}>매칭점수: {info.mMatchingScore}</Text>
+                                                <Text style={glStyles.basicText}>시간대: {info.mUserTime}</Text>
+                                                <Text style={glStyles.basicText}>타입: {info.mGameType}</Text>
+                                                <Text style={glStyles.basicText}>주챔: {info.mUserChmpion}</Text>
                                             </View>
-                                            <View style={styles.matchingArea}>
-                                                <View style={styles.playType}>
-                                                    <Text>{info.mGameType}</Text>
+                                            <View style={[glStyles.flexCenter]}>
+                                                <View>
+                                                    <Text style={[glStyles.basicText, glStyles.txtAlignCntr]}>{info.mUserRank}</Text>
+                                                    <Image resizeMode='center' style={glStyles.basicItemImg}
+                                                        source={require("./assets/images/rank/emblem-gold.png")} />
                                                 </View>
-                                                <View style={styles.matchingPointText}>
-                                                    <Text style={styles.matchingPointTextDetail}>매칭점수</Text>
+                                                <View style={[glStyles.btnBox, glStyles.flexRowEvenCntr]}>
+                                                    <View style={glStyles.pdR10} onStartShouldSetResponder={() => addFriendTrigger(info.mUserID)}>
+                                                        <Text><Ionicons name="rocket-outline" size={25} style={glStyles.cardIcon} /></Text>
+                                                    </View>
+                                                    <View onStartShouldSetResponder={() => reportButtonClick(info.mUserNickname, info.mUserID)}>
+                                                        <Text><Ionicons name="sad" size={25} style={glStyles.cardIcon} /></Text>
+                                                    </View>
                                                 </View>
-                                                <View style={styles.matchingPoint}>
-                                                    <Text>{info.mMatchingScore}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <View style={styles.profileButtonView}>
-                                            <View style={styles.addFriendArea} onStartShouldSetResponder={() => addFriendTrigger(info.mUserID)}>
-                                                <Text><Ionicons name="rocket-outline" size={25} style={glStyles.cardIcon} /></Text>
-                                            </View>
-                                            <View style={styles.reportArea} onStartShouldSetResponder={() => reportButtonClick(info.mUserNickname, info.mUserID)}>
-                                                <Text><Ionicons name="sad" size={25} style={glStyles.cardIcon} /></Text>
                                             </View>
                                         </View>
                                     </View>
+
+
                                 )
                             )
                             }
@@ -371,289 +344,271 @@ export default function MatchingHistoryScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    lineDesign: {
-        height: 1,
-        backgroundColor: "black",
-        marginBottom: "1%",
-        marginTop: "1%",
-        opacity: 0.3,
-    },
-    container: {
-        //flex:1,
-    },
-    titleView: {
-        marginTop: "15%",
-        height: "3%",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    contentsView: {
-        //flexGorw:1,
-        height: "83%",
-        marginTop: "1%",
-    },
-    // Daily
-    dailyMatching: {
-        //height: SCREEN_HEIGHT * 1,
-        height: "98%",
-        margin: "1%",
-    },
-    dayView: {
-        height: "5%",
-        //borderWidth: 1,
-        flexDirection: "row"
-    },
-    previousButtonView: {
-        width: "15%",
-        alignItems: "center",
-        justifyContent: "center",
-        //borderWidth: 1,
-    },
-    displayDate: {
-        width: "70%",
-        alignItems: "center",
-        justifyContent: "center",
-        //borderWidth: 1,
-    },
-    laterButtonView: {
-        width: "15%",
-        alignItems: "center",
-        justifyContent: "center",
-        //borderWidth: 1,
-    },
-    dailyProfile: {
-        height: "95%",
-        flex: 1,
-    },
-    // 프로필
-    profileView: {
-        height: SCREEN_HEIGHT * 0.098,
-        flexDirection: "row",
-        marginTop: "1%",
-        backgroundColor: 'rgb(236, 230, 255)',
-        borderWidth: 1,
-        borderRadius: 6,
-        //flex:1,
-    },
-    profileImgView: {
-        width: "20%",
-        //margin: "0.5%", 
-    },
-    profileImg: {
-        width: "100%",
-        height: "100%",
-        borderRadius: 50,
-    },
-    profileInfoView: {
-        width: "60%",
-        flexDirection: "row",
-        margin: "0.5%",
-        //borderWidth: 1
-    },
-    infoArea: {
-        width: "80%",
-        //borderWidth: 1
-    },
-    tierArea: {
-        height: "25%",
-        flexDirection: "row",
-        //borderWidth: 1
-    },
-    tierImgView: {
-        width: "15%",
-        //borderWidth: 1
-    },
-    tierImg: {
-        width: "100%",
-        height: "100%"
-    },
-    tierName: {
-        width: "85%",
-        justifyContent: "center",
-        fontFamily: "Apple SD Gothic Neo",
-        //borderWidth: 1
-    },
-    userArea: {
-        height: "50%",
-        flexDirection: "row",
-        //borderWidth: 1
-    },
-    userName: {
-        width: "80%",
-        justifyContent: "center",
-        //borderWidth: 1
-    },
-    userLike: {
-        width: "20%",
-        //borderWidth: 1
-    },
-    likeCount: {
-        height: "35%",
-        alignItems: "center",
-        //borderWidth: 1
-    },
-    likeImgView: {
-        height: "65%",
-        //borderWidth: 1
-    },
-    likeImg: {
-        width: "100%",
-        height: "100%"
-    },
-    mostArea: {
-        height: "25%",
-        flexDirection: "row",
-        //borderWidth: 1
-    },
-    mostChampions: {
-        width: "80%",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 30,
-        //borderWidth: 1
-    },
-    oftenTime: {
-        width: "20%",
-        alignItems: "center",
-        justifyContent: "center",
-        //borderWidth: 1
-    },
+    // lineDesign: {
+    //     // height: 1,
+    //     backgroundColor: "black",
+    //     marginBottom: "1%",
+    //     marginTop: "1%",
+    //     opacity: 0.3,
+    // },
+    // container: {
+    //     //flex:1,
+    // },
+    // titleView: {
+    //     marginTop: "15%",
+    //     height: "3%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    // },
+    // // Daily
+    // dailyMatching: {
+    //     //height: SCREEN_HEIGHT * 1,
+    //     // height: "98%",
+    //     margin: "1%",
+    // },
+    // dayView: {
+    //     height: "5%",
+    //     //borderWidth: 1,
+    //     flexDirection: "row"
+    // },
+    // previousButtonView: {
+    //     width: "15%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     //borderWidth: 1,
+    // },
+    // displayDate: {
+    //     width: "70%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     //borderWidth: 1,
+    // },
+    // laterButtonView: {
+    //     width: "15%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     //borderWidth: 1,
+    // },
+    // dailyProfile: {
+    //     // height: "95%",
+    //     flex: 1,
+    // },
+    // // 프로필
+    // profileImg: {
+    //     // width: "100%",
+    //     // height: "100%",
+    //     borderRadius: 50,
+    // },
+    // profileInfoView: {
+    //     // width: "60%",
+    //     flexDirection: "row",
+    //     margin: "0.5%",
+    //     //borderWidth: 1
+    // },
+    // infoArea: {
+    //     // width: "80%",
+    //     //borderWidth: 1
+    // },
+    // tierArea: {
+    //     // height: "25%",
+    //     // flexDirection: "row",
+    //     //borderWidth: 1
+    // },
+    // tierImgView: {
+    //     // width: "15%",
+    //     //borderWidth: 1
+    // },
+    // tierImg: {
+    //     width: "100%",
+    //     // height: "100%"
+    // },
+    // tierName: {
+    //     // width: "85%",
+    //     justifyContent: "center",
+    //     fontFamily: "Apple SD Gothic Neo",
+    //     //borderWidth: 1
+    // },
+    // userArea: {
+    //     // height: "50%",
+    //     flexDirection: "row",
+    //     //borderWidth: 1
+    // },
+    // userName: {
+    //     // width: "80%",
+    //     justifyContent: "center",
+    //     //borderWidth: 1
+    // },
+    // userLike: {
+    //     width: "20%",
+    //     //borderWidth: 1
+    // },
+    // likeCount: {
+    //     height: "35%",
+    //     alignItems: "center",
+    //     //borderWidth: 1
+    // },
+    // likeImgView: {
+    //     height: "65%",
+    //     //borderWidth: 1
+    // },
+    // likeImg: {
+    //     width: "100%",
+    //     height: "100%"
+    // },
+    // mostArea: {
+    //     height: "25%",
+    //     flexDirection: "row",
+    //     //borderWidth: 1
+    // },
+    // mostChampions: {
+    //     width: "80%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     fontSize: 30,
+    //     //borderWidth: 1
+    // },
+    // oftenTime: {
+    //     width: "20%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     //borderWidth: 1
+    // },
 
-    matchingArea: {
-        width: "20%",
-        //borderWidth: 1
-    },
-    playType: {
-        height: "35%",
-        alignItems: "center",
-        justifyContent: "center",
-        //borderWidth: 1
-    },
-    matchingPointText: {
-        height: "30%",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        //borderWidth: 1
-    },
-    matchingPointTextDetail: {
-        fontSize: 10,
-    },
+    // matchingArea: {
+    //     width: "20%",
+    //     //borderWidth: 1
+    // },
+    // playType: {
+    //     height: "35%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     //borderWidth: 1
+    // },
+    // matchingPointText: {
+    //     height: "30%",
+    //     alignItems: "center",
+    //     justifyContent: "flex-end",
+    //     //borderWidth: 1
+    // },
+    // matchingPointTextDetail: {
+    //     fontSize: 10,
+    // },
 
-    matchingPoint: {
-        height: "35%",
-        alignItems: "center",
-        justifyContent: "center",
-        //borderWidth: 1
-    },
+    // matchingPoint: {
+    //     height: "35%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     //borderWidth: 1
+    // },
 
-    profileButtonView: {
-        width: "17%",
-        //backgroundColor: "green",
-    },
-    addFriendArea: {
-        height: "50%",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    reportArea: {
-        height: "50%",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    centeredView: {
-        // flex: 1,
-        //borderWidth: 1
-        //marginTop: "5%",
-    },
-    modalView: {
-        margin: 0,
-        backgroundColor: 'white',
-        padding: "1%",
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        position: 'absolute',
-        top: -290,
-        bottom: 70,
-        left: 0,
-        right: 0,
-        //borderWidth: 1
-    },
-    reportTitleArea: {
-        flexDirection: "row",
-        height: "13%",
-        marginTop: "2%",
-        padding: "1%",
-        //borderWidth: 1
-    },
-    reportTitle_profileImg: {
-        width: "20%"
-    },
-    reportTitle_info: {
-        width: "80%",
-        marginLeft: "5%",
-        justifyContent: "center"
-    },
-    reportTitle_text: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    reportCheckboxArea: {
-        height: "50%",
-        padding: "3%",
-        marginTop: "3%",
-        //borderWidth: 1
-    },
-    reportTextInputArea: {
-        flex: 1,
-        flexShrink: 1,
-        height: "20%",
-        padding: "3%",
-        //borderWidth: 1
-    },
-    reportButtonArea: {
-        height: "10%",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        //borderWidth: 1
-    },
-    reportSubmitButton: {
-        //borderWidth: 1,
-        height: "70%",
-        width: "20%",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 8,
-        backgroundColor: "#F44336"
-    },
-    reportCancelButton: {
-        //borderWidth: 1,
-        marginLeft: "10%",
-        height: "70%",
-        width: "20%",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 7,
-        backgroundColor: "#7F7F7F"
-    },
-    reportCheckbox: {
-        height: "10%",
-        marginTop: "3%",
-    },
-    input: {
-        height: 80,
-        marginTop: "3%",
-        borderWidth: 1,
-        padding: 10,
-    },
-    avoid: {
-        flex: 1,
-        backgroundColor: "#ffffff"
-    },
+    // profileButtonView: {
+    //     width: "17%",
+    //     //backgroundColor: "green",
+    // },
+    // addFriendArea: {
+    //     height: "50%",
+    //     alignItems: "center",
+    //     justifyContent: "center"
+    // },
+    // reportArea: {
+    //     height: "50%",
+    //     alignItems: "center",
+    //     justifyContent: "center"
+    // },
+    // centeredView: {
+    //     // flex: 1,
+    //     //borderWidth: 1
+    //     //marginTop: "5%",
+    // },
+    // modalView: {
+    //     margin: 0,
+    //     backgroundColor: 'white',
+    //     padding: "1%",
+    //     shadowColor: '#000',
+    //     shadowOffset: {
+    //         width: 0,
+    //         height: 0,
+    //     },
+    //     shadowOpacity: 0.25,
+    //     shadowRadius: 4,
+    //     elevation: 5,
+    //     position: 'absolute',
+    //     top: -290,
+    //     bottom: 70,
+    //     left: 0,
+    //     right: 0,
+    //     //borderWidth: 1
+    // },
+    // reportTitleArea: {
+    //     flexDirection: "row",
+    //     height: "13%",
+    //     marginTop: "2%",
+    //     padding: "1%",
+    //     //borderWidth: 1
+    // },
+    // reportTitle_profileImg: {
+    //     width: "20%"
+    // },
+    // reportTitle_info: {
+    //     width: "80%",
+    //     marginLeft: "5%",
+    //     justifyContent: "center"
+    // },
+    // reportTitle_text: {
+    //     fontSize: 20,
+    //     fontWeight: 'bold',
+    // },
+    // reportCheckboxArea: {
+    //     height: "50%",
+    //     padding: "3%",
+    //     marginTop: "3%",
+    //     //borderWidth: 1
+    // },
+    // reportTextInputArea: {
+    //     flex: 1,
+    //     flexShrink: 1,
+    //     height: "20%",
+    //     padding: "3%",
+    //     //borderWidth: 1
+    // },
+    // reportButtonArea: {
+    //     height: "10%",
+    //     flexDirection: "row",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     //borderWidth: 1
+    // },
+    // reportSubmitButton: {
+    //     //borderWidth: 1,
+    //     height: "70%",
+    //     width: "20%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     borderRadius: 8,
+    //     backgroundColor: "#F44336"
+    // },
+    // reportCancelButton: {
+    //     //borderWidth: 1,
+    //     marginLeft: "10%",
+    //     height: "70%",
+    //     width: "20%",
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     borderRadius: 7,
+    //     backgroundColor: "#7F7F7F"
+    // },
+    // reportCheckbox: {
+    //     height: "10%",
+    //     marginTop: "3%",
+    // },
+    // input: {
+    //     height: 80,
+    //     marginTop: "3%",
+    //     borderWidth: 1,
+    //     padding: 10,
+    // },
+    // avoid: {
+    //     flex: 1,
+    //     backgroundColor: "#ffffff"
+    // },
 });

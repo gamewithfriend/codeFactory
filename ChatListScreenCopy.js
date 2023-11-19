@@ -153,7 +153,7 @@ export default function ChatListScreen({ navigation }) {
             body: JSON.stringify(param)
         }).then(response => response.json()
         ).then((result) => {
-            navigation.navigate('TextChat', { chatRoomId: result.resultMap.chatRoomId });
+            navigation.navigate('TextChatCopy', { chatRoomId: result.resultMap.chatRoomId });
         }).catch(error => {
             console.error(error);
         });
@@ -161,7 +161,7 @@ export default function ChatListScreen({ navigation }) {
 
     // 채팅방으로 이동하는 메서드
     const moveToChatRoom = (chatRoomId) => {
-        navigation.navigate('TextChat', { chatRoomId: chatRoomId });
+        navigation.navigate('TextChatCopy', { chatRoomId: chatRoomId });
     };
 
     useEffect(() => {
@@ -179,12 +179,12 @@ export default function ChatListScreen({ navigation }) {
                     <TouchableOpacity onPress={addFriendChat}>
                         <Ionicons name="person-add" size={20} style={glStyles.cardIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleAdd}>
+                    {/* <TouchableOpacity onPress={handleAdd}>
                         <Ionicons name="add" size={24} style={glStyles.cardIcon} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleAdd}>
                         <Ionicons name="add" size={24} style={glStyles.cardIcon} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
             <View style={glStyles.flexContainer}>
@@ -215,59 +215,59 @@ export default function ChatListScreen({ navigation }) {
                     />
                 )}
             </View>
-            <View style={styles.centeredView}>
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
-                        setModalVisible(!modalVisible);
-                    }}>
-                    <Pressable style={{
-                        flex: 1,
-                        backgroundColor: 'transparent',
-                    }}
-                        onPress={() => setModalVisible(false)}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
+                <Pressable style={{
+                    flex: 1,
+                    backgroundColor: 'transparent',
+                }}
+                    onPress={() => setModalVisible(false)}
+                />
+                <View style={[styles.modalView, glStyles.bgBlack, glStyles.pd15]}>
+                    <View style={[glStyles.btnIcon, glStyles.flexRowEnd]}>
+                        <Ionicons name="close" size={20} style={glStyles.cardIcon} />
+                    </View>
+                    <TextInput
+                        style={glStyles.basicText}
+                        onChangeText={text => onChange(text)}
+                        value={text}
                     />
-                    <View>
-
-                        <View style={styles.modalView}>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={text => onChange(text)}
-                                value={text}
-                            />
-                            {getStateFriendList.length === 0 ? (
-                                <Text>친구가 없습니다.</Text>
-                            ) : (
-                                <FlatList
-                                    data={getStateFriendList}
-                                    keyExtractor={item => item.id}
-                                    renderItem={({ item }) => (
-                                        <View style={[styles.chatItem, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
-                                            <View style={styles.itemBoxView}>
-                                                <View style={styles.itemBoxPhoto}>
-                                                    <Image resizeMode='contain' style={styles.profileImg}
-                                                        source={require("./assets/images/emptyProfile.jpg")} />
-                                                </View>
-                                                <View style={styles.listName} >
-                                                    <Text>{item.appNick}</Text>
-                                                </View>
-                                            </View>
+                    {getStateFriendList.length === 0 ? (
+                        <Text>친구가 없습니다.</Text>
+                    ) : (
+                        <FlatList
+                            data={getStateFriendList}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <View style={[glStyles.basicItem, glStyles.addPartLine, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
+                                    <View style={[glStyles.flexContainer, glStyles.flexRowStrtCntr]} >
+                                        <View style={glStyles.basicItemImgSm}>
+                                            <Image resizeMode='contain' style={styles.profileImg}
+                                                source={require("./assets/images/emptyProfile.jpg")} />
                                         </View>
-                                    )}
-                                    getItemLayout={getItemLayout}
-                                />
+                                        <View>
+                                            <Text style={glStyles.basicText} >{item.appNick}</Text>
+                                        </View>
+                                    </View>
+                                </View>
                             )}
-                            <View style={styles.modalBottomContainer} >
-                                <Button color={"black"} onPress={addFriendForChat} title='선택하기'></Button>
-                            </View>
+                            getItemLayout={getItemLayout}
+                        />
+                    )}
+                    <View style={[glStyles.btnBox, glStyles.flexRowEnd]}>
+                        <View style={[glStyles.smBtn, glStyles.btnBlue]} onPress={addFriendForChat}>
+                            <Text style={glStyles.btnText}>선택하기</Text>
                         </View>
                     </View>
-                </Modal>
-            </View>
-        </MainFrame>
+                </View>
+            </Modal>
+        </MainFrame >
     );
 }
 const styles = StyleSheet.create({
@@ -298,9 +298,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: 'white',
-        padding: "5%",
-        shadowColor: '#000',
+        shadowColor: colors.black,
         shadowOffset: {
             width: 0,
             height: 0,
@@ -309,7 +307,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         position: 'absolute',
-        top: -270,
+        top: 0,
         bottom: 100,
         left: 20,
         right: 20,
@@ -321,10 +319,6 @@ const styles = StyleSheet.create({
     itemBoxPhoto: {
         width: "20%",
         height: "100%",
-    },
-    modalBottomContainer: {
-        alignItems: "flex-end",
-        marginRight: "5%",
     },
     listName: {
         marginLeft: "3%",

@@ -119,13 +119,13 @@ export default function FriendScreen({ navigation }) {
           }
         </View>
         <View style={styles.profileMesaageView}>
-          <Text style={glStyles.basicText}>{userInfo.unickname}</Text>
+          <Text style={glStyles.titleText}>{userInfo.unickname}</Text>
         </View>
       </TouchableOpacity>
       <View style={styles.lineDesign} />
-      <View style={styles.friendView}>
-        <View style={styles.friendCountView}>
-          <Text style={glStyles.basicText} >친구수:</Text>
+      <View>
+        <View style={[glStyles.flexRowEnd, glStyles.pdHrzn20]}>
+          <Text style={glStyles.basicText} >친구수: </Text>
           <Text style={glStyles.basicText} >{getFriendNum}</Text>
         </View>
         <View style={glStyles.basicList}>
@@ -133,28 +133,13 @@ export default function FriendScreen({ navigation }) {
             showsHorizontalScrollIndicator={false}>
             {getStateFriendList.length === 0 ? (
               <View>
-              </View>
-            ) : (
-              <View style={styles.friendHeader}>
-                <View style={styles.itemBox}>
-                  <View style={styles.itemBoxPhoto}></View>
-                  <View style={[glStyles.flexContainer, glStyles.flexRowEven]}>
-                    <Text style={glStyles.basicText}>닉네임</Text>
-                    <Text style={glStyles.basicText}>소환사명</Text>
-                  </View>
-                </View>
-              </View>
-            )
-            }
-            {getStateFriendList.length === 0 ? (
-              <View>
                 <ActivityIndicator color="black" size="large" />
               </View>
             ) : (
               getStateFriendList.map((info, index) =>
                 <View key={index} style={glStyles.basicItem} data={info.fYouId} onStartShouldSetResponder={() => openChat(info)}>
-                  <TouchableOpacity style={styles.itemBox} onPress={viewProfileModal.bind(this, info.fYouId)}>
-                    <View style={styles.itemBoxPhoto}>
+                  <TouchableOpacity style={[glStyles.flexContainer, glStyles.flexRowStrtCntr]} onPress={viewProfileModal.bind(this, info.fYouId)}>
+                    <View>
                       {
                         info.profileImgUrl !== null ? (
                           <ImageBackground
@@ -173,13 +158,8 @@ export default function FriendScreen({ navigation }) {
                         )
                       }
                     </View>
-                    <View>
-                      <View>
-                        <Text style={glStyles.basicText}>{info.appNick}</Text>
-                      </View>
-                      <View>
-                        <Text style={glStyles.basicText}>{info.glSummoner}</Text>
-                      </View>
+                    <View style={glStyles.pdHrzn15}>
+                      <Text style={glStyles.titleText}>{info.appNick}({info.glSummoner}소환사명)</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -191,37 +171,44 @@ export default function FriendScreen({ navigation }) {
         </View>
       </View>
       <Modal visible={modalVisible} animationType="slide" onRequestClose={closeProfileModal}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalTopHeader}>
-            <Text style={styles.modalTitle}>{getFriendInfo.uNickname}</Text>
+        <View style={[glStyles.bgBlack, glStyles.flexContainer, glStyles.pdHrzn15]}>
+          <View style={[glStyles.flexCenter, glStyles.pdVrtcl20]}>
+            <Text style={glStyles.pageTit}>{getFriendInfo.uNickname}uNickname</Text>
           </View>
-          <View style={styles.modalImgView} >
+          <View style={[glStyles.mgbt20, glStyles.modalImgView]} >
             {
               getFriendInfo.profileImgUrl !== null ? (
                 <Image
                   source={{ uri: `http://hduo88.com/tomcatImg/myPage/${getFriendInfo.profileImgUrl}` }}
-                  style={styles.modalImg}
+                  style={glStyles.modalImg}
                   resizeMode='contain'
                 />
               ) : (
-                <Image resizeMode='contain' style={styles.modalImg}
+                <Image resizeMode='contain' style={glStyles.modalImg}
                   source={require("./assets/images/emptyProfile.jpg")} />
               )
             }
           </View>
-          <View style={styles.modalProfileLine}>
-            <Text style={styles.description}> 소환사명 : </Text>
-            <Text style={styles.content}> {getFriendInfo.glSummoner} </Text>
+          <View style={glStyles.pdVrtcl15}>
+            <View style={glStyles.titleBox}>
+              <Text style={glStyles.titleText}> 소환사명 : </Text>
+              <Text style={glStyles.basicText}> {getFriendInfo.glSummoner} 소환사명</Text>
+            </View>
+            <View style={glStyles.titleBox}>
+              <Text style={glStyles.titleText}> 랭크 : </Text>
+              <Text style={glStyles.basicText}> {getFriendInfo.glRank} 랭크</Text>
+            </View>
+            <View style={glStyles.titleBox}>
+              <Text style={glStyles.titleText}> 주챔피언 : </Text>
+              <Text style={glStyles.basicText}> {getFriendInfo.glChampion} 주챔피언</Text>
+            </View>
           </View>
-          <View style={styles.modalProfileLine}>
-            <Text style={styles.description}> 랭크 : </Text>
-            <Text style={styles.content}> {getFriendInfo.glRank} </Text>
+          {/* closeProfileModal 이벤트 작동 부탁 */}
+          <View style={glStyles.btnBox}>
+            <View style={[glStyles.mdBtn, glStyles.btnBlue]} onPress={closeProfileModal}>
+              <Text style={glStyles.btnText}>닫기</Text>
+            </View>
           </View>
-          <View style={styles.modalProfileLine}>
-            <Text style={styles.description}> 주챔피언 : </Text>
-            <Text style={styles.content}> {getFriendInfo.glChampion} </Text>
-          </View>
-          <Button title="Close" onPress={closeProfileModal} />
         </View>
       </Modal>
     </MainFrame >
@@ -229,15 +216,6 @@ export default function FriendScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  titleFont: {
-    fontSize: 30,
-    marginTop: "10%",
-    marginLeft: "5%",
-  },
-  statusMessageFont: {
-    fontSize: 18,
-    marginLeft: "10%",
-  },
   profileView: {
     width: "50%",
     height: "10%",
@@ -254,136 +232,15 @@ const styles = StyleSheet.create({
     height: "100%",
     flexDirection: "row",
   },
-  modalContainer: {
-    // marginTop : "",
-  },
-  modalTopHeader: {
-    height: "10%",
-    justifyContent: 'center', // 요소를 수평 축에서 오른쪽으로 정렬
-    alignItems: 'center', // 요소를 수직 축에서 아래로 정렬
-  },
-  modalTitle: {
-    fontSize: 30,
-  },
-  modalImgView: {
-    height: "40%",
-  },
-  modalImg: {
-    height: "100%",
-    width: "100%",
-  },
-  modalProfileLine: {
-    height: "10%",
-    flexDirection: "row",
-    justifyContent: 'space-between', // 요소들을 좌우로 분배
-  },
-  description: {
-    width: "30%",
-    // marginLeft: 'auto', // 수평 좌측으로 정렬
-    // justifyContent: 'flex-end',
-  },
-  content: {
-    marginRight: 'auto', // 수평 우측으로 정렬
-  },
-  imgUploadBtnView: {
-    height: "7%",
-  },
-  imgUploadBtn: {
-    width: "100%",
-    height: "100%",
-    justifyContent: 'center', // 요소를 수평 축에서 오른쪽으로 정렬
-    color: "black",
-    alignItems: 'center', // 요소를 수직 축에서 아래로 정렬
-  },
-  modalTop: {
-    height: "70%",
-    backgroundColor: "green",
-  },
   profileImg: {
     width: "100%",
     height: "100%",
   },
-  profileOtherImg: {
-    width: "100%",
-    height: "100%",
-  },
-  modalBottomHeader: {
-    height: "5%",
-    // flexDirection:"row",
-  },
   lineDesign: {
     height: 1,
-    backgroundColor: "black",
+    backgroundColor: colors.fontWh,
     marginBottom: "3%",
     marginTop: "3%",
     opacity: 0.3,
   },
-  friendView: {
-    width: "90%",
-    height: "70%",
-    marginTop: "5%",
-    marginLeft: "5%",
-  },
-  friendCountView: {
-    width: "100%",
-    height: "5%",
-    flexDirection: "row",
-  },
-  friendListView: {
-    width: "100%",
-    height: "85%",
-    marginTop: "3%",
-  },
-  centerBottomContainer: {
-    flex: 5,
-    width: "100%",
-    height: "10%",
-  },
-  friendHeader: {
-    flex: 5,
-    width: "100%",
-    height: "10%",
-  },
-  itemBox: {
-    width: "100%",
-    flexDirection: "row",
-  },
-  itemBoxPhoto: {
-    width: "20%",
-    height: "100%",
-  },
-  itemBoxMessage: {
-    width: "75%",
-    height: "100%",
-    marginLeft: "5%",
-    flexDirection: "row"
-  },
-  itemBoxMessageHeaderName: {
-    width: "20%",
-    height: "100%",
-    fontSize: 18,
-  },
-  itemBoxMessageHeaderStatus: {
-    width: "80%",
-    height: "100%",
-    marginLeft: "5%",
-    fontSize: 18,
-  },
-  itemBoxMessageName: {
-    width: "20%",
-    height: "100%",
-    marginTop: "10%",
-  },
-  itemBoxMessageStatus: {
-    width: "80%",
-    height: "100%",
-    marginLeft: "5%",
-    marginTop: "10%",
-  },
-  whiteSpace: {
-    height: "3%",
-  },
-  ghkrdls: {
-    backgroundColor: "red",
-  }
 });

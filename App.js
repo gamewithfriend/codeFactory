@@ -34,6 +34,7 @@ import ChatListScreenCopy from './ChatListScreenCopy';
 import FriendScreenCopy from './FriendScreenCopy';
 import LoginCopy from './LoginScreenCopy';
 import SettingScreenCopy from './SettingScreenCopy';
+import TextChatCopy from './TextChatCopy';
 import { Ionicons } from '@expo/vector-icons';
 import colors from './assets/colors/colors';
 
@@ -158,6 +159,9 @@ export default function App() {
           headerShown: false
         }} />
         <Stack.Screen name="MatchingHistoryScreenCopy" component={MatchingHistoryScreenCopy} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name="TextChatCopy" component={TextChatCopy} options={{
           headerShown: false
         }} />
       </Stack.Navigator>

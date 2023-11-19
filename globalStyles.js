@@ -23,13 +23,46 @@ export const glStyles = StyleSheet.create({
     fontSize: 14,
     textAlign: "right"
   },
-
+  // 배경색 일괄적용 안되는 경우   
+  bgBlack: {
+    backgroundColor: colors.black
+  },
+  showGroup: {//개발용
+    backgroundColor: "#333",
+  },
   // 패딩 설정
+  pd5: {
+    padding: 5
+  },
+  pd15: {
+    padding: 15
+  },
   pdHrzn15: {
     paddingHorizontal: 15,
   },
+  pdHrzn20: {
+    paddingHorizontal: 20,
+  },
   pdR10: { paddingRight: 10, },
-
+  pdVrtcl15: {
+    paddingVertical: 15
+  },
+  pdVrtcl20: {
+    paddingVertical: 20
+  },
+  // 마진 설정
+  mgTop5: {
+    marginTop: 5
+  },
+  mgbt10: {
+    marginBottom: 10
+  },
+  mgbt20: {
+    marginBottom: 20
+  },
+  mgVrtcl20: {
+    marginVertical: 20
+  },
   // flexbox 설정
   flexContainer: { flex: 1 },
   flexCenter: {
@@ -43,9 +76,23 @@ export const glStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  flexRowBtwnCntr: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   flexRowStrt: {
     flexDirection: "row",
     justifyContent: "flex-start",
+  },
+  flexRowStrtCntr: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  flexRowEnd: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
   flexRowEven: {
     flexDirection: "row",
@@ -56,7 +103,8 @@ export const glStyles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-
+  //grow 설정
+  flexGrow1: { flexGrow: 1, },
   // 글자설정
   pageTit: {
     fontWeight: "bold",
@@ -80,19 +128,24 @@ export const glStyles = StyleSheet.create({
     fontSize: 14,
     color: colors.fontWh,
   },
-
+  txtAlignCntr: { textAlign: "center" },
   // 버튼 설정
   btnBox: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: "space-evenly",
     alignItems: "center",
-    paddingBottom: 4,
   },
   mdBtn: {
-    marginTop: 30,
     width: 200,
     height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  smBtn: {
+    width: "30%",
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
@@ -185,6 +238,10 @@ export const glStyles = StyleSheet.create({
     width: 52,
     height: 52,
   },
+  basicItemImgSm: {
+    width: "20%",
+    height: "100%",
+  },
   basicItemInfo: {
     flex: 1,
     paddingLeft: 10,
@@ -220,6 +277,14 @@ export const glStyles = StyleSheet.create({
     flexDirection: 'row',
   },
 
-
+  // 프랜즈 모달
+  modalImgView: {
+    height: "30%",
+  },
+  modalImg: {
+    borderRadius: 45,
+    height: "100%",
+    width: "100%",
+  },
 });
 
