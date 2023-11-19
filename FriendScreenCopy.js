@@ -203,9 +203,8 @@ export default function FriendScreen({ navigation }) {
               <Text style={glStyles.basicText}> {getFriendInfo.glChampion} 주챔피언</Text>
             </View>
           </View>
-          {/* closeProfileModal 이벤트 작동 부탁, button 객체 스타일링 불가 */}
           <View style={glStyles.btnBox}>
-            <View style={[glStyles.mdBtn, glStyles.btnBlue]} onPress={closeProfileModal}>
+            <View style={[glStyles.mdBtn, glStyles.btnBlue]} onStartShouldSetResponder={() => closeProfileModal()}>
               <Text style={glStyles.btnText}>닫기</Text>
             </View>
           </View>

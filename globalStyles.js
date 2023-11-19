@@ -238,6 +238,10 @@ export const glStyles = StyleSheet.create({
     width: 52,
     height: 52,
   },
+  basicItemImgLg: {
+    width: 84,
+    height: 84,
+  },
   basicItemImgSm: {
     width: "20%",
     height: "100%",
@@ -278,6 +282,22 @@ export const glStyles = StyleSheet.create({
   },
 
   // 프랜즈 모달
+  modalView: {
+    margin: 20,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position: 'absolute',
+    top: 0,
+    bottom: 100,
+    left: 20,
+    right: 20,
+  },
   modalImgView: {
     height: "30%",
   },

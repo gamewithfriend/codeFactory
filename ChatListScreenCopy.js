@@ -229,7 +229,7 @@ export default function ChatListScreen({ navigation }) {
                 }}
                     onPress={() => setModalVisible(false)}
                 />
-                <View style={[styles.modalView, glStyles.bgBlack, glStyles.pd15]}>
+                <View style={[glStyles.modalView, glStyles.bgBlack, glStyles.pd15]}>
                     <View style={[glStyles.btnIcon, glStyles.flexRowEnd]}>
                         {/* 닫기 이벤트 추가 부탁 */}
                         <Ionicons name="close" size={20} style={glStyles.cardIcon} />
@@ -262,8 +262,7 @@ export default function ChatListScreen({ navigation }) {
                         />
                     )}
                     <View style={[glStyles.btnBox, glStyles.flexRowEnd]}>
-                        {/* onPress이벤트 작동 부탁, button 객체 스타일링 불가 */}
-                        <View style={[glStyles.smBtn, glStyles.btnBlue]} onPress={addFriendForChat}>
+                        <View style={[glStyles.smBtn, glStyles.btnBlue]} onStartShouldSetResponder={() => addFriendForChat()}>
                             <Text style={glStyles.btnText}>선택하기</Text>
                         </View>
                     </View>
