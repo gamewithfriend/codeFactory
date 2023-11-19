@@ -44,6 +44,9 @@ export const glStyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   pdR10: { paddingRight: 10, },
+  pdVrtcl10: {
+    paddingVertical: 10
+  },
   pdVrtcl15: {
     paddingVertical: 15
   },
@@ -53,6 +56,12 @@ export const glStyles = StyleSheet.create({
   // 마진 설정
   mgTop5: {
     marginTop: 5
+  },
+  mgR20: {
+    marginRight: 20
+  },
+  mgBt5: {
+    marginBottom: 5
   },
   mgbt10: {
     marginBottom: 10
@@ -146,6 +155,13 @@ export const glStyles = StyleSheet.create({
   smBtn: {
     width: "30%",
     height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  xsmBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,

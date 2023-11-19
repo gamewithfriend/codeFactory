@@ -261,7 +261,7 @@ export default function ChatListScreen({ navigation }) {
                             getItemLayout={getItemLayout}
                         />
                     )}
-                    <View style={[glStyles.btnBox, glStyles.flexRowEnd]}>
+                    <View style={glStyles.btnBox}>
                         <View style={[glStyles.smBtn, glStyles.btnBlue]} onStartShouldSetResponder={() => addFriendForChat()}>
                             <Text style={glStyles.btnText}>선택하기</Text>
                         </View>
