@@ -120,6 +120,7 @@ export default function TextChat({ route, navigator }) {
 
   const renderImages = (user) => {
     return (
+      // User 사진
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={() => handleReport(user)}>
           <Image
@@ -142,7 +143,7 @@ export default function TextChat({ route, navigator }) {
   const renderMessageText = (props) => {
     if (props.currentMessage.user._id !== user._id) {
       return (
-        // <View style={{ flexDirection: 'column' }}>
+        // 말풍선
         <View style={{ flexDirection: 'row' }}>
           <View >
             <MessageText {...props} />
@@ -165,6 +166,7 @@ export default function TextChat({ route, navigator }) {
   };
 
   return (
+    // 배경
     <View style={{ flex: 1 }}>
       <GiftedChat
         messages={messages}
