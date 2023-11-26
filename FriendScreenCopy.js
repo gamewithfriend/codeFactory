@@ -171,7 +171,7 @@ export default function FriendScreen({ navigation }) {
         </View>
       </View>
       <Modal visible={modalVisible} animationType="slide" onRequestClose={closeProfileModal}>
-        <View style={[glStyles.bgBlack, glStyles.flexContainer, glStyles.pdHrzn15]}>
+        <View style={[glStyles.bgDarkGray, glStyles.flexContainer, glStyles.pdHrzn15]}>
           <View style={[glStyles.flexCenter, glStyles.pdVrtcl20]}>
             <Text style={glStyles.pageTit}>{getFriendInfo.uNickname}uNickname</Text>
           </View>

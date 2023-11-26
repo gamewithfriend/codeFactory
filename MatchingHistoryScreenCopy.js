@@ -231,7 +231,7 @@ export default function MatchingHistoryScreen({ navigation }) {
             {/*신고 모달 화면 */}
             <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={() => { setModalVisible(!modalVisible); }}>
                 <Pressable style={{ flex: 1, backgroundColor: 'transparent' }} onPress={() => setModalVisible(false)} />
-                <View style={[glStyles.modalView, glStyles.bgBlack, glStyles.pd15]}>
+                <View style={[glStyles.modalView, glStyles.bgDarkGray, glStyles.pd15]}>
 
                     <View style={[glStyles.pdVrtcl15]}>
                         <Text style={[glStyles.pageTit, glStyles.txtAlignCntr]}>신고하기</Text>

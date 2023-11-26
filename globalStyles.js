@@ -4,6 +4,7 @@ import colors from './assets/colors/colors';
 import { block } from 'react-native-reanimated';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 // const fontSize = {
 //   xlg: SCREEN_WIDTH > 500 ? 26 : 24,
 //   lg: SCREEN_WIDTH > 500 ? 24 : 22,
@@ -24,8 +25,8 @@ export const glStyles = StyleSheet.create({
     textAlign: "right"
   },
   // 배경색 일괄적용 안되는 경우   
-  bgBlack: {
-    backgroundColor: colors.black
+  bgDarkGray: {
+    backgroundColor: "#333"
   },
   showGroup: {//개발용
     backgroundColor: "#333",
@@ -300,6 +301,7 @@ export const glStyles = StyleSheet.create({
   // 프랜즈 모달
   modalView: {
     margin: 20,
+    height: SCREEN_HEIGHT-100,
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,

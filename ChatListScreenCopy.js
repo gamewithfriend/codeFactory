@@ -229,7 +229,7 @@ export default function ChatListScreen({ navigation }) {
                 }}
                     onPress={() => setModalVisible(false)}
                 />
-                <View style={[glStyles.modalView, glStyles.bgBlack, glStyles.pd15]}>
+                <View style={[glStyles.modalView, glStyles.bgDarkGray, glStyles.pd15]}>
                     <View style={[glStyles.btnIcon, glStyles.flexRowEnd]}>
                         {/* 닫기 이벤트 추가 부탁 */}
                         <Ionicons name="close" size={20} style={glStyles.cardIcon} />
