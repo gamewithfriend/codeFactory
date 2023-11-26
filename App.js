@@ -38,6 +38,7 @@ import TextChatCopy from './TextChatCopy';
 import { Ionicons } from '@expo/vector-icons';
 import colors from './assets/colors/colors';
 
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
