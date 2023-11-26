@@ -5,6 +5,7 @@ import WebSocketClient from './utils/WebSocketClient.js';
 import * as Session from './utils/session.js';
 import { getDirectoryUri, createFile, readFile, deleteFile } from './utils/expoFileSystem.js';
 import { NavigationContainer, useNavigation, useIsFocused } from '@react-navigation/native';
+import colors from './assets/colors/colors';
 
 // 최상위 변수 선언
 const realUrl = "3.37.211.126";
@@ -167,7 +168,7 @@ export default function TextChat({ route, navigator }) {
 
   return (
     // 배경
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor:colors.darkGrdnt}}>
       <GiftedChat
         messages={messages}
         onSend={newMessages => onSend(newMessages)}
