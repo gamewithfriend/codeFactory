@@ -133,7 +133,7 @@ export default function LoginScreen({ navigation }) {
         <MainFrame>
             <View style={[glStyles.flexContainer, glStyles.flexCenter]}>
 
-                <TouchableOpacity style={[glStyles.mdBtn, glStyles.btnBlue]} disabled={!request} title="Google Login" onPress={() => { promptAsync(); }}>
+                <TouchableOpacity style={[glStyles.btnMd, glStyles.btnBlue]} disabled={!request} title="Google Login" onPress={() => { promptAsync(); }}>
                     <Text style={glStyles.btnText}>Google 로그인</Text>
                 </TouchableOpacity>
                 <Text style={[glStyles.basicText, { paddingTop: 20 }]}>GameWithFriend 어플리케이션은 Google 로그인만을 지원합니다.</Text>

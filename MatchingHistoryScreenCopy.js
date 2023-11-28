@@ -315,11 +315,11 @@ export default function MatchingHistoryScreen({ navigation }) {
                         </KeyboardAvoidingView>
                     </View>
                     <View style={[glStyles.btnBox, glStyles.flexCenter]}>
-                        <View style={[glStyles.xsmBtn, glStyles.btnBlue, glStyles.mgR20]} onStartShouldSetResponder={() => reportModalCancelClick()}>
-                            <Text style={glStyles.btnText}>닫기</Text>
+                        <View style={[glStyles.btnSm, glStyles.btnBlue, glStyles.mgR20]} onStartShouldSetResponder={() => reportModalCancelClick()}>
+                            <Text style={glStyles.btnTextSm}>닫기</Text>
                         </View>
-                        <View style={[glStyles.xsmBtn, glStyles.btnBlue]} onStartShouldSetResponder={() => submitReport()}>
-                            <Text style={glStyles.btnText}>신고</Text>
+                        <View style={[glStyles.btnSm, glStyles.btnBlue]} onStartShouldSetResponder={() => submitReport()}>
+                            <Text style={glStyles.btnTextSm}>신고</Text>
                         </View>
                     </View>
 

@@ -202,7 +202,7 @@ export default function ChatListScreen({ navigation }) {
                                     source={require('./assets/images/chatImg.jpg')}
                                     style={glStyles.basicItemImg}
                                     resizeMode="cover"
-                                    imageStyle={{ borderRadius: 17 }}
+                                    imageStyle={{ borderRadius: 52 }}
                                 />
                                 <View style={glStyles.basicItemInfo}>
                                     <Text style={glStyles.basicInfoTit}>{item.name}</Text>
@@ -262,7 +262,7 @@ export default function ChatListScreen({ navigation }) {
                         />
                     )}
                     <View style={glStyles.btnBox}>
-                        <View style={[glStyles.smBtn, glStyles.btnBlue]} onStartShouldSetResponder={() => addFriendForChat()}>
+                        <View style={[glStyles.btnSm, glStyles.btnBlue]} onStartShouldSetResponder={() => addFriendForChat()}>
                             <Text style={glStyles.btnText}>선택하기</Text>
                         </View>
                     </View>

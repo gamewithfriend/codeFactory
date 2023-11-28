@@ -26,7 +26,7 @@ export const glStyles = StyleSheet.create({
   },
   // 배경색 일괄적용 안되는 경우   
   bgDarkGray: {
-    backgroundColor: "#333"
+    backgroundColor: "#111"
   },
   showGroup: {//개발용
     backgroundColor: "#333",
@@ -37,6 +37,9 @@ export const glStyles = StyleSheet.create({
   },
   pd15: {
     padding: 15
+  },
+  pd20: {
+    padding: 20
   },
   pdHrzn15: {
     paddingHorizontal: 15,
@@ -155,21 +158,13 @@ export const glStyles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-  mdBtn: {
-    width: 200,
-    height: 50,
-    justifyContent: 'center',
+  btnMd: {
+    paddingVertical: 15,
+    paddingHorizontal: 30,    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
   },
-  smBtn: {
-    width: "30%",
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  xsmBtn: {
+  btnSm: {
     paddingVertical: 10,
     paddingHorizontal: 20,
     justifyContent: 'center',
@@ -179,6 +174,11 @@ export const glStyles = StyleSheet.create({
   btnText: {
     color: colors.fontWh,
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  btnTextSm: {
+    color: colors.fontWh,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   btnBlue: {
@@ -326,12 +326,12 @@ export const glStyles = StyleSheet.create({
     right: 20,
   },
   modalImgView: {
-    height: "30%",
+    alignItems:"center"
   },
   modalImg: {
-    borderRadius: 45,
-    height: "100%",
-    width: "100%",
+    borderRadius: (SCREEN_WIDTH-200)/2,
+    width: SCREEN_WIDTH-200,
+    height: SCREEN_WIDTH-200,
   },
 });
 

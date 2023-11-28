@@ -244,7 +244,7 @@ export default function SetNickNameScreen ({navigation}) {
                     </KeyboardAvoidingView>
                 </View>
                 <View style={glStyles.btnBox}>
-                    <View style={[glStyles.smBtn, glStyles.btnBlue]} onStartShouldSetResponder={() => saveUserNickName()}>
+                    <View style={[glStyles.btnSm, glStyles.btnBlue]} onStartShouldSetResponder={() => saveUserNickName()}>
                         <Text style={glStyles.btnText}>저장</Text>
                     </View>
                 </View>

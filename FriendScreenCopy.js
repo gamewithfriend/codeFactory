@@ -101,7 +101,7 @@ export default function FriendScreen({ navigation }) {
         <Text style={glStyles.pageTit}>친구</Text>
       </View>
       <TouchableOpacity style={[styles.profileView, glStyles.pdHrzn15]} onPress={editMyProfile}>
-        <View style={styles.profileImgView}>
+        <View >
           {
             // selectedImage.uri !== '' ? (
             // <Image source={{ uri: selectedImage.uri }} style={styles.profileImg} resizeMode='contain' />
@@ -109,11 +109,11 @@ export default function FriendScreen({ navigation }) {
             userInfo.profileImgUrl !== '' ? (
               <Image
                 source={{ uri: `http://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}` }}
-                style={styles.profileImg}
+                style={glStyles.basicItemImg}
                 resizeMode='contain'
               />
             ) : (
-              <Image resizeMode='contain' style={styles.profileImg} source={require("./assets/images/emptyProfile.jpg")} />
+              <Image resizeMode='contain' style={glStyles.basicItemImg} source={require("./assets/images/emptyProfile.jpg")} />
             )
             // )
           }
@@ -146,14 +146,14 @@ export default function FriendScreen({ navigation }) {
                             source={{ uri: `http://hduo88.com/tomcatImg/myPage/${info.profileImgUrl}` }}
                             style={glStyles.basicItemImg}
                             resizeMode="cover"
-                            imageStyle={{ borderRadius: 17 }}
+                            imageStyle={{ borderRadius: 52 }}
                           />
                         ) : (
                           <ImageBackground
                             source={require("./assets/images/emptyProfile.jpg")}
                             style={glStyles.basicItemImg}
                             resizeMode="cover"
-                            imageStyle={{ borderRadius: 17 }}
+                            imageStyle={{ borderRadius: 52 }}
                           />
                         )
                       }
@@ -191,20 +191,17 @@ export default function FriendScreen({ navigation }) {
           </View>
           <View style={glStyles.pdVrtcl15}>
             <View style={glStyles.titleBox}>
-              <Text style={glStyles.titleText}> 소환사명 : </Text>
-              <Text style={glStyles.basicText}> {getFriendInfo.glSummoner} 소환사명</Text>
+              <Text style={glStyles.titleText}> 소환사명 : {getFriendInfo.glSummoner} 소환사명</Text>
             </View>
             <View style={glStyles.titleBox}>
-              <Text style={glStyles.titleText}> 랭크 : </Text>
-              <Text style={glStyles.basicText}> {getFriendInfo.glRank} 랭크</Text>
+              <Text style={glStyles.titleText}> 랭크 : {getFriendInfo.glRank} 랭크</Text>
             </View>
             <View style={glStyles.titleBox}>
-              <Text style={glStyles.titleText}> 주챔피언 : </Text>
-              <Text style={glStyles.basicText}> {getFriendInfo.glChampion} 주챔피언</Text>
+              <Text style={glStyles.titleText}> 주챔피언 : {getFriendInfo.glChampion} 주챔피언</Text>
             </View>
           </View>
           <View style={glStyles.btnBox}>
-            <View style={[glStyles.mdBtn, glStyles.btnBlue]} onStartShouldSetResponder={() => closeProfileModal()}>
+            <View style={[glStyles.btnSm, glStyles.btnBlue]} onStartShouldSetResponder={() => closeProfileModal()}>
               <Text style={glStyles.btnText}>닫기</Text>
             </View>
           </View>

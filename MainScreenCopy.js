@@ -216,7 +216,7 @@ export default function MainScreen({ navigation }) {
 
   ////alramListTrigger---- 알람 리스트 함수/////// 
   const alramListTrigger = () => {
-    navigation.navigate('AlarmScreen', { navigation });
+    navigation.navigate('AlarmScreenCopy', { navigation });
     setModalVisible(false);
   };
 
@@ -371,22 +371,39 @@ export default function MainScreen({ navigation }) {
               Alert.alert('Modal has been closed.');
               setModalVisible(!modalVisible);
             }}>
-            <Pressable style={{
-              flex: 1,
+            <Pressable 
+            style={{
+              marginTop: 30,
               backgroundColor: 'transparent',
             }}
               onPress={() => setModalVisible(false)}
             />
-            <View style={styles.centeredView} >
-              <View style={styles.modalView}>
+            <View style={[glStyles.bgDarkGray, glStyles.pdVrtcl10, glStyles.pdHrzn20]} >
                 <View onStartShouldSetResponder={() => alramListTrigger()}>
                   {getAlramRecentOneMsg === "" ? (
-                    <Text style={styles.modalText}>알람이 없습니다.</Text>
+                    <View>
+                      <View style={glStyles.basicItem}>
+                        <Text style={glStyles.titleText}>알람은 어케 닫어???.</Text>
+                      </View>
+                      <View style={glStyles.basicItem}>
+                        <Text style={glStyles.titleText}>알람이 알람 내용 임시.</Text>
+                      </View>
+                      <View style={glStyles.basicItem}>
+                        <Text style={glStyles.titleText}>알람이 알람 내용 임시.</Text>
+                      </View>
+                      <View style={glStyles.basicItem}>
+                        <Text style={glStyles.titleText}>알람이 알람 내용 임시.</Text>
+                      </View>
+                      <View style={glStyles.basicItem}>
+                        <Text style={[glStyles.titleText]}>알람이 없습니다.</Text>
+                      </View>
+                    </View>
                   ) : (
-                    <Text style={styles.modalText}>{getAlramRecentOneMsg}</Text>
+                    <View style={glStyles.basicItem}>
+                      <Text style={glStyles.titleText}>{getAlramRecentOneMsg}</Text>
+                    </View>
                   )}
                 </View>
-              </View>
             </View>
           </Modal>
         </View>
@@ -424,7 +441,7 @@ export default function MainScreen({ navigation }) {
           </ScrollView>
           <View>
             {/* 버튼 아니면 onPress가 안되는 것인지 확인 필요. 버튼 객체가 스타일이 안먹음*/}
-            <Button color={colors.lightBlue} title='선택' onPress={optionSubmit} style={[glStyles.mdBtn, glStyles.btnBlue]}>
+            <Button color={colors.lightBlue} title='선택' onPress={optionSubmit} style={[glStyles.btnMd, glStyles.btnBlue]}>
             </Button>
           </View>
         </View>

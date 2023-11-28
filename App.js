@@ -36,6 +36,7 @@ import LoginCopy from './LoginScreenCopy';
 import SettingScreenCopy from './SettingScreenCopy';
 import TextChatCopy from './TextChatCopy';
 import SetNickNameScreenCopy from './SetNickNameScreenCopy';
+import AlarmScreenCopy from './AlarmScreenCopy';
 import { Ionicons } from '@expo/vector-icons';
 import colors from './assets/colors/colors';
 
@@ -167,6 +168,9 @@ export default function App() {
           headerShown: false
         }} />
         <Stack.Screen name="SetNickNameScreenCopy" component={SetNickNameScreenCopy} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name="AlarmScreenCopy" component={AlarmScreenCopy} options={{
           headerShown: false
         }} />
       </Stack.Navigator>
