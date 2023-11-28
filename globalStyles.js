@@ -139,9 +139,18 @@ export const glStyles = StyleSheet.create({
     color: colors.fontWh,
   },
   txtAlignCntr: { textAlign: "center" },
+  lh15: { lineHeight: 1.5},
+  // input 설정
+  inptBasic: {
+    width: "100%",
+    color: colors.fontWh,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.fontWh,
+
+  },
   // 버튼 설정
   btnBox: {
-    flex: 1,
+    padding: 30,
     flexDirection: 'row',
     justifyContent: "space-evenly",
     alignItems: "center",

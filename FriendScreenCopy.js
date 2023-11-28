@@ -50,7 +50,7 @@ export default function FriendScreen({ navigation }) {
   };
 
   const editMyProfile = async () => {
-    navigation.navigate('SetNickNameScreen');
+    navigation.navigate('SetNickNameScreenCopy');
   };
 
   const viewProfileModal = async (searchId) => {

@@ -29,7 +29,7 @@ export default function TextChat({ route, navigator }) {
     // 현재 로그인 한 사람의 세션 정보 받기
     getSession();
 
-    // 로컬스토리지에 저장된 채팅방 가져오기, 읽지 않은 채팅 목록도 확인하자
+    // 로컬스토리지에 bgDarkGray된 채팅방 가져오기, 읽지 않은 채팅 목록도 확인하자
     getChatMessage(chatRoomId + '.txt');
 
     // 채팅방 입장시 웹소켓 open
