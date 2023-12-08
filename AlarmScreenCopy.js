@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     height:"100%",
     width:"80%",
     flexDirection:"row", 
-    opacity:"0.3",   
+    opacity:0.3,   
   },
   alramViewCenterN: {
     height:"100%",

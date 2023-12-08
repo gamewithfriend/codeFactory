@@ -62,6 +62,7 @@ export default function MainScreen({ navigation }) {
       let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
       jsonOptionList.selectMatchingOptionList[i].url = tempUrl;
     }
+    console.log(jsonOptionList.selectMatchingOptionList)
     setOptionList(jsonOptionList.selectMatchingOptionList);
   };
 
@@ -159,14 +160,7 @@ export default function MainScreen({ navigation }) {
     const response = await fetch(`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
     const jsonAlramList = await response.json();
     let alramCount = 0;
-    let alramRecentOneMsg = "";
-    if (jsonAlramList != null) {
-      alramCount = jsonAlramList.findMyAlramList.length;
-      alramRecentOneMsg = jsonAlramList.findMyAlramList[0].sendNickName + " " + jsonAlramList.findMyAlramList[0].cdDtlDesc;
-    } else {
-      alramRecentOneMsg = "알람이 없습니다";
-    }
-    setAlramRecentOneMsg(alramRecentOneMsg);
+    console.log(jsonAlramList)
     setAlramCount(alramCount);
   };
 
@@ -217,7 +211,6 @@ export default function MainScreen({ navigation }) {
   ////alramListTrigger---- 알람 리스트 함수/////// 
   const alramListTrigger = () => {
     navigation.navigate('AlarmScreenCopy', { navigation });
-    setModalVisible(false);
   };
 
   const goMatchingHistory = () => {
@@ -357,55 +350,10 @@ export default function MainScreen({ navigation }) {
     <MainFrame>
       <View style={styles.mainContainer} >
         <View style={styles.mainSatusView}>
-          <View style={styles.mainSatusItemView} onStartShouldSetResponder={() => setModalVisible(true)} >
+          <View style={styles.mainSatusItemView} onStartShouldSetResponder={() => alramListTrigger()} >
             <FontAwesome5 name="bell" size={22} style={glStyles.cardIcon} />
             <Text style={styles.mainSatusCountFont}>{getAlramCount}</Text>
           </View>
-        </View>
-        <View>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setModalVisible(!modalVisible);
-            }}>
-            <Pressable 
-            style={{
-              marginTop: 30,
-              backgroundColor: 'transparent',
-            }}
-              onPress={() => setModalVisible(false)}
-            />
-            <View style={[glStyles.bgDarkGray, glStyles.pdVrtcl10, glStyles.pdHrzn20]} >
-                <View onStartShouldSetResponder={() => alramListTrigger()}>
-                  {getAlramRecentOneMsg === "" ? (
-                    <View>
-                      <View style={glStyles.basicItem}>
-                        <Text style={glStyles.titleText}>알람은 어케 닫어???.</Text>
-                      </View>
-                      <View style={glStyles.basicItem}>
-                        <Text style={glStyles.titleText}>알람이 알람 내용 임시.</Text>
-                      </View>
-                      <View style={glStyles.basicItem}>
-                        <Text style={glStyles.titleText}>알람이 알람 내용 임시.</Text>
-                      </View>
-                      <View style={glStyles.basicItem}>
-                        <Text style={glStyles.titleText}>알람이 알람 내용 임시.</Text>
-                      </View>
-                      <View style={glStyles.basicItem}>
-                        <Text style={[glStyles.titleText]}>알람이 없습니다.</Text>
-                      </View>
-                    </View>
-                  ) : (
-                    <View style={glStyles.basicItem}>
-                      <Text style={glStyles.titleText}>{getAlramRecentOneMsg}</Text>
-                    </View>
-                  )}
-                </View>
-            </View>
-          </Modal>
         </View>
         <View style={{ marginBottom: 20 }}>
           <View style={glStyles.titleBoxIcon}>
@@ -413,6 +361,21 @@ export default function MainScreen({ navigation }) {
             <View style={glStyles.justMarginLeft} onStartShouldSetResponder={() => goMatchingHistory()}>
               <Ionicons name="time-outline" size={22} style={glStyles.cardIcon} />
             </View>
+          </View>
+          <View style={glStyles.titleBoxIcon}>
+          {getOptionList.length === 0 ? (
+              <View >
+              </View>
+            ) : (
+              getOptionList.map((info, index) =>
+                <View key={index} style={glStyles.pdHrzn15}>
+                  <Text style={glStyles.pageTit}>
+                    {info.cdDtlName}
+                  </Text>
+                </View>
+              )
+            )
+          }
           </View>
           <ScrollView style={glStyles.slideList}
             pagingEnabled
@@ -440,86 +403,9 @@ export default function MainScreen({ navigation }) {
             }
           </ScrollView>
           <View>
-            {/* 버튼 아니면 onPress가 안되는 것인지 확인 필요. 버튼 객체가 스타일이 안먹음*/}
             <Button color={colors.lightBlue} title='선택' onPress={optionSubmit} style={[glStyles.btnMd, glStyles.btnBlue]}>
             </Button>
           </View>
-        </View>
-        <View style={glStyles.flexContainer}>
-          <View style={glStyles.titleBox}>
-            <Text style={glStyles.titleText}>친구 추천</Text>
-          </View>
-          <ScrollView style={glStyles.cardList}
-            pagingEnabled
-            // onMomentumScrollEnd={(event) => { friendChange(event.nativeEvent.contentOffset.x) }}
-            showsHorizontalScrollIndicator={false}>
-            <View style={glStyles.flexRowEven}>
-              {getUserLikeTop5List.length === 0 ? (
-                <View >
-                </View>
-              ) : (
-
-                getUserLikeTop5List.map((info, index) =>
-                  <View key={index}>
-                    <View style={glStyles.cardItems}>
-                      <Image resizeMode='cover' style={glStyles.slideImg2}
-                        source={{
-                          uri: `${info[0].glMostUrl}`,
-                        }}
-                      />
-                      <Text style={glStyles.cardLabel} >TOP{index + 1}</Text>
-                      <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info[0].uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info[0].glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info[0].glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info[0].glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info[0].glTime}</Text>
-                        <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info[0].ylYouId, info[0].friendState)}>
-                            <Ionicons name={info[0].friendUrl} size={25} style={glStyles.cardIcon} />
-                          </View>
-                          <View>
-                            <Ionicons name="chatbubble-sharp" size={20} style={glStyles.cardIcon} />
-                          </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info[0].ylYouId)}>
-                            <Ionicons name={info[0].url} size={20} style={glStyles.cardIcon} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                    <View style={glStyles.cardItems}>
-                      <Image resizeMode='cover' style={glStyles.slideImg2}
-                        source={{
-                          uri: `${info[1].glMostUrl}`,
-                        }}
-                      />
-                      <Text style={glStyles.cardLabel} >TOP{index + 3}</Text>
-                      <View style={glStyles.cardInfo}>
-                        <Text style={glStyles.basicText}>닉네임: {info[1].uNickname}</Text>
-                        <Text style={glStyles.basicText} >랭크 :{info[1].glRank}</Text>
-                        <Text style={glStyles.basicText} >포지션 :{info[1].glPosition}</Text>
-                        <Text style={glStyles.basicText} >챔피언 :{info[1].glChampion}</Text>
-                        <Text style={glStyles.basicText} >시간대 :{info[1].glTime}</Text>
-                        <View style={glStyles.btnBox}>
-                          <View onStartShouldSetResponder={() => addFriendTrigger(info[1].ylYouId, info[1].friendState)}>
-                            <Ionicons name={info[1].friendUrl} size={25} style={glStyles.cardIcon} />
-                          </View>
-                          <View>
-                            <Ionicons name="chatbubble-sharp" size={20} style={glStyles.cardIcon} />
-                          </View>
-                          <View onStartShouldSetResponder={() => targetLikeTrigger(info[1].ylYouId)}>
-                            <Ionicons name={info[1].url} size={20} style={glStyles.cardIcon} />
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                )
-
-              )
-              }
-            </View>
-          </ScrollView>
         </View>
       </View>
     </MainFrame >
@@ -573,6 +459,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
+    marginTop: "10%"
   },
   mainCenter: {
     alignItems: "center",
