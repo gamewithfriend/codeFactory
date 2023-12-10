@@ -217,7 +217,7 @@ export default function SetNickNameScreen ({navigation}) {
                         {selectedImage.uri !== '' ? (
                             <Image source={{ uri: selectedImage.uri }} style={styles.image} resizeMode='contain' />
                             ) : (
-                            userInfo.profileImgUrl !== '' ? (
+                            userInfo.profileImgUrl !== null ? (
                             <Image
                                 source={{ uri: `http://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
                                 style={styles.image}

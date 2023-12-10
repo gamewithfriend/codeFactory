@@ -30,6 +30,7 @@ export default function FriendScreen({ navigation }) {
   const getFriendList = async () => {
     let userInfo = await Session.sessionGet("sessionInfo");
     setUserInfo(userInfo);
+    console.log("getFriendList", userInfo);
     getMyNick = userInfo.uIntgId;
     const response = await fetch(`http://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}`)
     // const response = await fetch (`http://192.168.0.187:8080/friend/findFriendList.do?myNick=${getMyNick}`)
@@ -106,7 +107,7 @@ export default function FriendScreen({ navigation }) {
             // selectedImage.uri !== '' ? (
             // <Image source={{ uri: selectedImage.uri }} style={styles.profileImg} resizeMode='contain' />
             // ) : (
-            userInfo.profileImgUrl !== '' ? (
+            userInfo.profileImgUrl !== null ? (
               <Image
                 source={{ uri: `http://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}` }}
                 style={glStyles.basicItemImg}
