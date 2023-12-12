@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ImageBackground, Image, StatusBar, SafeAreaView, Dimensions, Modal, Pressable, Alert, Button, TextInput } from 'react-native';
 import * as Session from './utils/session';
 import { useIsFocused } from '@react-navigation/native';
+import Fetcher from './utils/Fetcher';
 
 //이소망 추가
 import MainFrame from './MainFrame';
@@ -46,23 +47,14 @@ export default function ChatListScreen({ navigation }) {
 
     // 사용자의 chatList를 불러온다.
     const getChatList = async (url, data) => {
-        await fetch("http://" + url + ":8080/chat/getChatList.do", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-            },
-            body: JSON.stringify(data)
-        }).then(response => response.json()
-        ).then(async (result) => {
-            // 컴포넌트의 값을 세팅
-
-            if (result.chatList != null && result.chatList != undefined) {
-                updateChatList(result);
-            }
-            console.log(result);
-        }).catch(error => {
-            console.error(error);
-        });
+        const fectcher = new Fetcher("https://hduo88.com/chat/getChatList.do", "post", JSON.stringify(data));
+        const result = await fectcher.jsonFetch();
+        
+        
+        if (result.chatList != null && result.chatList != undefined) {
+            console.log("result : ", result.chatList);
+            updateChatList(result);
+        }
     };
 
     // 데이터가 변할 때마다 chatList 업데이트

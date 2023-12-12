@@ -12,10 +12,13 @@ class Fetcher {
     method;
     data;
     contentType = "application/json;";
-    constructor(url,method,data) {
+    constructor(url,method,data,contentType) {
         this.url=url;
         this.method=method.toUpperCase();
         this.data=data;
+        if(contentType!=null) {
+            this.contentType = contentType;
+        }
     }
 
     /**
@@ -96,7 +99,7 @@ class Fetcher {
             const response = await fetch(paramUrl, {
                 method: this.method,
                 headers: {
-                    'Content-type':contentType+'charset=utf-8'
+                    'Content-type':this.contentType+'charset=utf-8'
                 },
                 body: this.data
                 }).then(response => response.json());
