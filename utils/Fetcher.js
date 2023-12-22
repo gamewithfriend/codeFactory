@@ -1,3 +1,6 @@
+import { Alert } from 'react-native';
+import HduoError from './Error';
+
 /**
  * 이 클래스는 비동기 통신을 용이하게 하기 위한 class 입니다.
  */
@@ -7,6 +10,7 @@ class Fetcher {
      * @param (string) url - 서버 통신 url
      * @param (string) method - 서버 통신 방법(method)
      * @param (string) data - 서버에 보낼 데이터
+     * @param (string) contentType - 서버 통신 헤더, 기본 application/json
      */
     url;
     method;
@@ -37,7 +41,7 @@ class Fetcher {
         
         // 메소드 방식에 따라 
         if(this.method == "GET" || this.method == "DELETE") {
-            const queryParams = new URLSearchParams(data);
+            const queryParams = new URLSearchParams(JSON.parse(this.data));
             paramUrl = this.url + "?" + queryParams;
             response = await this._urlFecth(paramUrl);
         } else if (this.method == "POST" || this.method == "PUT") {
@@ -81,12 +85,23 @@ class Fetcher {
             const response = await fetch(paramUrl, {
                 method: this.method,
                 headers: {
-                    'Content-type':'application/json; charset=utf-8'
+                    'Content-type':this.contentType+'charset=utf-8'
                 },
                 }).then(response => response.json());
+
+            // API 통신 규격에 따라 error메세지가 있을 경우 에러 throw
+            if (response.error != null) {
+                throw new HduoError("오류가 발생했습니다?");
+            }
             return response;
         } catch (e) {
-            console.log("error 발생", e);
+            console.log("error 발생", e, e.message);
+
+            if (e instanceof HduoError) {
+                Alert.alert(e.message);
+            }
+            // 에러를 발생시켜 프로그램을 중단
+            throw new Error(e);
         }
     }
 
@@ -103,9 +118,19 @@ class Fetcher {
                 },
                 body: this.data
                 }).then(response => response.json());
+
+            // API 통신 규격에 따라 error메세지가 있을 경우 에러 throw
+            if (response.error != null) {
+                throw new HduoError("오류가 발생했습니다?");
+            }
             return response;
         } catch (e) {
-            console.log("error 발생", e);
+            console.log("error 발생", e, e.message);
+            if (e instanceof HduoError) {
+                Alert.alert(e.message);
+            }
+            // 에러를 발생시켜 프로그램을 중단
+            throw new Error(e);
         }
     }
 

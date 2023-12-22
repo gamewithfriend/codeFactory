@@ -11,7 +11,7 @@ import colors from './assets/colors/colors';
 import { Ionicons } from '@expo/vector-icons';
 
 const realUrl = "3.37.211.126";
-const testUrl = "192.168.219.142";
+const testUrl = "192.168.219.195";
 
 // 세션정보를 담기위한 변수 선언
 let session = "";
@@ -38,7 +38,7 @@ export default function ChatListScreen({ navigation }) {
 
             if (session != null && session != undefined) {
                 // 세션정보를 기반으로 채팅방 목록을 호출
-                getChatList(realUrl, session);
+                getChatList(testUrl, session);
             }
         } catch (error) {
             console.error(error);
@@ -47,19 +47,21 @@ export default function ChatListScreen({ navigation }) {
 
     // 사용자의 chatList를 불러온다.
     const getChatList = async (url, data) => {
-        const fectcher = new Fetcher("https://hduo88.com/chat/getChatList.do", "post", JSON.stringify(data));
+        // const fectcher = new Fetcher("https://hduo88.com/chat/getChatList.do", "post", JSON.stringify(data));
+        const fectcher = new Fetcher("http://"+url+":8080/chat/getChatList.do", "get", JSON.stringify(data));
         const result = await fectcher.jsonFetch();
-        
-        
-        if (result.chatList != null && result.chatList != undefined) {
-            console.log("result : ", result.chatList);
-            updateChatList(result);
+
+        console.log("이부분 로직을 타는지 확인---------------------------------------");
+        console.log(result);
+
+        if (result.data != null && result.data != undefined) {
+            updateChatList(result.data);
         }
     };
 
     // 데이터가 변할 때마다 chatList 업데이트
     const updateChatList = (data) => {
-        const updatedChatList = data.chatList.map(item => ({
+        const updatedChatList = data.map(item => ({
             id: item.chaSeq,
             name: item.chaTitl
         }));
