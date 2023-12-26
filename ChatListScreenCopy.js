@@ -38,7 +38,7 @@ export default function ChatListScreen({ navigation }) {
 
             if (session != null && session != undefined) {
                 // 세션정보를 기반으로 채팅방 목록을 호출
-                getChatList(testUrl, session);
+                getChatList(session);
             }
         } catch (error) {
             console.error(error);
@@ -46,13 +46,10 @@ export default function ChatListScreen({ navigation }) {
     };
 
     // 사용자의 chatList를 불러온다.
-    const getChatList = async (url, data) => {
-        // const fectcher = new Fetcher("https://hduo88.com/chat/getChatList.do", "post", JSON.stringify(data));
-        const fectcher = new Fetcher("http://"+url+":8080/chat/getChatList.do", "get", JSON.stringify(data));
+    const getChatList = async (data) => {
+        const fectcher = new Fetcher("https://hduo88.com/chat/getChatList.do", "post", JSON.stringify(data));
+        // const fectcher = new Fetcher(`http://${url}:8080/chat/getChatList.do`, "get", JSON.stringify(data));
         const result = await fectcher.jsonFetch();
-
-        console.log("이부분 로직을 타는지 확인---------------------------------------");
-        console.log(result);
 
         if (result.data != null && result.data != undefined) {
             updateChatList(result.data);
@@ -85,7 +82,6 @@ export default function ChatListScreen({ navigation }) {
     };
 
     const addFriendForChat = () => {
-        // alert("여기다가 붙이면됨");
         // 선택된 사용자가 없으면 alert
         if (receivers.length < 1) {
             Alert.alert("선택된 친구가 없습니다.");
@@ -139,18 +135,18 @@ export default function ChatListScreen({ navigation }) {
             param.receivers = receivers;
         }
         console.log("파라미터 : ", param);
-        await fetch("http://" + realUrl + ":8080/chat/openChatRoom.do", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-            },
-            body: JSON.stringify(param)
-        }).then(response => response.json()
-        ).then((result) => {
-            navigation.navigate('TextChatCopy', { chatRoomId: result.resultMap.chatRoomId });
-        }).catch(error => {
-            console.error(error);
-        });
+
+        // const fectcher = new Fetcher(`http://${testUrl}:8080/chat/openChatRoom.do`, "post", JSON.stringify(param));
+        const fectcher = new Fetcher("https://hduo88.com/chat/openChatRoom.do", "post", JSON.stringify(param));
+        const result = await fectcher.jsonFetch();
+        console.log("결과값을 가져다 주세요~!", result);
+        if (result.data != null && result.data != "" && result.data != undefined) {
+            // 채팅방으로 이동
+            moveToChatRoom(result.data);
+        } else {
+            Alert.alert("오류가 발생했습니다.");
+            return false;
+        }
     };
 
     // 채팅방으로 이동하는 메서드
