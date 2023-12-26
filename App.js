@@ -119,6 +119,9 @@ export default function App() {
         <Stack.Screen name="HomeTab" component={HomeTab} options={{
           headerShown: false
         }} />
+        <Stack.Screen name="MainScreenCopy" component={MainScreenCopy} options={{
+          headerShown: false
+        }} />
         <Stack.Screen name="OptionSelect" component={OptionSelect} options={{
           headerShown: true
         }} />
