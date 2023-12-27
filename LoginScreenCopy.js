@@ -119,7 +119,7 @@ export default function LoginScreen({ navigation }) {
             // 닉네임 설정이 되어 있지 않으면 닉네임 설정화면으로 이동
         } else {
             console.log("There's no NickName!!");
-            navigation.navigate('SetNickNameScreen');
+            navigation.navigate('SetNickNameScreenCopy');
         }
     };
 

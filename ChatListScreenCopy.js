@@ -47,7 +47,7 @@ export default function ChatListScreen({ navigation }) {
 
     // 사용자의 chatList를 불러온다.
     const getChatList = async (data) => {
-        const fectcher = new Fetcher("https://hduo88.com/chat/getChatList.do", "post", JSON.stringify(data));
+        const fectcher = new Fetcher("https://hduo88.com/chat/getChatList.do", "get", JSON.stringify(data));
         // const fectcher = new Fetcher(`http://${url}:8080/chat/getChatList.do`, "get", JSON.stringify(data));
         const result = await fectcher.jsonFetch();
 
@@ -112,10 +112,6 @@ export default function ChatListScreen({ navigation }) {
             keyWord = text;
         }
         let userInfo = await Session.sessionGet("sessionInfo");
-        console.log("userInfo : ", userInfo);
-        // const sessionId = userInfo.uIntgId;
-        // setUserInfo(userInfo);
-        // setMyNick(sessionId);
         getMyNick = userInfo.uIntgId;
         const response = await fetch(`https://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}&keyWord=${keyWord}`)
         const json = await response.json();
