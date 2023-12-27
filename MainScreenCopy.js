@@ -26,7 +26,7 @@ const realUrl = "3.37.211.126";
 const testUrl = "192.168.105.27";
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-export default function MainScreen({ navigation }) {
+export default function MainScreen({ route,navigation }) {
   const isFocused = useIsFocused();
   const [id, setid] = useState("");
   const [passWord, setpassWord] = useState("");
@@ -56,14 +56,19 @@ export default function MainScreen({ navigation }) {
 
   ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
   const serverGetOptionList = async () => {
-    const response = await fetch(`http://3.37.211.126:8080/main/selectMatchingOptionList.do`)
-    const jsonOptionList = await response.json();
-    for (var i = 0; i < jsonOptionList.selectMatchingOptionList.length; i++) {
-      let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectMatchingOptionList[i].url}`;
-      jsonOptionList.selectMatchingOptionList[i].url = tempUrl;
+    let setOption = "";
+    if(route.params == undefined){
+      setOption = "109";
+    }else{
+      setOption = route.params.lolOption;  
     }
-    console.log(jsonOptionList.selectMatchingOptionList)
-    setOptionList(jsonOptionList.selectMatchingOptionList);
+    const response = await fetch(`http://192.168.0.2:80/hexa/main/selectMatchingOptionList.do?option=${setOption}`)
+    const jsonOptionList = await response.json();
+    for (var i = 0; i < jsonOptionList.data.length; i++) {
+      let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.data[i].url}`;
+      jsonOptionList.data[i].url = tempUrl;
+    }
+    setOptionList(jsonOptionList.data);
   };
 
   ////serverGetUserLikeTop5List----좋아요 TOP5리스트 서버에서 가져오기 함수///////  
@@ -160,7 +165,6 @@ export default function MainScreen({ navigation }) {
     const response = await fetch(`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
     const jsonAlramList = await response.json();
     let alramCount = 0;
-    console.log(jsonAlramList)
     setAlramCount(alramCount);
   };
 
@@ -169,7 +173,6 @@ export default function MainScreen({ navigation }) {
     setOptionName(Math.floor(index / 100))
     let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
     setSelectedOption(getOptionList[indexNumber]);
-
   };
 
   ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
@@ -218,18 +221,12 @@ export default function MainScreen({ navigation }) {
   };
 
   const optionSubmit = () => {
-    if (getSelectedOption.length == 0) {
-      navigation.navigate('OptionSelect', {
-        gameType: getOptionList[0]
-        , gameTypePlus: ""
-        , gameTypePlusIndex: 0
-      }, { navigation });
+    if (getSelectedOption.length == 0) { // 옵션 선택 슬라이드를 움직이지 않았을 경우
+      navigation.navigate('MainScreenCopy', {lolOption:"101"
+                                                                                          },{ navigation });
     } else {
-      navigation.navigate('OptionSelect', {
-        gameType: getSelectedOption
-        , gameTypePlus: ""
-        , gameTypePlusIndex: 0
-      }, { navigation });
+      navigation.navigate('MainScreenCopy', {lolOption:"101"
+                                                                                          },{ navigation });
     }
   };
 
@@ -345,7 +342,7 @@ export default function MainScreen({ navigation }) {
     serverGetOptionList();
     //sendNotification();
   }, [isFocused, response]);
-
+  
   return (
     <MainFrame>
       <View style={styles.mainContainer} >
