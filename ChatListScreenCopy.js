@@ -117,7 +117,7 @@ export default function ChatListScreen({ navigation }) {
         // setUserInfo(userInfo);
         // setMyNick(sessionId);
         getMyNick = userInfo.uIntgId;
-        const response = await fetch(`http://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}&keyWord=${keyWord}`)
+        const response = await fetch(`https://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}&keyWord=${keyWord}`)
         const json = await response.json();
 
         setStateFriendList(json.friendList)
