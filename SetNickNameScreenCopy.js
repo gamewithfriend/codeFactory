@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
 import * as Session from './utils/session.js'
 import * as ImagePicker from 'expo-image-picker';
+import Fetcher from './utils/Fetcher';
 import axios from 'axios';
 
 //이소망 추가
@@ -36,13 +37,16 @@ export default function SetNickNameScreen ({navigation}) {
     }
     
     const getMyInfo = async() =>{
+        // 세션정보를 가지고 온다.
         let userInfo= await Session.sessionGet("sessionInfo");
         setNickName(userInfo.uNickname);
-        const sessionId = userInfo.uIntgId;
-        const response = await fetch (`http://hduo88.com/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
-        const json = await response.json();
-        if(json != ''){
-            setUserInfo(json.user[0]);
+        
+        const fectcher = new Fetcher("http://hduo88.com/mypage/selectUserInfo.do", "get", JSON.stringify({uIntgId : userInfo.uIntgId}));
+        // const fectcher = new Fetcher("http://192.168.219.195:8080/mypage/selectUserInfo.do", "get", JSON.stringify({uIntgId : userInfo.uIntgId}));
+        const result = await fectcher.jsonFetch();
+        
+        if(result.data != ""){
+            setUserInfo(result.data);
         }
     };
 
