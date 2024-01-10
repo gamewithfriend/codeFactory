@@ -41,7 +41,7 @@ export default function SetNickNameScreen ({navigation}) {
         let userInfo= await Session.sessionGet("sessionInfo");
         setNickName(userInfo.uNickname);
         
-        const fetcher = new Fetcher("http://hduo88.com/mypage/selectUserInfo.do", "get", JSON.stringify({uIntgId : userInfo.uIntgId}));
+        const fetcher = new Fetcher("https://hduo88.com/mypage/selectUserInfo.do", "get", JSON.stringify({uIntgId : userInfo.uIntgId}));
         // const fectcher = new Fetcher("http://192.168.219.195:8080/mypage/selectUserInfo.do", "get", JSON.stringify({uIntgId : userInfo.uIntgId}));
         const result = await fetcher.jsonFetch();
         
@@ -61,10 +61,10 @@ export default function SetNickNameScreen ({navigation}) {
             setUserInfo(userInfo);
             
             // 서버통신 실행
-            const fetcher = new Fetcher("http://hduo88.com/login/saveUserNickName.do","post",JSON.stringify(userInfo));
+            const fetcher = new Fetcher("https://hduo88.com/login/saveUserNickName.do","post",JSON.stringify(userInfo));
             // const fetcher = new Fetcher("http://192.168.219.195:8080/login/saveUserNickName.do","post",JSON.stringify(userInfo));
             const result = await fetcher.jsonFetch();
-
+            
             if (result.data != null && result.data != "") {
                 // 최초로그인 및 로그인 확인이 끝났으면 session 값을 set 및 get 해준다
                     let tmpSessionInfo = JSON.stringify(result.data);

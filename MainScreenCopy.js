@@ -320,7 +320,7 @@ export default function MainScreen({ route,navigation }) {
 
       // 닉네임 설정이 되어 있지 않으면 닉네임 설정화면으로 이동
     } else {
-      navigation.navigate('SetNickNameScreen');
+      navigation.navigate('SetNickNameScreenCopy');
     }
   };
 
