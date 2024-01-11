@@ -42,6 +42,8 @@ export default function MainScreen({ route,navigation }) {
   const [getUserLike, setUserLike] = useState("");
   const onChangeid = (payload) => setid(payload);
   const onChangepassWord = (payload) => setpassWord(payload);
+  // 선택한 옵션 code Id 값
+  const [getOptionId, setOptionId] = useState(0);
 
   let youserLikeCheck = "";
   let sessions = "";
@@ -67,7 +69,7 @@ export default function MainScreen({ route,navigation }) {
     for (var i = 0; i < jsonOptionList.data.length; i++) {
       let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.data[i].url}`;
       jsonOptionList.data[i].url = tempUrl;
-    }
+    } 
     setOptionList(jsonOptionList.data);
   };
 
@@ -170,9 +172,12 @@ export default function MainScreen({ route,navigation }) {
 
   ////optionChange----옵션 리스트 인덱스 함수/////// 
   const optionChange = (index) => {
+    console.log(getOptionList)
     setOptionName(Math.floor(index / 100))
     let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
     setSelectedOption(getOptionList[indexNumber]);
+    setOptionId(getOptionList[indexNumber].cdDtlId)
+    console.log(getOptionList[indexNumber].cdDtlId)
   };
 
   ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
@@ -222,7 +227,7 @@ export default function MainScreen({ route,navigation }) {
 
   const optionSubmit = () => {
     if (getSelectedOption.length == 0) { // 옵션 선택 슬라이드를 움직이지 않았을 경우
-      navigation.navigate('MainScreenCopy', {lolOption:"101"
+      navigation.navigate('MainScreenCopy', {lolOption:"101" 
                                                                                           },{ navigation });
     } else {
       navigation.navigate('MainScreenCopy', {lolOption:"101"
@@ -320,7 +325,7 @@ export default function MainScreen({ route,navigation }) {
 
       // 닉네임 설정이 되어 있지 않으면 닉네임 설정화면으로 이동
     } else {
-      navigation.navigate('SetNickNameScreen');
+      navigation.navigate('SetNickNameScreenCopy');
     }
   };
 
@@ -337,11 +342,11 @@ export default function MainScreen({ route,navigation }) {
 
   useEffect(() => {
     loginCheck();
-    serverGetUserLikeTop5List();
+    //serverGetUserLikeTop5List();
     serverGetFindMyAlramList();
     serverGetOptionList();
     //sendNotification();
-  }, [isFocused, response]);
+  }, []);
   
   return (
     <MainFrame>
