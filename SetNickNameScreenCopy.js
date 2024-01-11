@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
 import * as Session from './utils/session.js'
 import * as ImagePicker from 'expo-image-picker';
+import Fetcher from './utils/Fetcher';
 import axios from 'axios';
 
 //이소망 추가
@@ -36,51 +37,44 @@ export default function SetNickNameScreen ({navigation}) {
     }
     
     const getMyInfo = async() =>{
+        // 세션정보를 가지고 온다.
         let userInfo= await Session.sessionGet("sessionInfo");
         setNickName(userInfo.uNickname);
-        const sessionId = userInfo.uIntgId;
-        const response = await fetch (`http://hduo88.com/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
-        const json = await response.json();
-        if(json != ''){
-            setUserInfo(json.user[0]);
+        
+        const fetcher = new Fetcher("https://hduo88.com/mypage/selectUserInfo.do", "get", JSON.stringify({uIntgId : userInfo.uIntgId}));
+        // const fectcher = new Fetcher("http://192.168.219.195:8080/mypage/selectUserInfo.do", "get", JSON.stringify({uIntgId : userInfo.uIntgId}));
+        const result = await fetcher.jsonFetch();
+        
+        if(result.data != ""){
+            setUserInfo(result.data);
         }
     };
 
     const saveUserNickName = async () => {
         let isValid = validCheck();
-        console.log(isValid==true);
+        
         if (isValid) {
             // 세션정보에 닉네임값을 담아 전달할 데이터 구성
             let userInfo = await Session.sessionGet("sessionInfo");
             
-            setUserInfo(userInfo);
             userInfo.uNickname = nickName;
+            setUserInfo(userInfo);
             
             // 서버통신 실행
-            await fetch("http://" + realUrl + ":8080/login/saveUserNickName.do", {
-                                    method : "POST",
-                                    headers : {
-                                        'Content-Type': 'application/json; charset=utf-8',
-                                    },
-                                    body : JSON.stringify(userInfo)
-                                  }).then(response => response.json()
-                                   ).then(async (result) => {
-                                        // 최초로그인 및 로그인 확인이 끝났으면 session 값을 set 및 get 해준다
-                                        if (result.isSaved = "Y") {
-                                            let tmpSessionInfo = JSON.stringify(result.sessionInfo);
-                                            
-                                            await Session.sessionSave("sessionInfo", tmpSessionInfo);
-                                            // 테스트용
-                                            // let newUserInfo = await sessionGet("userInfo");
-                                            // console.log(newUserInfo);
-
-                                            Alert.alert("정상적으로 변경되었습니다!");
-                                            
-                                            navigation.navigate('MainScreen');
-                                        }
-                                   }).catch( error => {
-                                        console.error(error);
-                                   }) ;
+            const fetcher = new Fetcher("https://hduo88.com/login/saveUserNickName.do","post",JSON.stringify(userInfo));
+            // const fetcher = new Fetcher("http://192.168.219.195:8080/login/saveUserNickName.do","post",JSON.stringify(userInfo));
+            const result = await fetcher.jsonFetch();
+            
+            if (result.data != null && result.data != "") {
+                // 최초로그인 및 로그인 확인이 끝났으면 session 값을 set 및 get 해준다
+                    let tmpSessionInfo = JSON.stringify(result.data);
+                    
+                    await Session.sessionSave("sessionInfo", tmpSessionInfo);
+        
+                    Alert.alert("정상적으로 변경되었습니다!");
+                    
+                    navigation.navigate('MainScreenCopy');
+            }
         } else {
             Alert.alert("닉네임을 저장할 수 없습니다. 유효한 닉네임을 입력하였는지 확인하세요.");
             nickNameInput.current.focus();
