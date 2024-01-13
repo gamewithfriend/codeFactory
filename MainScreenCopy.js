@@ -37,14 +37,19 @@ export default function MainScreen({ route,navigation }) {
   const [getAlramCount, setAlramCount] = useState(0);
   const [getOptionList, setOptionList] = useState([]);
   const [getUserLikeTop5List, setUserLikeTop5List] = useState([]);
-  const [getSelectedOption, setSelectedOption] = useState([]);
+  const [getSelectedOptionList, setSelectedOptionList] = useState([]);
   const [ok, setOptionName] = useState(1);
   const [getUserLike, setUserLike] = useState("");
   const onChangeid = (payload) => setid(payload);
   const onChangepassWord = (payload) => setpassWord(payload);
-  // 선택한 옵션 code Id 값
-  const [getOptionId, setOptionId] = useState(0);
-
+  // slid 선택한 옵션 code Id 값 
+  const [getOptionId, setOptionId] = useState("");
+  // submit한 옵션 code Id 값 
+  const [getSubmitOptionId, setSubmitOptionId] = useState("");
+  // slideIndexNumber
+  const [getSlideNumber, setSlideNumber] = useState(0);
+  // submit한 옵션 List
+  const [getSubmitList, setSubmitList] = useState([]);
   let youserLikeCheck = "";
   let sessions = "";
 
@@ -57,15 +62,28 @@ export default function MainScreen({ route,navigation }) {
   };
 
   ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
-  const serverGetOptionList = async () => {
+  const serverGetOptionList = async (tempOptionSelected) => {
     let setOption = "";
-    if(route.params == undefined){
+    if(tempOptionSelected == undefined){
       setOption = "109";
     }else{
-      setOption = route.params.lolOption;  
+      setOption = tempOptionSelected;  
     }
     const response = await fetch(`http://192.168.0.2:80/hexa/main/selectMatchingOptionList.do?option=${setOption}`)
     const jsonOptionList = await response.json();
+    console.log("jsonOptionList.data")
+    console.log(jsonOptionList.data)
+    console.log("getSubmitList")
+    console.log(getSubmitList)
+    let tempCheckDuplicatedOptionList = [];
+    for(var i = 0; i < jsonOptionList.data.length; i++){
+      for(var j = 0; j < getSubmitList.length; j++){
+        if(jsonOptionList.data[i].cdDtlId == getSubmitList[j].cdDtlId){
+          tempCheckDuplicatedOptionList.push(i)
+        }
+        
+      }
+    }
     for (var i = 0; i < jsonOptionList.data.length; i++) {
       let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.data[i].url}`;
       jsonOptionList.data[i].url = tempUrl;
@@ -172,12 +190,11 @@ export default function MainScreen({ route,navigation }) {
 
   ////optionChange----옵션 리스트 인덱스 함수/////// 
   const optionChange = (index) => {
-    console.log(getOptionList)
     setOptionName(Math.floor(index / 100))
     let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
-    setSelectedOption(getOptionList[indexNumber]);
+    setSlideNumber(indexNumber);
+    setSelectedOptionList(getOptionList[indexNumber]);
     setOptionId(getOptionList[indexNumber].cdDtlId)
-    console.log(getOptionList[indexNumber].cdDtlId)
   };
 
   ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
@@ -226,13 +243,30 @@ export default function MainScreen({ route,navigation }) {
   };
 
   const optionSubmit = () => {
-    if (getSelectedOption.length == 0) { // 옵션 선택 슬라이드를 움직이지 않았을 경우
-      navigation.navigate('MainScreenCopy', {lolOption:"101" 
-                                                                                          },{ navigation });
+    let submitOption = ""; 
+    console.log(getOptionId)
+    console.log(getSubmitOptionId)
+    if (getSelectedOptionList.length == 0) { // 옵션 선택 슬라이드를 움직이지 않았을 경우     
+      if(getSubmitOptionId == "101"){
+        submitOption= "102";
+        console.log(getOptionList[0])
+        let tempSubmutList = getSubmitList.push(getOptionList[0]);
+        setSubmitList(tempSubmutList);
+      }else{
+        submitOption= "101";
+      }
     } else {
-      navigation.navigate('MainScreenCopy', {lolOption:"101"
-                                                                                          },{ navigation });
+      console.log(getSlideNumber)
+      if(getSubmitOptionId == "101"){
+        submitOption= Number(getSubmitOptionId) + getSlideNumber;
+        let tempSubmutList = getSubmitList.push(submitOption);
+        setSubmitList(tempSubmutList);
+      }else{
+        submitOption= "101";
+      }
     }
+    setSubmitOptionId(submitOption)
+    serverGetOptionList(submitOption);
   };
 
   let token;
@@ -342,9 +376,9 @@ export default function MainScreen({ route,navigation }) {
 
   useEffect(() => {
     loginCheck();
-    //serverGetUserLikeTop5List();
     serverGetFindMyAlramList();
     serverGetOptionList();
+    //serverGetUserLikeTop5List();
     //sendNotification();
   }, []);
   
