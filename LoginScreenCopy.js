@@ -113,12 +113,9 @@ export default function LoginScreen({ navigation }) {
         // 닉네임 설정이 되어있으면 메인 화면으로 이동
         console.log("sesisonInfo : ", sessionInfo);
         if (sessionInfo.uNickname != null) {
-            console.log("There's is NickName!!");
-            navigation.navigate('MainScreen');
-
+            navigation.navigate('HomeTab', {screen: 'Home'});
             // 닉네임 설정이 되어 있지 않으면 닉네임 설정화면으로 이동
         } else {
-            console.log("There's no NickName!!");
             navigation.navigate('SetNickNameScreenCopy');
         }
     };
