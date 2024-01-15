@@ -16,12 +16,10 @@ import colors from './assets/colors/colors';
 const {width:SCREEN_WIDTH} = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 
-const realUrl = "3.37.211.126";
-const testUrl = "192.168.105.27";
-
 export default function SetNickNameScreen ({navigation}) {
     // 닉네임 설정을 위한 useState 선언
     const [nickName, setNickName] = useState("");
+    const [glSummoner, setGlSummoner] = useState("");
     const [selectedImage, setSelectedImage] = useState({
         uri: '',
         ext : ''
@@ -32,8 +30,13 @@ export default function SetNickNameScreen ({navigation}) {
     const nickNameInput = useRef(null);
 
     // 닉네임 TextInput 변경 감지 event
-    const onChangeText = (e) => {
+    const onChangeNickName = (e) => {
         setNickName(e.nativeEvent.text);
+    }
+
+    // 닉네임 TextInput 변경 감지 event
+    const onChangeRiotNickName = (e) => {
+        setGlSummoner(e.nativeEvent.text);
     }
     
     const getMyInfo = async() =>{
@@ -58,8 +61,12 @@ export default function SetNickNameScreen ({navigation}) {
             let userInfo = await Session.sessionGet("sessionInfo");
             
             userInfo.uNickname = nickName;
+            userInfo.glSummoner = glSummoner;
             setUserInfo(userInfo);
             
+            // 24. 01. 15 프로필 사진 저장로직도 닉네임 저장 시 넘어가도록 로직 변경
+            await uploadImageAsync();
+
             // 서버통신 실행
             const fetcher = new Fetcher("https://hduo88.com/login/saveUserNickName.do","post",JSON.stringify(userInfo));
             // const fetcher = new Fetcher("http://192.168.219.195:8080/login/saveUserNickName.do","post",JSON.stringify(userInfo));
@@ -73,7 +80,7 @@ export default function SetNickNameScreen ({navigation}) {
         
                     Alert.alert("정상적으로 변경되었습니다!");
                     
-                    navigation.navigate('MainScreenCopy');
+                    navigation.navigate('HomeTab', {screen: 'Home'});
             }
         } else {
             Alert.alert("닉네임을 저장할 수 없습니다. 유효한 닉네임을 입력하였는지 확인하세요.");
@@ -93,7 +100,7 @@ export default function SetNickNameScreen ({navigation}) {
         const specialChracterRegex = /[!@#$%^&*(),.?":{}|<>]/;
         // 특수문자 포함 체크로직
         if (nickName.length == 0 || nickName.includes(" ")) {
-            console.log("공백이 있습니다요!");
+            console.log("닉네임에 공백을 사용할 수 없습니다.");
 
             return false;
         }
@@ -128,27 +135,6 @@ export default function SetNickNameScreen ({navigation}) {
         return stringByteLength;
     }
 
-    // session 정보를 확인하는 함수
-    const sessionGet = async (key) => {
-        try {
-            const value = await AsyncStorage.getItem(key);
-            if (value !== null) {
-                return value;
-            } else {
-                session = "";
-            }
-        } catch (error) {
-            Alert.alert(error);
-        }
-    };
-    // session 정보를 set하는 함수
-    const sessionSave = async (key, value)=>{
-        await AsyncStorage.setItem(
-            key,
-            value,
-        );
-    };
-
     const openImagePickerAsync = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (permissionResult.granted === false) {
@@ -157,7 +143,7 @@ export default function SetNickNameScreen ({navigation}) {
         }
 
         const pickerResult = await ImagePicker.launchImageLibraryAsync();
-        if (!pickerResult.cancelled) {
+        if (!pickerResult.canceled) {
             const lastDotIndex = pickerResult.assets[0].uri.lastIndexOf('.');
             let fileExtension = "";
             if (lastDotIndex !== -1) {
@@ -172,7 +158,7 @@ export default function SetNickNameScreen ({navigation}) {
     };
 
     const uploadImageAsync = async () => {
-        const apiUrl = 'http://hduo88.com/mypage/changeMyImage.do';
+        const apiUrl = 'https://hduo88.com/mypage/changeMyImage.do';
         const formData = new FormData();
         
         formData.append('image', {
@@ -181,7 +167,7 @@ export default function SetNickNameScreen ({navigation}) {
             type: 'image/*'
         });
 
-        formData.append('data',JSON.stringify(userInfo.uintgId));
+        formData.append('data',JSON.stringify(userInfo.uIntgId));
         try{
             
             const response = await axios.post (apiUrl,formData,{
@@ -207,13 +193,13 @@ export default function SetNickNameScreen ({navigation}) {
         <MainFrame>
             <View style={[glStyles.flexContainer, glStyles.flexCenter]} >
                 <View>
-                    <TouchableOpacity style={styles.imageContainer} onPress={openImagePickerAsync}>
+                    <TouchableOpacity onPress={openImagePickerAsync}>
                         {selectedImage.uri !== '' ? (
                             <Image source={{ uri: selectedImage.uri }} style={styles.image} resizeMode='contain' />
                             ) : (
                             userInfo.profileImgUrl !== null ? (
                             <Image
-                                source={{ uri: `http://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
+                                source={{ uri: `https://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}`}}
                                 style={styles.image}
                                 resizeMode='contain'
                                 onPress={openImagePickerAsync}
@@ -223,18 +209,19 @@ export default function SetNickNameScreen ({navigation}) {
                             )
                         )}
                     </TouchableOpacity>
-                    { selectedImage.uri !== '' ? (
+                    {/* { selectedImage.uri !== '' ? (
                         <TouchableOpacity style={styles.imgUploadBtnView} title="이미지업로드" onPress={uploadImageAsync}>
                             <Text ref={nickNameInput} style={styles.btnText}>이미지업로드</Text>
                         </TouchableOpacity>
                             ) : (
                             <Text></Text>
                             )
-                    }
+                    } */}
                 </View>
                 <View>
                     <KeyboardAvoidingView keyboardVerticalOffset={-100}>
-                        <TextInput style={[glStyles.inptBasic, glStyles.pageTit, glStyles.txtAlignCntr, glStyles.lh15]} placeholder='사용할 닉네임을 입력하세요.' value={nickName} onChange={onChangeText}/>
+                        <TextInput style={[glStyles.inptBasic, glStyles.pageTit, glStyles.txtAlignCntr, glStyles.titleText]} placeholder='사용할 닉네임을 입력하세요.' placeholderTextColor='#eee' value={nickName} onChange={onChangeNickName}/>
+                        <TextInput style={[glStyles.inptBasic, glStyles.pageTit, glStyles.txtAlignCntr, glStyles.titleText]} placeholder='소환사명을 입력하세요.' placeholderTextColor='#eee' value={glSummoner} onChange={onChangeRiotNickName}/>
                     </KeyboardAvoidingView>
                 </View>
                 <View style={glStyles.btnBox}>
