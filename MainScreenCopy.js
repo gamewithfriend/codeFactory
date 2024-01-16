@@ -29,10 +29,12 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
 // 선택한 메인 옵션을 제외하기위한 배열
 let selectedOptionArr = [];
+// 선택한 랭크 하부 옵션을 제외하기위한 배열
+let selectedOptionRankUnderArr = [];
 
 
 export default function MainScreen({ route,navigation }) {
-  
+
   const isFocused = useIsFocused();
   const scrollRef = useRef();
   const [id, setid] = useState("");
@@ -112,10 +114,10 @@ export default function MainScreen({ route,navigation }) {
 
   const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
     const matchingOptionCode=forRankUnderOptionListCode;   
-    const response = await fetch (`http://hduo88.com/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+    const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}&params=${selectedOptionRankUnderArr}`)
     const jsonOptionList = await response.json();
     for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
-      let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+      let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
       jsonOptionList.selectOptionList[i].url = tempUrl;
     }
     if(getModalIndex == false){
@@ -237,7 +239,7 @@ export default function MainScreen({ route,navigation }) {
     setOptionId(getOptionList[indexNumber].cdDtlId)
   };
 
-  //// rankChange----옵션 리스트 인덱스 함수/////// 
+  //// rankChange----랭크 리스트 인덱스 함수/////// 
   const modalRankChange = (index)=>{
     let changeIndex =Math.floor(index/100);
     let indexNumber =0;
@@ -297,7 +299,6 @@ export default function MainScreen({ route,navigation }) {
       setModalIndex(false); // rank  모달 인덱스 설정
       setRankModalVisible(false); // rank  모달 종료시키기
       serverGetOptionList("101", ""); // 옵션 화면 리로딩
-      console.log(selectedOptionArr)
     }
   };
 
@@ -306,6 +307,7 @@ export default function MainScreen({ route,navigation }) {
     setModalVisible(false);
     selectedOptionArr.pop();
     setSubmitOptionId("101")
+    setSelectedOptionList([]);
     serverGetOptionList("101", "");
     
   };
