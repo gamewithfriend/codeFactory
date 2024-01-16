@@ -25,3 +25,10 @@ export async function sessionSave(key, value) {
         value,
     );
 }
+
+// 로그아웃 처리를 위한 session정보 클리어 로직
+export async function sessionClear(key) {
+  await AsyncStorage.removeItem(
+      key
+  );
+}
