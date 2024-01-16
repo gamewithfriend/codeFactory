@@ -23,7 +23,7 @@ export default function ChatListScreen({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [getFriendNum, setFriendNum] = useState(0);
     const [getStateFriendList, setStateFriendList] = useState([]);
-    const [text, onChangeText] = React.useState('Useless Text');
+    const [text, onChangeText] = React.useState(null);
 
     let isFocused = useIsFocused();
 
@@ -71,15 +71,15 @@ export default function ChatListScreen({ navigation }) {
         index,
     });
 
-    // buttonClickEvent
-    const handleAdd = () => {
-        console.log("임시");
-    };
-
-    // buttonClickEvent
+    // 친구를 검색하여 채팅방을 여는 모달을 오픈
     const addFriendChat = () => {
         setModalVisible(true);
     };
+
+    // 친구를 검색하여 채팅방을 여는 모달을 종료
+    const addFriendChatClose = () => {
+        setModalVisible(false);
+    }
 
     const addFriendForChat = () => {
         // 선택된 사용자가 없으면 alert
@@ -130,12 +130,11 @@ export default function ChatListScreen({ navigation }) {
         if (receivers != null && receivers != undefined && receivers.length > 0) {
             param.receivers = receivers;
         }
-        console.log("파라미터 : ", param);
 
         // const fectcher = new Fetcher(`http://${testUrl}:8080/chat/openChatRoom.do`, "post", JSON.stringify(param));
         const fectcher = new Fetcher("https://hduo88.com/chat/openChatRoom.do", "post", JSON.stringify(param));
         const result = await fectcher.jsonFetch();
-        console.log("결과값을 가져다 주세요~!", result);
+        
         if (result.data != null && result.data != "" && result.data != undefined) {
             // 채팅방으로 이동
             moveToChatRoom(result.data);
@@ -209,20 +208,24 @@ export default function ChatListScreen({ navigation }) {
                     Alert.alert('Modal has been closed.');
                     setModalVisible(!modalVisible);
                 }}>
-                <Pressable style={{
+                {/* <Pressable style={{
                     flex: 1,
                     backgroundColor: 'transparent',
                 }}
                     onPress={() => setModalVisible(false)}
-                />
+                /> */}
                 <View style={[glStyles.modalView, glStyles.bgDarkGray, glStyles.pd15]}>
                     <View style={[glStyles.btnIcon, glStyles.flexRowEnd]}>
                         {/* 닫기 이벤트 추가 부탁 */}
-                        <Ionicons name="close" size={20} style={glStyles.cardIcon} />
+                        <TouchableOpacity onPress={addFriendChatClose} >
+                            <Ionicons name="close" size={20} style={glStyles.cardIcon} />
+                        </TouchableOpacity>
                     </View>
                     <TextInput
                         style={glStyles.basicText}
                         onChangeText={text => onChange(text)}
+                        placeholder='친구 검색'
+                        placeholderTextColor='#eee'
                         value={text}
                     />
                     {getStateFriendList.length === 0 ? (
