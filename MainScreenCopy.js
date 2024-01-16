@@ -1,5 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Image, Dimensions, ActivityIndicator, Modal, Pressable, Alert } from 'react-native';
+import React, { Component, useState, useEffect, useRef } from 'react';
+import { View, Text, Button, StyleSheet, TextInput, Image
+  , Dimensions, ActivityIndicator, Modal, Pressable, Alert,TouchableHighlight,TouchableOpacity  } from 'react-native';
 import GameMatchingScreen from './GameMatchingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -25,12 +26,19 @@ const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.goo
 const realUrl = "3.37.211.126";
 const testUrl = "192.168.105.27";
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const {height:SCREEN_HEIGHT} = Dimensions.get('window');
+// 선택한 메인 옵션을 제외하기위한 배열
+let selectedOptionArr = [];
+
 
 export default function MainScreen({ route,navigation }) {
+  
   const isFocused = useIsFocused();
+  const scrollRef = useRef();
   const [id, setid] = useState("");
   const [passWord, setpassWord] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [rankModalVisible, setRankModalVisible] = useState(false);
   const [getSessionId, setSessionId] = useState("");
   const [getLikeYn, setLikeYn] = useState("");
   const [getAlramRecentOneMsg, setAlramRecentOneMsg] = useState("");
@@ -42,16 +50,267 @@ export default function MainScreen({ route,navigation }) {
   const [getUserLike, setUserLike] = useState("");
   const onChangeid = (payload) => setid(payload);
   const onChangepassWord = (payload) => setpassWord(payload);
+
   // slid 선택한 옵션 code Id 값 
   const [getOptionId, setOptionId] = useState("");
   // submit한 옵션 code Id 값 
   const [getSubmitOptionId, setSubmitOptionId] = useState("");
   // slideIndexNumber
   const [getSlideNumber, setSlideNumber] = useState(0);
-  // submit한 옵션 List
-  const [getSubmitList, setSubmitList] = useState([]);
+  // 챔피언 찾는 text
+  const [text, onChangeText] = React.useState('챔피언 명을 입력해주세요');
+  // 나중에 지우는 List
+  const [getStateFriendList, setStateFriendList] = useState([]);
+  // 챔피언 List
+  const [championList, setChampionList] = useState([]);
+  // 선택한 챔피언
+  const [getChampionSelect, setChampionSelect] = useState("");
+  // rank Modal Slid Index
+  const [getModalChangeIndex, setModalChangeIndex] = useState(0);
+  // rank Under Number List
+  const [getRankUnderOptionListOne, setRankUnderOptionListOne] = useState([]);
+  const [getRankUnderOptionListTwo, setRankUnderOptionListTwo] = useState([]);
+  // get Rank Modal Index
+  const [getModalIndex, setModalIndex] = useState(false);
+
+
+  // 챔피언 새로 담아주는 List 
+  let reChampionList = [];
   let youserLikeCheck = "";
   let sessions = "";
+
+  // scrollref 서버에서 옵션 리스트 가져올때마다 scrollView Index 초기화
+  const onserverGetOption = () => {
+    scrollRef.current?.scrollTo({
+      x: 0,
+      animated: true,
+    });
+  }
+
+  ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
+  const serverGetOptionList = async (tempOptionSelected, submitOptionMain) => {
+    let setOption = "";
+    if(submitOptionMain == "10102"){ // main option 선택이 챔피언이라면 모달 창 생성 if 문
+      champSelectModal();
+    }else if(submitOptionMain == "10101"){
+      setRankModalVisible(true);
+    }
+    if(tempOptionSelected == undefined){
+      setOption = "109";
+    }else{
+      setOption = tempOptionSelected;  
+    }
+    const response = await fetch(`http://3.37.211.126:8080/main/selectMatchingOptionList.do?option=${setOption}&params=${selectedOptionArr}`)
+    const jsonOptionList = await response.json();
+    for (var i = 0; i < jsonOptionList.data.length; i++) {
+      let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.data[i].url}`;
+      jsonOptionList.data[i].url = tempUrl;
+    } 
+    setOptionList(jsonOptionList.data);
+    onserverGetOption();
+  };
+
+  const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
+    const matchingOptionCode=forRankUnderOptionListCode;   
+    const response = await fetch (`http://hduo88.com/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}`)
+    const jsonOptionList = await response.json();
+    for(var i=0; i<jsonOptionList.selectOptionList.length; i++){ 
+      let tempUrl = `http://hduo88.com/tomcatImg/option/${jsonOptionList.selectOptionList[i].url}`;
+      jsonOptionList.selectOptionList[i].url = tempUrl;
+    }
+    if(getModalIndex == false){
+      setRankUnderOptionListOne(jsonOptionList.selectOptionList);
+    }else{
+      setRankUnderOptionListTwo(jsonOptionList.selectOptionList);
+    }      
+  };
+
+  ////getChampionList----챔피언 리스트 서버에서 가져오기 함수///////
+  const getChampionList = async() =>{
+    const response = await fetch (`http://hduo88.com/gameMatching/selectChampion.do).then(response`);
+      let json = await response.json(); 
+      for (let i =0; i<json.gameVO.length; i++) {
+        let tempChName = json.gameVO[i].chName;
+        let tempUrl = `http://hduo88.com/tomcatImg/champ/${json.gameVO[i].url}`;
+        json.gameVO[i]= {
+          chIndex : json.gameVO[i].chIndex,
+          chName : json.gameVO[i].chName,
+          chNameK: json.gameVO[i].chNameK,
+          optionUrl : tempUrl
+        };
+        if((i+1)%4 ==0){
+          let tempBox = [];
+          tempBox.push(json.gameVO[i]);
+          tempBox.push(json.gameVO[i-1]);
+          tempBox.push(json.gameVO[i-2]);
+          tempBox.push(json.gameVO[i-3]);
+          reChampionList.push(tempBox);
+        }
+        if(i == json.gameVO.length-1){
+          let tempLength = (i+1)%4;
+          let tempBox = [];
+          for(let n =0; n<tempLength; n++){
+            tempBox.push(json.gameVO[i-n]);  
+          }
+          if(tempBox.length !=4){
+            let tempTwoLength = 4-tempBox.length;
+            for(let u=0; u<tempTwoLength; u++){
+              let tempObjec = {
+                chName : "",
+                chIndex : "",
+                url : ""
+              };
+              tempBox.push(tempObjec);
+            }
+          }
+          reChampionList.push(tempBox); 
+        }
+      }
+      setChampionList(reChampionList)
+    };
+
+  ////getSearchChampionList---- 검색한 챔피언 리스트 서버에서 가져오기 함수///////
+  const getSearchChampionList = async(keyWord) =>{
+    const response = await fetch (`http://hduo88.com/gameMatching/selectSearchChampion.do?keyWord=${keyWord}`)
+    const json = await response.json();
+    for (let i =0; i<json.gameVO.length; i++) {
+      let tempChName = json.gameVO[i].chName;
+      let tempUrl = `http://hduo88.com/tomcatImg/champ/${json.gameVO[i].url}`;
+      json.gameVO[i]= {
+        chIndex : json.gameVO[i].chIndex,
+        chName : json.gameVO[i].chName,
+        chNameK: json.gameVO[i].chNameK,
+        optionUrl : tempUrl
+      };
+      if((i+1)%4 ==0){
+        let tempBox = [];
+        tempBox.push(json.gameVO[i]);
+        tempBox.push(json.gameVO[i-1]);
+        tempBox.push(json.gameVO[i-2]);
+        tempBox.push(json.gameVO[i-3]);
+        reChampionList.push(tempBox);
+      }
+      if(i == json.gameVO.length-1){
+        let tempLength = (i+1)%4;
+        let tempBox = [];
+        for(let n =0; n<tempLength; n++){
+          tempBox.push(json.gameVO[i-n]);  
+        }
+        if(tempBox.length !=4){
+          let tempTwoLength = 4-tempBox.length;
+          for(let u=0; u<tempTwoLength; u++){
+            let tempObjec = {
+              chName : "",
+              chIndex : "",
+              url : ""
+            };
+            tempBox.push(tempObjec);
+          }
+        }
+        reChampionList.push(tempBox); 
+      }
+    }
+    setChampionList(reChampionList)
+  };
+
+  // 챔피언 선택함수                                                                
+  const selectChampion = (index)=>{
+    setChampionSelect(index);
+  };
+
+  //champSelectModal   챔피언 모달창 생성 함수
+  const champSelectModal = () => {
+    setModalVisible(true);
+  };
+  // 챔피언 검색 체인지 함수
+  const onChange = (text)=>{
+    onChangeText(text);
+    getSearchChampionList(text);   
+  };
+
+  ////optionChange----옵션 리스트 인덱스 함수/////// 
+  const optionChange = (index) => {
+    setOptionName(Math.floor(index / 100))
+    let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
+    setSlideNumber(indexNumber);
+    setSelectedOptionList(getOptionList[indexNumber]);
+    setOptionId(getOptionList[indexNumber].cdDtlId)
+  };
+
+  //// rankChange----옵션 리스트 인덱스 함수/////// 
+  const modalRankChange = (index)=>{
+    let changeIndex =Math.floor(index/100);
+    let indexNumber =0;
+    if(changeIndex != 0){
+      indexNumber = Math.ceil((changeIndex+1)/4);
+    }
+    setModalChangeIndex(indexNumber);      
+  };
+  
+
+  ////alramListTrigger---- 알람 리스트 함수/////// 
+  const alramListTrigger = () => {
+    navigation.navigate('AlarmScreenCopy', { navigation });
+  };
+
+  const goMatchingHistory = () => {
+    navigation.navigate('MatchingHistoryScreenCopy', { navigation });
+  };
+
+
+  ////optionSubmit---- 옵션 Submit 함수///////   
+  const optionSubmit = () => { 
+    let submitOption = ""; // greatest option 선택 값
+    let submitOptionMain = "";  // main option 선택 값
+    if (getSelectedOptionList.length == 0) { // 옵션 선택 슬라이드를 움직이지 않았을 경우     
+      if(getSubmitOptionId == "101"){ //main option
+        submitOption= "102";
+        selectedOptionArr.push(getOptionList[0].cdDtlId); //선택한 메인 옵션 제외하기 위한 배열 
+        submitOptionMain = getOptionList[0].cdDtlId;
+      }else{ //sub option
+        submitOption= "101";
+      }
+    } else {
+      if(getSubmitOptionId == "101"){ //main option
+        submitOption= Number(getSubmitOptionId) + getSlideNumber+selectedOptionArr.length;
+        selectedOptionArr.push(getOptionList[getSlideNumber].cdDtlId);  //선택한 메인 옵션 제외하기 위한 배열 
+        submitOptionMain = getOptionList[getSlideNumber].cdDtlId;      
+      }else{  //sub option
+        submitOption= "101";
+      }
+    }
+    setSubmitOptionId(submitOption)
+    serverGetOptionList(submitOption, submitOptionMain);
+  };
+  ////championSubmit---- 챔피언 Submit 함수///////   
+  const championSubmit = () => { 
+    setModalVisible(false);
+    serverGetOptionList("101", "");
+  };
+
+  ////rankSubmit---- rank Submit 함수///////   
+  const rankSubmit = () => { 
+    if(getModalIndex ==false){
+      setModalIndex(true);  // rank  모달 인덱스 설정
+      onserverGetOption();  // rank Scrollview 초기화
+    }else{
+      setModalIndex(false); // rank  모달 인덱스 설정
+      setRankModalVisible(false); // rank  모달 종료시키기
+      serverGetOptionList("101", ""); // 옵션 화면 리로딩
+      console.log(selectedOptionArr)
+    }
+  };
+
+  ////championModalClose---- 챔피언 championModalClose 함수///////   
+  const championModalClose = () => { 
+    setModalVisible(false);
+    selectedOptionArr.pop();
+    setSubmitOptionId("101")
+    serverGetOptionList("101", "");
+    
+  };
+
+  ///////////////////-------------------------------------------------------------------------------
 
   ////targetLike----좋아요 기능함수///////
   const targetLike = async (targetId) => {
@@ -61,34 +320,51 @@ export default function MainScreen({ route,navigation }) {
     serverGetFindMyAlramList();
   };
 
-  ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
-  const serverGetOptionList = async (tempOptionSelected) => {
-    let setOption = "";
-    if(tempOptionSelected == undefined){
-      setOption = "109";
-    }else{
-      setOption = tempOptionSelected;  
+  ////serverGetFindMyAlramList----로그인 유저 알람리스트 서버에서 가져오기 함수/////// 
+  const serverGetFindMyAlramList = async () => {
+    sessions = await Session.sessionGet("sessionInfo");
+    const sessionId = sessions.uIntgId;
+    const response = await fetch(`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
+    const jsonAlramList = await response.json();
+    let alramCount = 0;
+    setAlramCount(alramCount);
+  };
+
+  
+  ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 
+  const targetLikeTrigger = (targetId) => {
+    targetLike(targetId);
+    serverGetUserLikeTop5List();
+  };
+
+   ////addFriendTrigger----친구신청 함수/////// 
+   const addFriendTrigger = (targetId, friendState) => {
+    if (friendState == "10502") {
+      alert("현재 친구신청 메세지가 보내진상태입니다.")
+    } else {
+      addFriendDetail(targetId, friendState);
     }
-    const response = await fetch(`http://192.168.0.2:80/hexa/main/selectMatchingOptionList.do?option=${setOption}`)
-    const jsonOptionList = await response.json();
-    console.log("jsonOptionList.data")
-    console.log(jsonOptionList.data)
-    console.log("getSubmitList")
-    console.log(getSubmitList)
-    let tempCheckDuplicatedOptionList = [];
-    for(var i = 0; i < jsonOptionList.data.length; i++){
-      for(var j = 0; j < getSubmitList.length; j++){
-        if(jsonOptionList.data[i].cdDtlId == getSubmitList[j].cdDtlId){
-          tempCheckDuplicatedOptionList.push(i)
-        }
-        
-      }
+
+  };
+  const addFriendDetail = async (targetId, friendState) => {
+
+    sessions = await Session.sessionGet("sessionInfo");
+    const sessionIdForAdd = sessions.uIntgId;
+    if (sessionIdForAdd == targetId) {
+      alert("자신에게는 친구신청을 보낼수없습니다.")
+      return;
     }
-    for (var i = 0; i < jsonOptionList.data.length; i++) {
-      let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.data[i].url}`;
-      jsonOptionList.data[i].url = tempUrl;
-    } 
-    setOptionList(jsonOptionList.data);
+    const responseAddFriend = await fetch(`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
+    serverGetUserLikeTop5List();
+  };
+
+  ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
+  const friendChange = (index) => {
+    setOptionName(Math.floor(index / 100))
+    let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
+    let youId = getUserLikeTop5List[indexNumber].ylYouId;
+    serverGetTargetUserLikeYn(youId, indexNumber);
+    serverGetTargetUserFriendState(youId, indexNumber);
   };
 
   ////serverGetUserLikeTop5List----좋아요 TOP5리스트 서버에서 가져오기 함수///////  
@@ -178,96 +454,8 @@ export default function MainScreen({ route,navigation }) {
 
   };
 
-  ////serverGetFindMyAlramList----로그인 유저 알람리스트 서버에서 가져오기 함수/////// 
-  const serverGetFindMyAlramList = async () => {
-    sessions = await Session.sessionGet("sessionInfo");
-    const sessionId = sessions.uIntgId;
-    const response = await fetch(`http://3.37.211.126:8080/alram/findMyAlramList.do?myId=${sessionId}`)
-    const jsonAlramList = await response.json();
-    let alramCount = 0;
-    setAlramCount(alramCount);
-  };
+  ///////////////////-------------------------------------------------------------------------------
 
-  ////optionChange----옵션 리스트 인덱스 함수/////// 
-  const optionChange = (index) => {
-    setOptionName(Math.floor(index / 100))
-    let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
-    setSlideNumber(indexNumber);
-    setSelectedOptionList(getOptionList[indexNumber]);
-    setOptionId(getOptionList[indexNumber].cdDtlId)
-  };
-
-  ////friendChange----좋아요 TOP5 리스트 인덱스 함수/////// 
-  const friendChange = (index) => {
-    setOptionName(Math.floor(index / 100))
-    let indexNumber = Math.floor(((Math.floor(index / 100)) + 1) / 4);
-    let youId = getUserLikeTop5List[indexNumber].ylYouId;
-    serverGetTargetUserLikeYn(youId, indexNumber);
-    serverGetTargetUserFriendState(youId, indexNumber);
-  };
-
-  ////addFriendTrigger----친구신청 함수/////// 
-  const addFriendTrigger = (targetId, friendState) => {
-    if (friendState == "10502") {
-      alert("현재 친구신청 메세지가 보내진상태입니다.")
-    } else {
-      addFriendDetail(targetId, friendState);
-    }
-
-  };
-  const addFriendDetail = async (targetId, friendState) => {
-
-    sessions = await Session.sessionGet("sessionInfo");
-    const sessionIdForAdd = sessions.uIntgId;
-    if (sessionIdForAdd == targetId) {
-      alert("자신에게는 친구신청을 보낼수없습니다.")
-      return;
-    }
-    const responseAddFriend = await fetch(`http://hduo88.com/friend/friendAdd.do?myNick=${sessionIdForAdd}&yourNick=${targetId}`);
-    serverGetUserLikeTop5List();
-  };
-
-  ////targetLikeTrigger----좋아요 버튼 트리거 함수/////// 
-  const targetLikeTrigger = (targetId) => {
-    targetLike(targetId);
-    serverGetUserLikeTop5List();
-  };
-
-  ////alramListTrigger---- 알람 리스트 함수/////// 
-  const alramListTrigger = () => {
-    navigation.navigate('AlarmScreenCopy', { navigation });
-  };
-
-  const goMatchingHistory = () => {
-    navigation.navigate('MatchingHistoryScreenCopy', { navigation });
-  };
-
-  const optionSubmit = () => {
-    let submitOption = ""; 
-    console.log(getOptionId)
-    console.log(getSubmitOptionId)
-    if (getSelectedOptionList.length == 0) { // 옵션 선택 슬라이드를 움직이지 않았을 경우     
-      if(getSubmitOptionId == "101"){
-        submitOption= "102";
-        console.log(getOptionList[0])
-        let tempSubmutList = getSubmitList.push(getOptionList[0]);
-        setSubmitList(tempSubmutList);
-      }else{
-        submitOption= "101";
-      }
-    } else {
-      console.log(getSlideNumber)
-      if(getSubmitOptionId == "101"){
-        submitOption= Number(getSubmitOptionId) + getSlideNumber;
-        let tempSubmutList = getSubmitList.push(submitOption);
-        setSubmitList(tempSubmutList);
-      }else{
-        submitOption= "101";
-      }
-    }
-    setSubmitOptionId(submitOption)
-    serverGetOptionList(submitOption);
-  };
 
   let token;
   let userInfo = {};
@@ -374,10 +562,14 @@ export default function MainScreen({ route,navigation }) {
     });
   };
 
+  
+
   useEffect(() => {
     loginCheck();
     serverGetFindMyAlramList();
-    serverGetOptionList();
+    serverGetOptionList();  // 옵션 리스트 가져오는 함수
+    getChampionList();  // 챔피언 리스트 가져오는 함수
+    serverGetRankUnderOptionList("10202"); // 랭크 옵션 하위
     //serverGetUserLikeTop5List();
     //sendNotification();
   }, []);
@@ -393,7 +585,7 @@ export default function MainScreen({ route,navigation }) {
         </View>
         <View style={{ marginBottom: 20 }}>
           <View style={glStyles.titleBoxIcon}>
-            <Text style={glStyles.titleText}>게임모드 옵션 설정</Text>
+            <Text style={glStyles.titleText}>매칭 옵션 설정</Text>   
             <View style={glStyles.justMarginLeft} onStartShouldSetResponder={() => goMatchingHistory()}>
               <Ionicons name="time-outline" size={22} style={glStyles.cardIcon} />
             </View>
@@ -417,7 +609,9 @@ export default function MainScreen({ route,navigation }) {
             pagingEnabled
             horizontal
             onMomentumScrollEnd={(event) => { optionChange(event.nativeEvent.contentOffset.x) }}
-            showsHorizontalScrollIndicator={false}>
+            showsHorizontalScrollIndicator={false}
+            ref={scrollRef}
+            >
             {getOptionList.length === 0 ? (
               <View >
               </View>
@@ -439,11 +633,181 @@ export default function MainScreen({ route,navigation }) {
             }
           </ScrollView>
           <View>
-            <Button color={colors.lightBlue} title='선택' onPress={optionSubmit} style={[glStyles.btnMd, glStyles.btnBlue]}>
-            </Button>
+              <Button color={colors.lightBlue} title='선택' onPress={optionSubmit} style={[glStyles.btnMd, glStyles.btnBlue]}>
+              </Button>
           </View>
         </View>
       </View>
+      <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
+                <Pressable style={{
+                    flex: 1,
+                    backgroundColor: 'transparent',
+                }}
+                    onPress={() => championModalClose()}
+                />
+                <View style={[glStyles.modalView, glStyles.bgDarkGray, glStyles.pd15]}>
+                    <View style={[glStyles.btnIcon, glStyles.flexRowEnd]} onStartShouldSetResponder={() =>championModalClose()}>
+                        {/* 닫기 이벤트 추가 부탁 */}
+                        <Ionicons name="close" size={20} style={glStyles.cardIcon} />
+                    </View>
+                    <TextInput
+                        style={glStyles.basicText}
+                        onChangeText={text => onChange(text)}
+                        value={text}
+                    />
+                    <View style={glStyles.flexContainer}>
+                    <ScrollView
+                              showsHorizontalScrollIndicator = {false}>                
+                    {championList.length === 0? (
+                        <View >
+                          <ActivityIndicator color="black" size="large"/>
+                        </View>
+                      ):(
+                        championList.map((champion, index) =>         
+                          <View key={index} style={styles.centerBottomContainer}> 
+                                                  
+                            <View onStartShouldSetResponder={() =>selectChampion(champion[0].chNameK)} style={styles.champItemBox}>
+                              <TouchableOpacity>
+                                <Image
+                                  style={styles.champImg}
+                                  source={{
+                                    uri: `${champion[0].optionUrl}`,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                              <Text style={glStyles.champText}>{champion[0].chNameK}</Text>
+                            </View> 
+                            <View onStartShouldSetResponder={() => selectChampion(champion[1].chNameK)} style={styles.champItemBox}>
+                              <TouchableOpacity>
+                               <Image
+                                style={styles.champImg}
+                                source={{
+                                  uri: `${champion[1].optionUrl}`,
+                                }}
+                              />
+                              </TouchableOpacity>
+                                <Text style={glStyles.champText}>{champion[1].chNameK}</Text>                              
+                            </View>
+                            <View onStartShouldSetResponder={() => selectChampion(champion[2].chNameK)} style={styles.champItemBox}>
+                              <TouchableOpacity>
+                               <Image
+                                style={styles.champImg}
+                                source={{
+                                  uri: `${champion[2].optionUrl}`,
+                                }}
+                              />
+                              </TouchableOpacity>
+                              <Text style={glStyles.champText}>{champion[2].chNameK}</Text>
+                            </View> 
+                            <View onStartShouldSetResponder={() => selectChampion(champion[3].chNameK)} style={styles.champItemBox}>
+                              <TouchableOpacity>
+                               <Image
+                                style={styles.champImg}
+                                source={{
+                                  uri: `${champion[3].optionUrl}`,
+                                }}
+                              />
+                              </TouchableOpacity>
+                              <Text style={glStyles.champText}>{champion[3].chNameK}</Text>
+                            </View>
+                          </View> 
+                        )
+                      )
+                    }
+                  </ScrollView>
+                  </View>
+                    <View style={glStyles.btnBox}>
+                        <View style={[glStyles.btnSm, glStyles.btnBlue]} onStartShouldSetResponder={() => championSubmit()}>
+                            <Text style={glStyles.btnText}>선택하기</Text>
+                        </View>
+                    </View>
+                </View>
+      </Modal>
+      <Modal
+              animationType="fade"
+              transparent={true}
+              visible={rankModalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setRankModalVisible(!modalVisible);
+              }}>
+              <Pressable style={{
+              flex:1,
+              backgroundColor:'transparent',
+              }}
+              onPress={()=>setModalVisible(false)}
+              />
+                <View style={[styles.modalView, glStyles.bgDarkGray]}>
+                    <View style={[glStyles.btnIcon, glStyles.flexRowEnd]} onStartShouldSetResponder={() =>championModalClose()}>
+                        {/* 닫기 이벤트 추가 부탁 */}
+                        <Ionicons name="close" size={20} style={glStyles.cardIcon} />
+                    </View>
+                    {getModalIndex === false ? (
+                      <Text>
+                        ddd
+                      </Text>
+                    ) : (
+                      <Text>
+                        aaa
+                      </Text>
+                    )
+                    }
+                    
+                    <ScrollView pagingEnabled
+                                horizontal
+                                ref={scrollRef}
+                                onMomentumScrollEnd={(event) => {modalRankChange(event.nativeEvent.contentOffset.x)}} 
+                                showsHorizontalScrollIndicator = {false}>      
+                        {getOptionList.length === 0? (
+                            <View >
+                                <ActivityIndicator color="black" size="large"/>
+                            </View>
+                            ) : (
+                              getOptionList.map( (info, index) =>    
+                                <View key={index} style={glStyles.slideItems}>                                 
+                                  <View style={glStyles.slideImgBox2}>
+                                    <View style={glStyles.cardItems}  >
+                                        <Text style={styles.itemBoxTitle} >{info.cdDtlName}</Text>
+                                        <Image resizeMode='contain' style={styles.backImg} source={{
+                                                    uri: `${info.url}`,
+                                                  }}/>       
+                                    </View>
+                                    </View>    
+                                </View>
+                            )
+                            )
+                        }         
+                    </ScrollView>
+                    <View style={glStyles.btnBox2}>
+                        <View style={styles.sectionViewButtonBox}>
+                          {getRankUnderOptionListOne.length === 0? (
+                            <View  style={styles.sectionViewButtonImgBox}>
+                            </View>
+                            )  : (
+                              getRankUnderOptionListOne.map( (info, index) =>    
+                                <View key={index} style={styles.sectionViewButtonImgBox} onStartShouldSetResponder={() =>rankUnderIndex(index+1,0)} >
+                                  <Image resizeMode='contain' style={styles.champImg} source={{
+                                                      uri: `${info.url}`,
+                                                    }}/>
+                                  <Text></Text>                      
+                                </View>
+                              )
+                              )
+                          }      
+                        </View>
+                        <View style={[glStyles.btnSm, glStyles.btnBlue]} onStartShouldSetResponder={() => rankSubmit()}>
+                            <Text style={glStyles.btnText}>선택하기</Text>
+                        </View>
+                    </View>
+                </View>
+        </Modal>
     </MainFrame >
 
 
@@ -559,10 +923,9 @@ const styles = StyleSheet.create({
     marginTop: "5%",
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    padding: "5%",
-    shadowColor: '#000',
+    width:"100%",
+    height: "50%",
+    shadowColor: colors.black,
     shadowOffset: {
       width: 0,
       height: 0,
@@ -571,9 +934,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     position: 'absolute',
-    top: -640,
-    bottom: 540,
-    left: 180,
+    top: 80,
+    bottom: 0,
+    left: 0,
     right: 0,
   },
   button: {
@@ -597,6 +960,68 @@ const styles = StyleSheet.create({
     position: "absolute",
     paddingTop: "2%",
   },
+  centerBottomContainer:{       // 챔피언 박스 나중에 수정
+    height:"7%",
+    alignItems:"center",
+    width:"100%",
+    flexDirection:"row"
+  },
+  champItemBox:{        // 챔피언 박스 나중에 수정
+    width:"20%",
+    height:"90%",
+    marginTop: "3%",
+    marginRight:"2%",
+    marginLeft:"2%",
+  },
+  champImg:{  // 챔피언 박스 나중에 수정
+    width:"100%",
+    height:"90%",
+  },
+  redName:{ // 챔피언 박스 나중에 수정
+    color:"red",
+    backgroundColor:"red",
+  },
+  ////////////////////
+  // 랭크  박스 나중에 수정
+  contentBottomRank:{
+    width:SCREEN_WIDTH,
+    height:"100%",
+  },
+  itemBoxImgRank:{
+    width:SCREEN_WIDTH,
+  },
+  itemBoxTitle:{
+    marginBottom : '5%',
+    textAlign: 'center',
+  },
+  backImg:{
+    width:'100%',
+    height:"100%",
+    alignContent:"center",
+  },
+  centeredRankView: {
+    flex: 1,
+    marginTop: "5%",
+  },
+  modalSelectView: {
+    width:"100%",
+    alignContent:"center",
+  },
+  modalBottomContainer:{
+    flex:1,
+    alignItems:"center",
+    borderColor:"black",
+    borderStyle:"solid",
+  },
+  sectionViewButtonBox:{
+    width:"60%",
+    flexDirection:"row",
+    marginBottom:"5%",
 
+  },
+  sectionViewButtonImgBox:{
+    width:"25%",
+    flexDirection:"row"
+  },
 });
 

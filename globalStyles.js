@@ -141,6 +141,11 @@ export const glStyles = StyleSheet.create({
     fontSize: 14,
     color: colors.fontWh,
   },
+  champText: {
+    fontSize: 10,
+    color: colors.fontWh,
+    textAlign: 'center',
+  },
   txtAlignCntr: { textAlign: "center" },
   lh15: { lineHeight: 1.5},
   // input 설정
@@ -155,6 +160,11 @@ export const glStyles = StyleSheet.create({
   btnBox: {
     padding: 30,
     flexDirection: 'row',
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  btnBox2: {
+    padding: 30,
     justifyContent: "space-evenly",
     alignItems: "center",
   },
