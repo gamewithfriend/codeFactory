@@ -22,13 +22,14 @@ export default function ChatListScreen({ navigation }) {
     const itemHeightRatio = 0.1;    // 아이템 높이를 화면 높이의 %로 설정
     const [modalVisible, setModalVisible] = useState(false);
     const [getFriendNum, setFriendNum] = useState(0);
+    // 채팅 대화 상대를 담기위한 상태
+    const [receivers, setReceivers] = useState([]);
+    // 친구목록 선택 여부 감지
+    const [clickState, setClickState] = useState({});
     const [getStateFriendList, setStateFriendList] = useState([]);
     const [text, onChangeText] = React.useState(null);
 
     let isFocused = useIsFocused();
-
-    // 채팅 대화 상대를 담기위한 변수 선언
-    let receivers = [];
 
     const initChatList = async () => {
         try {
@@ -83,7 +84,7 @@ export default function ChatListScreen({ navigation }) {
 
     const addFriendForChat = () => {
         // 선택된 사용자가 없으면 alert
-        if (receivers.length < 1) {
+        if (receivers.length == 0) {
             Alert.alert("선택된 친구가 없습니다.");
         } else {
             openChat();
@@ -92,12 +93,18 @@ export default function ChatListScreen({ navigation }) {
     // 친구목록을 클릭할 때 배열에 추가하는 메서드
     const addReciever = (fYouId) => {
         if (fYouId != null && fYouId != "" && fYouId != undefined) {
+            let tmpArr;
             if (receivers.includes(fYouId)) {
-                receivers.splice(receivers.indexOf(fYouId), 1);
+                // 이미 선택된 경우, 해당 항목을 배열에서 제거
+                tmpArr = receivers.filter(id => id !== fYouId);
             } else {
-                receivers.push(fYouId);
+                // 선택되지 않은 경우, 해당 항목을 배열에 추가
+                tmpArr = [...receivers, fYouId];
             }
-            console.log(receivers);
+            // 배열 상태값 변경
+            setReceivers(tmpArr);
+            // 해당 버튼의 상태를 조절
+            setClickState((prevState) => ({...prevState,  [fYouId]: !prevState[fYouId]}));
         }
     }
 
@@ -117,7 +124,6 @@ export default function ChatListScreen({ navigation }) {
         const json = await response.json();
 
         setStateFriendList(json.friendList)
-        console.log(json.friendList)
         setFriendNum(json.friendNum);
     };
 
@@ -136,6 +142,9 @@ export default function ChatListScreen({ navigation }) {
         const result = await fectcher.jsonFetch();
         
         if (result.data != null && result.data != "" && result.data != undefined) {
+            // 선택 값 초기화
+            setReceivers([]);
+            setClickState({});
             // 채팅방으로 이동
             moveToChatRoom(result.data);
         } else {
@@ -164,12 +173,6 @@ export default function ChatListScreen({ navigation }) {
                     <TouchableOpacity onPress={addFriendChat}>
                         <Ionicons name="person-add" size={20} style={glStyles.cardIcon} />
                     </TouchableOpacity>
-                    {/* <TouchableOpacity onPress={handleAdd}>
-                        <Ionicons name="add" size={24} style={glStyles.cardIcon} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleAdd}>
-                        <Ionicons name="add" size={24} style={glStyles.cardIcon} />
-                    </TouchableOpacity> */}
                 </View>
             </View>
             <View style={glStyles.flexContainer}>
@@ -208,15 +211,8 @@ export default function ChatListScreen({ navigation }) {
                     Alert.alert('Modal has been closed.');
                     setModalVisible(!modalVisible);
                 }}>
-                {/* <Pressable style={{
-                    flex: 1,
-                    backgroundColor: 'transparent',
-                }}
-                    onPress={() => setModalVisible(false)}
-                /> */}
                 <View style={[glStyles.modalView, glStyles.bgDarkGray, glStyles.pd15]}>
                     <View style={[glStyles.btnIcon, glStyles.flexRowEnd]}>
-                        {/* 닫기 이벤트 추가 부탁 */}
                         <TouchableOpacity onPress={addFriendChatClose} >
                             <Ionicons name="close" size={20} style={glStyles.cardIcon} />
                         </TouchableOpacity>
@@ -233,10 +229,10 @@ export default function ChatListScreen({ navigation }) {
                     ) : (
                         <FlatList
                             data={getStateFriendList}
-                            keyExtractor={item => item.id}
+                            keyExtractor={item => item.fYouId}
                             renderItem={({ item }) => (
-                                <View style={[glStyles.basicItem, glStyles.addPartLine, { height: Dimensions.get('window').height * itemHeightRatio }]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
-                                    <View style={[glStyles.flexContainer, glStyles.flexRowStrtCntr]} >
+                                <View style={[glStyles.basicItem, glStyles.addPartLine, { height: Dimensions.get('window').height * itemHeightRatio }]}>
+                                    <View style={[glStyles.flexContainer, glStyles.flexRowStrtCntr, {borderColor : clickState[item.fYouId]?'#eee':undefined, borderWidth:1}]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
                                         <View style={glStyles.basicItemImgSm}>
                                             <Image resizeMode='contain' style={styles.profileImg}
                                                 source={require("./assets/images/emptyProfile.jpg")} />
