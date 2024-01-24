@@ -75,7 +75,7 @@ export default function FriendScreen({ navigation }) {
     if (sessionInfo.fYouId != null) {
       receivers.push(sessionInfo.fYouId);
     }
-    sessionInfo.receivers = receivers;
+    sessionInfo.receivers = receivers;p
 
     await fetch("https://hduo88.com/chat/openChatRoom.do", {
       method: "POST",
@@ -140,7 +140,7 @@ export default function FriendScreen({ navigation }) {
                       {
                         info.profileImgUrl !== null ? (
                           <ImageBackground
-                            source={{ uri: `http://hduo88.com/tomcatImg/myPage/${info.profileImgUrl}` }}
+                            source={{ uri: `https://hduo88.com/tomcatImg/myPage/${info.profileImgUrl}` }}
                             style={glStyles.basicItemImg}
                             resizeMode="cover"
                             imageStyle={{ borderRadius: 52 }}
