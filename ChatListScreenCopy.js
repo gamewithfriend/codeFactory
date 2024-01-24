@@ -24,10 +24,13 @@ export default function ChatListScreen({ navigation }) {
     const [getFriendNum, setFriendNum] = useState(0);
     // 채팅 대화 상대를 담기위한 상태
     const [receivers, setReceivers] = useState([]);
-    // 친구목록 선택 여부 감지
+    // 친구목록 선택
     const [clickState, setClickState] = useState({});
     const [getStateFriendList, setStateFriendList] = useState([]);
     const [text, onChangeText] = React.useState(null);
+
+    
+    // let receivers = [];
 
     let isFocused = useIsFocused();
 
@@ -122,7 +125,7 @@ export default function ChatListScreen({ navigation }) {
         getMyNick = userInfo.uIntgId;
         const response = await fetch(`https://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}&keyWord=${keyWord}`)
         const json = await response.json();
-
+        
         setStateFriendList(json.friendList)
         setFriendNum(json.friendNum);
     };
@@ -233,10 +236,17 @@ export default function ChatListScreen({ navigation }) {
                             renderItem={({ item }) => (
                                 <View style={[glStyles.basicItem, glStyles.addPartLine, { height: Dimensions.get('window').height * itemHeightRatio }]}>
                                     <View style={[glStyles.flexContainer, glStyles.flexRowStrtCntr, {borderColor : clickState[item.fYouId]?'#eee':undefined, borderWidth:1}]} onStartShouldSetResponder={() => addReciever(item.fYouId)}>
-                                        <View style={glStyles.basicItemImgSm}>
+                                        {item.profileImgUrl !== null ?
+                                        (<View style={glStyles.basicItemImgSm}>
+                                            <Image resizeMode='contain' style={styles.profileImg}
+                                                source={{ uri: `http://hduo88.com/tomcatImg/myPage/${item.profileImgUrl}` }} />
+                                        </View>)
+                                        :
+                                        (<View style={glStyles.basicItemImgSm}>
                                             <Image resizeMode='contain' style={styles.profileImg}
                                                 source={require("./assets/images/emptyProfile.jpg")} />
-                                        </View>
+                                        </View>)
+                                        }
                                         <View>
                                             <Text style={glStyles.basicText} >{item.appNick}</Text>
                                         </View>
