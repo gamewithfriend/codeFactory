@@ -27,6 +27,7 @@ const realUrl = "3.37.211.126";
 const testUrl = "192.168.105.27";
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const {height:SCREEN_HEIGHT} = Dimensions.get('window');
+let { width: OPTION_MENU_WIDTH } = 0;
 // 선택한 메인 옵션을 제외하기위한 배열
 let selectedOptionArr = [];
 // 선택한 랭크 하부 옵션을 제외하기위한 배열
@@ -80,7 +81,7 @@ export default function MainScreen({ route,navigation }) {
   let reChampionList = [];
   let youserLikeCheck = "";
   let sessions = "";
-
+  
   // scrollref 서버에서 옵션 리스트 가져올때마다 scrollView Index 초기화
   const onserverGetOption = () => {
     scrollRef.current?.scrollTo({
@@ -92,26 +93,35 @@ export default function MainScreen({ route,navigation }) {
   ////serverGetOptionList----옵션리스트 서버에서 가져오기 함수///////
   const serverGetOptionList = async (tempOptionSelected, submitOptionMain) => {
     let setOption = "";
+
     if(submitOptionMain == "10102"){ // main option 선택이 챔피언이라면 모달 창 생성 if 문
       champSelectModal();
-    }else if(submitOptionMain == "10101"){
+    }else if(submitOptionMain == "10101"){ // main option 선택이 랭크라면 모달 창 생성 if 문
       setRankModalVisible(true);
+    }else if(submitOptionMain == "10105"){  // main option 선택이 끝난후 매칭 페이지 이동
+      sendMatchingPage();
     }
+
     if(tempOptionSelected == undefined){
       setOption = "109";
     }else{
       setOption = tempOptionSelected;  
     }
+    
     const response = await fetch(`http://3.37.211.126:8080/main/selectMatchingOptionList.do?option=${setOption}&params=${selectedOptionArr}`)
     const jsonOptionList = await response.json();
     for (var i = 0; i < jsonOptionList.data.length; i++) {
       let tempUrl = `http://3.37.211.126:8080/tomcatImg/option/${jsonOptionList.data[i].url}`;
       jsonOptionList.data[i].url = tempUrl;
     } 
+    /// 메인 옵션 메뉴 작업 계속 해야됨
+    OPTION_MENU_WIDTH= 100/jsonOptionList.data.length;
+    console.log(OPTION_MENU_WIDTH)
+    /////////
     setOptionList(jsonOptionList.data);
     onserverGetOption();
   };
-
+  
   const serverGetRankUnderOptionList = async(forRankUnderOptionListCode) =>{
     const matchingOptionCode=forRankUnderOptionListCode;   
     const response = await fetch (`http://3.37.211.126:8080/gameMatching/selectBasicOption.do?matchingOptionCode=${matchingOptionCode}&params=${selectedOptionRankUnderArr}`)
@@ -244,9 +254,10 @@ export default function MainScreen({ route,navigation }) {
     let changeIndex =Math.floor(index/100);
     let indexNumber =0;
     if(changeIndex != 0){
-      indexNumber = Math.ceil((changeIndex+1)/4);
+      indexNumber = Math.floor((changeIndex+1)/4);
     }
-    setModalChangeIndex(indexNumber);      
+    setModalChangeIndex(indexNumber);
+    serverGetRankUnderOptionList(getOptionList[indexNumber].cdDtlId);      
   };
   
 
@@ -284,6 +295,7 @@ export default function MainScreen({ route,navigation }) {
     setSubmitOptionId(submitOption)
     serverGetOptionList(submitOption, submitOptionMain);
   };
+
   ////championSubmit---- 챔피언 Submit 함수///////   
   const championSubmit = () => { 
     setModalVisible(false);
@@ -310,6 +322,29 @@ export default function MainScreen({ route,navigation }) {
     setSelectedOptionList([]);
     serverGetOptionList("101", "");
     
+  };
+
+  ////rankModalClose---- 랭크 모달창 종료  함수///////   
+  const rankModalClose = () => { 
+    setModalIndex(false); // rank  모달 인덱스 설정
+    selectedOptionArr.pop();
+    setSubmitOptionId("101")
+    setRankModalVisible(false); // rank  모달 종료시키기
+    serverGetOptionList("101", ""); // 옵션 화면 리로딩
+  };
+
+  ////sendMatchingPage---- 매칭페이지로 이동하는 함수///////   
+  const sendMatchingPage = () =>{
+    navigation.navigate('GameMatching',{  0: route.params.optionOne
+      ,1: route.params.optionOneDetail
+      ,2:route.params.optionTwo
+      ,3:route.params.optionTwoDetail
+      ,4:route.params.optionThree
+      ,5:route.params.optionThreeDetail
+      ,6:route.params.optionFour
+      ,7:tempOptionFourDetail
+      ,optionValueBox: route.params.optionValueBox
+    },{navigation});
   };
 
   ///////////////////-------------------------------------------------------------------------------
@@ -571,7 +606,7 @@ export default function MainScreen({ route,navigation }) {
     serverGetFindMyAlramList();
     serverGetOptionList();  // 옵션 리스트 가져오는 함수
     getChampionList();  // 챔피언 리스트 가져오는 함수
-    serverGetRankUnderOptionList("10202"); // 랭크 옵션 하위
+    serverGetRankUnderOptionList(); // 랭크 옵션 하위
     //serverGetUserLikeTop5List();
     //sendNotification();
   }, []);
@@ -598,7 +633,7 @@ export default function MainScreen({ route,navigation }) {
               </View>
             ) : (
               getOptionList.map((info, index) =>
-                <View key={index} style={glStyles.pdHrzn15}>
+                <View key={index} style={[glStyles.pdHrzn15,styles.viewBoxWidthPerLength]}>
                   <Text style={glStyles.pageTit}>
                     {info.cdDtlName}
                   </Text>
@@ -663,6 +698,7 @@ export default function MainScreen({ route,navigation }) {
                         style={glStyles.basicText}
                         onChangeText={text => onChange(text)}
                         value={text}
+                        placeholder=''
                     />
                     <View style={glStyles.flexContainer}>
                     <ScrollView
@@ -738,26 +774,26 @@ export default function MainScreen({ route,navigation }) {
               visible={rankModalVisible}
               onRequestClose={() => {
                 Alert.alert('Modal has been closed.');
-                setRankModalVisible(!modalVisible);
+                rankModalClose();
               }}>
               <Pressable style={{
               flex:1,
               backgroundColor:'transparent',
               }}
-              onPress={()=>setModalVisible(false)}
+              onPress={()=>rankModalClose()}
               />
                 <View style={[styles.modalView, glStyles.bgDarkGray]}>
-                    <View style={[glStyles.btnIcon, glStyles.flexRowEnd]} onStartShouldSetResponder={() =>championModalClose()}>
+                    <View style={[glStyles.btnIcon, glStyles.flexRowEnd]} onStartShouldSetResponder={() =>rankModalClose()}>
                         {/* 닫기 이벤트 추가 부탁 */}
                         <Ionicons name="close" size={20} style={glStyles.cardIcon} />
                     </View>
                     {getModalIndex === false ? (
-                      <Text>
-                        ddd
+                      <Text style={[glStyles.basicText, glStyles.txtAlignCntr]}>
+                        랭크 하위 구간
                       </Text>
                     ) : (
-                      <Text>
-                        aaa
+                      <Text style={[glStyles.basicText, glStyles.txtAlignCntr]}>
+                        랭크 상위 구간
                       </Text>
                     )
                     }
@@ -1025,5 +1061,10 @@ const styles = StyleSheet.create({
     width:"25%",
     flexDirection:"row"
   },
+  ///// 메인
+
+  viewBoxWidthPerLength : {
+    width: OPTION_MENU_WIDTH,
+  }
 });
 
