@@ -3,14 +3,13 @@ import { View, Text, Button, StyleSheet, TextInput, Dimensions, ActivityIndicato
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Session from './utils/session.js';
 import { useIsFocused } from '@react-navigation/native';
-import axios from 'axios';
+import Fetcher from './utils/Fetcher';
 
 //이소망 추가
 import MainFrame from './MainFrame';
 import { glStyles } from './globalStyles';
 import colors from './assets/colors/colors';
 
-const realUrl = "3.37.211.126";
 const testUrl = "192.168.219.142";
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -32,7 +31,7 @@ export default function FriendScreen({ navigation }) {
     setUserInfo(userInfo);
     console.log("getFriendList", userInfo);
     getMyNick = userInfo.uIntgId;
-    const response = await fetch(`http://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}`)
+    const response = await fetch(`https://hduo88.com/friend/findFriendList.do?myNick=${getMyNick}`)
     // const response = await fetch (`http://192.168.0.187:8080/friend/findFriendList.do?myNick=${getMyNick}`)
     const json = await response.json();
     setStateFriendList(json.friendList)
@@ -43,7 +42,7 @@ export default function FriendScreen({ navigation }) {
   const getMyInfo = async () => {
     let userInfo = await Session.sessionGet("sessionInfo");
     const sessionId = userInfo.uIntgId;
-    const response = await fetch(`http://hduo88.com/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
+    const response = await fetch(`https://hduo88.com/mypage/selectUserInfo.do?uIntgId=${sessionId}`)
     const json = await response.json();
     if (json != '') {
       setUserInfo(json.user[0]);
@@ -57,12 +56,13 @@ export default function FriendScreen({ navigation }) {
   const viewProfileModal = async (searchId) => {
     setModalVisible(true);
     let userInfo = await Session.sessionGet("sessionInfo");
-    const response = await fetch(`http://hduo88.com/friend/findFriendList.do?myNick=${userInfo.uIntgId}&keyWord=${searchId}`)
-    const json = await response.json();
-    console.log(json)
-    if (json != '') {
-      console.log(getFriendInfo);
-      setFriendInfo(json.friendList[0]);
+    // 서버통신
+    const fetcher = new Fetcher("https://hduo88.com/friend/findFriendList.do", "get", JSON.stringify({"myNick" : userInfo.uIntgId, "keyWord" : searchId}));
+    // const fetcher = new Fetcher("http://192.168.219.195:8080/friend/findFriendList.do", "get", JSON.stringify({"myNick" : userInfo.uIntgId, "keyWord" : searchId}));
+    const response = await fetcher.jsonFetch();
+    
+    if (response.friendList[0] != '') {
+      setFriendInfo(response.friendList[0]);
     }
   };
 
@@ -75,9 +75,9 @@ export default function FriendScreen({ navigation }) {
     if (sessionInfo.fYouId != null) {
       receivers.push(sessionInfo.fYouId);
     }
-    sessionInfo.receivers = receivers;
+    sessionInfo.receivers = receivers;p
 
-    await fetch("http://" + testUrl + ":8080/chat/openChatRoom.do", {
+    await fetch("https://hduo88.com/chat/openChatRoom.do", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -104,9 +104,6 @@ export default function FriendScreen({ navigation }) {
       <TouchableOpacity style={[styles.profileView, glStyles.pdHrzn15]} onPress={editMyProfile}>
         <View >
           {
-            // selectedImage.uri !== '' ? (
-            // <Image source={{ uri: selectedImage.uri }} style={styles.profileImg} resizeMode='contain' />
-            // ) : (
             userInfo.profileImgUrl !== null ? (
               <Image
                 source={{ uri: `http://hduo88.com/tomcatImg/myPage/${userInfo.profileImgUrl}` }}
@@ -116,7 +113,6 @@ export default function FriendScreen({ navigation }) {
             ) : (
               <Image resizeMode='contain' style={glStyles.basicItemImg} source={require("./assets/images/emptyProfile.jpg")} />
             )
-            // )
           }
         </View>
         <View style={styles.profileMesaageView}>
@@ -144,7 +140,7 @@ export default function FriendScreen({ navigation }) {
                       {
                         info.profileImgUrl !== null ? (
                           <ImageBackground
-                            source={{ uri: `http://hduo88.com/tomcatImg/myPage/${info.profileImgUrl}` }}
+                            source={{ uri: `https://hduo88.com/tomcatImg/myPage/${info.profileImgUrl}` }}
                             style={glStyles.basicItemImg}
                             resizeMode="cover"
                             imageStyle={{ borderRadius: 52 }}
@@ -160,7 +156,7 @@ export default function FriendScreen({ navigation }) {
                       }
                     </View>
                     <View style={glStyles.pdHrzn15}>
-                      <Text style={glStyles.titleText}>{info.appNick}({info.glSummoner}소환사명)</Text>
+                      <Text style={glStyles.titleText}>{info.appNick}({info.glSummoner})</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -192,13 +188,13 @@ export default function FriendScreen({ navigation }) {
           </View>
           <View style={glStyles.pdVrtcl15}>
             <View style={glStyles.titleBox}>
-              <Text style={glStyles.titleText}> 소환사명 : {getFriendInfo.glSummoner} 소환사명</Text>
+              <Text style={glStyles.titleText}> 소환사명 : {getFriendInfo.glSummoner}</Text>
             </View>
             <View style={glStyles.titleBox}>
-              <Text style={glStyles.titleText}> 랭크 : {getFriendInfo.glRank} 랭크</Text>
+              <Text style={glStyles.titleText}> 랭크 : {getFriendInfo.glRank}</Text>
             </View>
             <View style={glStyles.titleBox}>
-              <Text style={glStyles.titleText}> 주챔피언 : {getFriendInfo.glChampion} 주챔피언</Text>
+              <Text style={glStyles.titleText}> 주챔피언 : {getFriendInfo.glChampion}</Text>
             </View>
           </View>
           <View style={glStyles.btnBox}>

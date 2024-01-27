@@ -43,7 +43,7 @@ export default function SettingScreen({ navigation }) {
           <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>License</Text>
         </View>
-        <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
+        {/* <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
           <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>Settings</Text>
         </View>
@@ -54,7 +54,7 @@ export default function SettingScreen({ navigation }) {
         <View style={[glStyles.flexRowStrt, glStyles.addPartLine]} onPress={optionSubmit}>
           <Ionicons name="settings-outline" size={24} style={[glStyles.cardIcon, glStyles.pdHrzn15]} />
           <Text style={glStyles.basicInfoTit}>Settings</Text>
-        </View>
+        </View> */}
         <View style={styles.lineDesign} />
       </View>
 

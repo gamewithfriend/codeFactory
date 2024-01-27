@@ -15,9 +15,6 @@ const expoClientId = '1078327323794-hqr8b6qj7lkcdtkr9snucrb5aca6lkmq.apps.google
 const iosClientId = '1078327323794-t3nm7kvjmvdg2gkac69ldninie81gkvr.apps.googleusercontent.com';
 const androidClientId = '1078327323794-scnfkq9p0i8rfqtb5rpc08vu60101q6g.apps.googleusercontent.com';
 
-const realUrl = "3.37.211.126";
-const testUrl = "192.168.105.27";
-
 export default function LoginScreen({ navigation }) {
     let token;
     let userInfo = {};
@@ -51,7 +48,7 @@ export default function LoginScreen({ navigation }) {
                 console.error(error);
             }
         } else {    // 세션값 확인되면 로그인 정보 최신화 후 닉네임 체크 로직 
-            checkLoginUserInfo(realUrl, session);
+            checkLoginUserInfo(session);
         }
     }
 
@@ -76,7 +73,7 @@ export default function LoginScreen({ navigation }) {
             userInfo.uLastTerminalKind = modelName;
 
             if (userInfo != null) {
-                checkLoginUserInfo(realUrl, userInfo);
+                checkLoginUserInfo(userInfo);
             }
 
         } catch (error) {
@@ -85,8 +82,8 @@ export default function LoginScreen({ navigation }) {
         }
     };
 
-    const checkLoginUserInfo = async (url, data) => {
-        await fetch("http://" + url + ":8080/login/loginCheck.do", {
+    const checkLoginUserInfo = async (data) => {
+        await fetch("https://hduo88.com/login/loginCheck.do", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
