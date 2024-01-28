@@ -19,20 +19,18 @@ export default function AlarmScreen ({navigation}) {
   const [getSendNickName, setSendNickName] = useState("");
   const [getCdDtlDesc, setCdDtlDesc] = useState("");
   const [getFriendCheck, setFriendCheck] = useState("");
-  let param1 = "";
-  let param2 = "";
+  
   const serverGetFindMyAlramList = async() =>{
     const session = await Session.sessionGet("sessionInfo");
     const sessionId = session.uIntgId;
-    const response = await fetch (`http://hduo88.com/alram/findMyAlramList.do?myId=${sessionId}`)
+    const response = await fetch (`https://hduo88.com/alram/findMyAlramList.do?myId=${sessionId}`)
     const jsonAlramList = await response.json();
-    console.log("alramList$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    console.log(jsonAlramList.findMyAlramList)
+    
     setAlramList(jsonAlramList.findMyAlramList);
   };
   const alarmDelet = async(seq) =>{
     const alSeq = seq;
-    const response = await fetch (`http://hduo88.com/alram/alramDelete.do?alSeq=${alSeq}`)
+    const response = await fetch (`https://hduo88.com/alram/alramDelete.do?alSeq=${alSeq}`)
     const jsonAlramList = await response.json();
     serverGetFindMyAlramList();
   };
@@ -57,7 +55,6 @@ export default function AlarmScreen ({navigation}) {
         updateReadYn(alSeq);
       }
     }
-
   }
 
   const addFriendAcceptTrigger = () =>{
@@ -68,10 +65,16 @@ export default function AlarmScreen ({navigation}) {
   const checkFriend = async(alSendId) =>{
     const session = await Session.sessionGet("sessionInfo");
     const sessionId = session.uIntgId;
-    const response = await fetch (`http://hduo88.com/friend/friendCheck.do?myId=${sessionId}&targetId=${alSendId}`)
+    
+    const response = await fetch (`https://hduo88.com/friend/friendCheck.do?myId=${sessionId}&targetId=${alSendId}`)
     const friendState = await response.json();
-    console.log(friendState.vo.fStateCd)
-    setFriendCheck(friendState.vo.fStateCd);
+    
+    // vo에 대한 null 체크로직 추가
+    if (friendState.vo == null) {
+      setFriendCheck(null);
+    } else {
+      setFriendCheck(friendState.vo.fStateCd);
+    }
   };
 
   const updateReadYn = async(seq) =>{
@@ -83,66 +86,59 @@ export default function AlarmScreen ({navigation}) {
   const addFriendAccept = async() =>{
     const session = await Session.sessionGet("sessionInfo");
     const sessionId = session.uIntgId;
-    const response = await fetch (`http://hduo88.com/friend/addFriendAccept.do?myId=${sessionId}&targetId=${getSendId}`)
-    alert("sssss")
+    const response = await fetch (`http://hduo88.com/friend/addFriendAccept.do?myId=${sessionId}&targetId=${getSendId}`);
   };
-
-  
 
   useEffect(() => {     
     serverGetFindMyAlramList();
   },[]);
     return (
       <MainFrame>
-        <View style={styles.container}>
+        <View style={glStyles.flexContainer}>
           <View style={styles.containerPercent}>
-            <View style={styles.centeredView}>
-                <Modal
+            {/* <View> */}
+              <Modal
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
-                  Alert.alert('Modal has been closed.');
                   setModalVisible(!modalVisible);
-                }}>
-                <Pressable style={{
-                flex:1,
-                backgroundColor:'transparent',
-                }}
-                onPress={()=>setModalVisible(false)}
-                />
+              }}>
+                <Pressable style={glStyles.flexContainer}
+                  onPress={()=>setModalVisible(false)} />
                 <View style={styles.centeredView} >
-                  <View style={styles.modalView}>
-                    <View >
+                  <View style={[styles.modalView, glStyles.bgDarkGray]}>
+                    <View>
                       {getFriendCheck === "10501"? (
                                                     <View >
                                                       <View>
                                                         <Text style={glStyles.basicText}>{getSendNickName}님이 친구신청을 보내셨습니다</Text>  
                                                       </View>
-                                                      
-                                                    
                                                     </View >                                                 
                                                   ) : (
                                                     <View >
-                                                    <View>
-                                                      <Text style={glStyles.basicText}>{getSendNickName}님이 친구신청을 보내셨습니다 수락하시겠습니까?</Text>  
-                                                    </View>
-                                                    <View  onStartShouldSetResponder={() =>addFriendAcceptTrigger()}>
-                                                      <Text >yes</Text>  
-                                                    </View>
-                                                    
-                                                  
-                                                  </View >      
+                                                      <View>
+                                                        <Text style={glStyles.basicText}>{getSendNickName}님이 친구신청을 보내셨습니다{"\n"} 수락하시겠습니까?{"\n"}</Text>  
+                                                      </View>
+                                                      <View style={glStyles.flexRowBtwn}>
+                                                        <View onStartShouldSetResponder={() => addFriendAcceptTrigger()}>
+                                                          <Text style={[glStyles.basicText]}>수락</Text>
+                                                        </View>
+                                                        <View onStartShouldSetResponder={() => setModalVisible(false)}>
+                                                          <Text style={[glStyles.basicText]}>거절</Text>
+                                                        </View>
+                                                      </View>
+                                                    </View >      
                                                         )
-                        
                       }
                     </View>
                   </View>
                 </View>
-                </Modal>
-            </View>
-           <ScrollView        pagingEnabled
-                              showsHorizontalScrollIndicator = {false}>
+              </Modal>
+            {/* </View> */}
+            <ScrollView        
+              pagingEnabled
+              showsHorizontalScrollIndicator = {false}>
               {getAlramList.length === 0? (
                                           <View style={glStyles.basicItem}>
                                             <Text style={[glStyles.titleText]}>알람이 없습니다.</Text>
@@ -173,8 +169,6 @@ export default function AlarmScreen ({navigation}) {
             </View>            
         </View>
       </MainFrame>
-      
-      
     );
   
 
