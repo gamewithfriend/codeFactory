@@ -41,6 +41,9 @@ export const glStyles = StyleSheet.create({
   pd20: {
     padding: 20
   },
+  pdHrzn10: {
+    paddingHorizontal: 10,
+  },
   pdHrzn15: {
     paddingHorizontal: 15,
   },
@@ -60,6 +63,9 @@ export const glStyles = StyleSheet.create({
   // 마진 설정
   mgTop5: {
     marginTop: 5
+  },
+  mgL5: {
+    marginLeft: 10
   },
   mgR20: {
     marginRight: 20
@@ -137,8 +143,16 @@ export const glStyles = StyleSheet.create({
     fontSize: 16,
     color: colors.fontWh,
   },
+  titleTextBg: {
+    fontSize: 20,
+    color: colors.fontWh,
+  },
   basicText: {
     fontSize: 14,
+    color: colors.fontWh,
+  },
+  basicTextSm: {
+    fontSize: 10,
     color: colors.fontWh,
   },
   champText: {
@@ -165,6 +179,13 @@ export const glStyles = StyleSheet.create({
   },
   btnBox2: {
     padding: 30,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  btnBox3: {
+    padding: 20,
+    paddingTop: 3,
+    flexDirection: 'row',
     justifyContent: "space-evenly",
     alignItems: "center",
   },
@@ -229,15 +250,19 @@ export const glStyles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 45,
   },
+  // 친구목록 스크롤
+  friendList: {
+    height: SCREEN_HEIGHT * 0.4,
+  },
 
   // 카드 리스트
   cardList: {
-    width: SCREEN_WIDTH,
+    width: SCREEN_WIDTH - 20,
   },
   cardItems: {
     borderRadius: 45,
-    width: 180,
-    height: 180,
+    width: 120,
+    height: 120,
     marginBottom: 9,
   },
   cardLabel: {
@@ -249,7 +274,7 @@ export const glStyles = StyleSheet.create({
   cardInfo: {
     flex: 1,
     paddingHorizontal: 10,
-    paddingTop: 3,
+    paddingTop: 1,
   },
   cardIcon: {
     color: colors.fontWh,
@@ -274,6 +299,7 @@ export const glStyles = StyleSheet.create({
     width: 52,
     height: 52,
   },
+
   basicItemImgLg: {
     width: 84,
     height: 84,
@@ -281,6 +307,10 @@ export const glStyles = StyleSheet.create({
   basicItemImgSm: {
     width: "20%",
     height: "100%",
+  },
+  basicItemImgSm2: {
+    width: 26,
+    height: 26,
   },
   basicItemInfo: {
     flex: 1,
